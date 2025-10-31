@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import axios from "../utils/axios";
+import { withApiKey } from "../utils/axios";
 
 type ResponseBody = {
   dates: {
@@ -29,10 +29,13 @@ type ResponseBody = {
 
 const getPopular = async (page: number = 1): Promise<ResponseBody | undefined> => {
   try {
-    const res = await axios.withApiKey.get(`/movie/popular?language=en-US&page=${page}`);
+    const res = await withApiKey.get(`/movie/popular?language=en-US&page=${page}`);
     return res.data;
   } catch (error) {
-    isAxiosError(error) && console.log(error.response?.data.status_message);
+    if (isAxiosError(error)) {
+      console.error(error.response?.data.status_message);
+    return undefined;
+    }
   }
 };
 

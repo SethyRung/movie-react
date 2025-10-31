@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import CastCard from "../../components/movie/cast-card";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import getMovieDetail, { type ResponseBody as MovieDetail } from "../../api/movie-detail.get";
 import getVideos from "../../api/movie-videos.get";
@@ -15,27 +15,27 @@ export default function Index() {
   const [credits, setCredits] = useState<Credits>();
   const [keywords, setKeywords] = useState<Keywords>();
 
-  const loadData = useCallback(async () => {
-    if (!movieId || isNaN(parseInt(movieId))) return;
-    const movie_id = parseInt(movieId);
-
-    const movie = await getMovieDetail(movie_id);
-    setMovie(movie);
-
-    const movieVideos = await getVideos(movie_id);
-    const video = movieVideos?.results.find((v) => v.site === "YouTube" && v.type === "Trailer");
-    video && setMovieTrailerURL(`https://www.youtube.com/watch?v=${video.key}`);
-
-    const credits = await getMovieCredits(movie_id);
-    setCredits(credits);
-
-    const keywords = await getKeyword(movie_id);
-    setKeywords(keywords);
-  }, [movieId]);
-
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    (async () => {
+      if (!movieId || isNaN(parseInt(movieId))) return;
+      const movie_id = parseInt(movieId);
+
+      const movie = await getMovieDetail(movie_id);
+      setMovie(movie);
+
+      const movieVideos = await getVideos(movie_id);
+      const video = movieVideos?.results.find((v) => v.site === "YouTube" && v.type === "Trailer");
+      if (video) {
+        setMovieTrailerURL(`https://www.youtube.com/watch?v=${video.key}`);
+      }
+
+      const credits = await getMovieCredits(movie_id);
+      setCredits(credits);
+
+      const keywords = await getKeyword(movie_id);
+      setKeywords(keywords);
+    })();
+  }, [movieId]);
 
   const castCardRef = useRef<HTMLDivElement>(null);
 

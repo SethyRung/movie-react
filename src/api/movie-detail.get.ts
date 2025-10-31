@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import axios from "../utils/axios";
+import { withApiKey } from "../utils/axios";
 
 type ResponseBody = {
   adult: boolean;
@@ -46,10 +46,13 @@ type ResponseBody = {
 
 const getMovieDetail = async (movie_id: number): Promise<ResponseBody | undefined> => {
   try {
-    const res = await axios.withApiKey.get(`/movie/${movie_id}`);
+    const res = await withApiKey.get(`/movie/${movie_id}`);
     return res.data;
   } catch (error) {
-    isAxiosError(error) && console.log(error.response?.data.status_message);
+    if (isAxiosError(error)) {
+      console.error(error.response?.data.status_message);
+    return undefined;
+    }
   }
 };
 

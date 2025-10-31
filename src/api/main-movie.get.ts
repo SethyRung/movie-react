@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import axios from "../utils/axios";
+import { withApiKey } from "../utils/axios";
 import getImages, { type ResponseBody as Image } from "./movie-images.get";
 
 type ResponseBody = {
@@ -27,11 +27,14 @@ type ResponseBody = {
 
 const getMainMovie = async (): Promise<ResponseBody | undefined> => {
   try {
-    const res = await axios.withApiKey.get("/movie/popular");
+    const res = await withApiKey.get("/movie/popular");
     const images = await getImages(res.data.results[0].id);
     return { ...res.data.results[0], images };
   } catch (error) {
-    isAxiosError(error) && console.log(error.response?.data.status_message);
+    if (isAxiosError(error)) {
+      console.error(error.response?.data.status_message);
+    }
+    return undefined;
   }
 };
 export default getMainMovie;

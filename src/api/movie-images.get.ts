@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import axios from "../utils/axios";
+import { withApiKey } from "../utils/axios";
 
 type ResponseBody = {
   aspect_ratio: number;
@@ -18,10 +18,13 @@ const getImages = async (
   | undefined
 > => {
   try {
-    const res = await axios.withApiKey.get(`/movie/${movie_id}/images?include_image_language=en`);
+    const res = await withApiKey.get(`/movie/${movie_id}/images?include_image_language=en`);
     return res.data;
   } catch (error) {
-    isAxiosError(error) && console.log(error.response?.data.status_message);
+    if (isAxiosError(error)) {
+      console.error(error.response?.data.status_message);
+    return undefined;
+    }
   }
 };
 

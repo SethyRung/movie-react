@@ -29,7 +29,7 @@ const MovieCard = ({
             <span>{rating}</span>
           </div>
         </div>
-        <div className="grid grid-cols-[auto,_1fr] grid-rows-2 text-xs font-roboto gap-y-2 gap-x-3">
+        <div className="grid grid-cols-[auto_1fr] grid-rows-2 text-xs font-roboto gap-y-2 gap-x-3">
           <p className="text-grey-500">Release :</p>
           <p className="text-gray-400">{release}</p>
           <p className="text-grey-500">Language :</p>
@@ -42,7 +42,7 @@ const MovieCard = ({
           Get Tickets
         </Link> */}
         <Link
-          to={`/movie/${id}`}
+          to={`/movies/${id}`}
           className="w-full h-8 text-white rounded bg-primary-500 hover:bg-primary-600 transition-all flex items-center justify-center gap-2 text-xs tablet:text-base">
           <Icon icon="mdi-eye" width="16" />
           View Details

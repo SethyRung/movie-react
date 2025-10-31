@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainCard from "../components/movie/main-card";
 import MovieCard from "../components/movie/movie-card";
 import Tabs from "../components/tabs";
@@ -40,28 +40,29 @@ export default function Index() {
   const [mainMovie, setMainMovie] = useState<Movie | undefined>(undefined);
   const [movieList, setMovieList] = useState<MovieList>();
 
-  const loadMovieList = useCallback(async () => {
-    const movies =
-      currentTab === "nowPlaying"
-        ? await getNowPlaying()
-        : currentTab === "upcoming"
-          ? await getUpcoming()
-          : await getPopular();
-    setMovieList(movies);
-  }, [currentTab]);
-
-  const loadData = async () => {
-    const res = await getMainMovie();
-    setMainMovie(res);
-  };
-
+  
   useEffect(() => {
+    const loadData = async () => {
+      const res = await getMainMovie();
+      setTimeout(() => setMainMovie(res), 0);
+    };
+
     loadData();
   }, []);
 
   useEffect(() => {
+    const loadMovieList = async () => {
+      const movies =
+        currentTab === "nowPlaying"
+          ? await getNowPlaying()
+          : currentTab === "upcoming"
+            ? await getUpcoming()
+            : await getPopular();
+      setTimeout(() => setMovieList(movies), 0);
+    };
+
     loadMovieList();
-  }, [loadMovieList]);
+  }, [currentTab]);
 
   return (
     <div className="w-full p-4 tablet:px-16 desktop:px-52">

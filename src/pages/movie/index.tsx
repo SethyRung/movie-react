@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MovieCard from "../../components/movie/movie-card";
 import getPopular, { type ResponseBody as MovieList } from "../../api/popular.get";
 
@@ -6,18 +6,19 @@ export default function Index() {
   const [movieList, setMovieList] = useState<MovieList>();
   const [page, setPage] = useState<number>(1);
 
-  const loadData = useCallback(async () => {
-    const res = await getPopular(page);
-    if (!movieList) setMovieList(res);
-    else {
-      res?.results.unshift(...movieList!.results);
-      setMovieList(res);
-    }
-  }, [page]);
-
   useEffect(() => {
+    const loadData = async () => {
+      const res = await getPopular(page);
+      if (!movieList) {
+        setTimeout(() => setMovieList(res), 0);
+      } else {
+        res?.results.unshift(...movieList!.results);
+        setTimeout(() => setMovieList(res), 0);
+      }
+    };
+
     loadData();
-  }, [loadData]);
+  }, [page, movieList]);
 
   return (
     <div className="w-full p-4 tablet:px-16 desktop:px-52 grid gap-4 grid-cols-[repeat(auto-fit,_minmax(208px,_1fr))]">

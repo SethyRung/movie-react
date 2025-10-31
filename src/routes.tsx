@@ -1,23 +1,23 @@
-import Index from "./pages";
-import MovieIndex from "./pages/movie/index";
-import MovieDetail from "./pages/movie/[id]";
-import ComingSoon from "./pages/coming-soon.tsx";
+import { RouteObject } from "react-router-dom";
+import HomePage from "@pages/Home";
+import { MovieListPage, MovieDetailPage } from "@pages/Movies";
+import NotFoundPage from "@pages/NotFound";
 
-export const routes: { path: string; element: JSX.Element }[] = [
+export const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Index />,
+    element: <HomePage />,
   },
   {
-    path: "/movie",
-    element: <MovieIndex />,
+    path: "/movies",
+    element: <MovieListPage />,
   },
   {
-    path: "/movie/:id",
-    element: <MovieDetail />,
+    path: "/movies/:id",
+    element: <MovieDetailPage />,
   },
   {
     path: "*",
-    element: <ComingSoon />,
+    element: <NotFoundPage />,
   },
 ];

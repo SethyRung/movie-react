@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Icon } from "@iconify/react";
 import { NavLink, useLocation } from "react-router-dom";
+import { Search } from "@/components/Search";
 
 export default function NavBar() {
   const navItems = [
@@ -10,8 +11,8 @@ export default function NavBar() {
       name: "Home",
     },
     {
-      to: "/movie",
-      name: "Movie",
+      to: "/movies",
+      name: "Movies",
     },
     {
       to: "/contacts",
@@ -27,8 +28,23 @@ export default function NavBar() {
   const route = useLocation();
 
   useEffect(() => {
-    setIsNavOpen(false);
+    // Close mobile menu when route changes
+    if (isNavOpen) {
+      setTimeout(() => setIsNavOpen(false), 0);
+    }
   }, [route]);
+
+  useEffect(() => {
+    // Close mobile menu when pressing Escape key
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isNavOpen) {
+        setIsNavOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isNavOpen]);
 
   return (
     <div className="bg-tertiary-500 sticky top-0 z-[1000]">
@@ -52,19 +68,23 @@ export default function NavBar() {
             </li>
           ))}
         </ul>
-        <div className="relative hidden tablet:block">
-          <Icon
-            icon="mdi-magnify"
-            width="24"
-            className="text-grey-500 absolute left-2 top-2/4 translate-y-[-50%] search-icon"
-          />
-          <input
-            type="text"
+        <div className="hidden tablet:block">
+          <Search
             placeholder="Search here"
-            className="w-56 h-8 px-2 pl-8 bg-tertiary-500 border border-grey-500 focus:outline-none focus:border-primary-500 text-white"
+            className="w-56"
+            size="sm"
+            onSearch={(query) => {
+              // TODO: Implement search functionality
+              console.log("Search query:", query);
+            }}
           />
         </div>
-        <button onClick={() => setIsNavOpen(!isNavOpen)} className="tablet:hidden">
+        <button
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          className="tablet:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
+          aria-label={isNavOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isNavOpen}
+        >
           {isNavOpen ? (
             <Icon icon="mdi-close" width="24" color="white" />
           ) : (
@@ -73,22 +93,48 @@ export default function NavBar() {
         </button>
       </div>
       {isNavOpen && (
-        <ul className="py-2 tablet:hidden">
-          {navItems.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                className={({ isActive }) =>
-                  twMerge(
-                    "w-full h-10 flex justify-center items-center text-white text-center",
-                    isActive ? "text-primary-500" : ""
-                  )
-                }>
-                {item.name}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+        <>
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-[999] tablet:hidden transition-opacity duration-300"
+            onClick={() => setIsNavOpen(false)}
+            aria-label="Close mobile menu"
+          />
+
+          {/* Mobile menu */}
+          <div className="fixed top-14 left-0 right-0 bg-tertiary-500 shadow-lg z-[1000] tablet:hidden max-h-[calc(100vh-3.5rem)] overflow-y-auto transition-transform duration-300 ease-out">
+            <div className="px-4 py-4">
+              <Search
+                placeholder="Search here"
+                className="w-full"
+                size="sm"
+                onSearch={(query) => {
+                  // TODO: Implement search functionality
+                  console.log("Mobile search query:", query);
+                }}
+              />
+            </div>
+            <nav aria-label="Mobile navigation">
+              <ul className="py-2">
+                {navItems.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      onClick={() => setIsNavOpen(false)}
+                      className={({ isActive }) =>
+                        twMerge(
+                          "w-full h-12 flex justify-center items-center text-white text-center transition-colors hover:bg-white/10",
+                          isActive ? "text-primary-500 bg-primary-500/10" : ""
+                        )
+                      }>
+                      {item.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );

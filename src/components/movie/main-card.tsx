@@ -21,20 +21,27 @@ const MainCard = ({
   images: string[];
 }) => {
   const carouselRef = useRef<ICarouselRef>(null);
+  const [carouselReady, setCarouselReady] = useState(false);
 
   const [carouselImgLoading, setCarouselImgLoading] = useState(true);
   useEffect(() => {
-    carouselImgLoading &&
+    if (carouselImgLoading) {
       setInterval(() => {
         if (!carouselRef.current) return;
 
         if (carouselRef.current.page === carouselRef.current.pages) {
-          return carouselRef.current.select(0);
+          carouselRef.current.select(0);
+          return;
         }
 
         carouselRef.current.next();
       }, 5000);
+    }
   }, [carouselImgLoading]);
+
+  useEffect(() => {
+    setTimeout(() => setCarouselReady(true), 0);
+  }, []);
 
   const [currentValue, setCurrentValue] = useState(1);
   const prevCarouselPage = useRef(currentValue);
@@ -118,7 +125,6 @@ const MainCard = ({
           <h1 className="uppercase text-2xl tablet:text-[32px] font-bold font-redHatMono">
             {title}
           </h1>
-          <h2 className="uppercase text-base tablet:text-2xl font-redHatText"></h2>
           <p className="font-roboto text-justify text-xs tablet:text-base text-grey-500 mb-6">
             {overview}
           </p>
@@ -130,7 +136,7 @@ const MainCard = ({
           See details
         </Link>
         <div className="hidden lgMobile:block ">
-          {carouselRef.current && (
+          {carouselReady && (
             <Pagination
               currentValue={currentValue}
               onCurrentValueChange={onCurrentValueChange}

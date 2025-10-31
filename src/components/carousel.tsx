@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
-import { mergeUI } from "../utils/helpers";
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
+import { mergeUI } from "../lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
@@ -46,10 +46,10 @@ export interface ICarouselProps {
   indicators?: boolean;
   onPageChange?: (page: number) => void;
   slot: {
-    default: (item: string, index: number) => JSX.Element;
-    prev?: (onClick: () => void, disabled: boolean) => JSX.Element;
-    next?: (onClick: () => void, disabled: boolean) => JSX.Element;
-    indicator?: (onClick: (page: number) => void, page: number, active: boolean) => JSX.Element;
+    default: (item: string, index: number) => React.JSX.Element;
+    prev?: (onClick: () => void, disabled: boolean) => React.JSX.Element;
+    next?: (onClick: () => void, disabled: boolean) => React.JSX.Element;
+    indicator?: (onClick: (page: number) => void, page: number, active: boolean) => React.JSX.Element;
   };
 }
 
@@ -80,16 +80,16 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
     ui = mergeUI<ICarouselUI>(defaultUI, ui);
 
     const carouselRef = useRef<HTMLDivElement>(null);
-    useCarouselScroll(carouselRef);
+    useCarouselScroll(carouselRef as React.RefObject<HTMLElement>);
 
     const { width: carouselWidth = 0 } = useResizeObserver({
-      ref: carouselRef,
+      ref: carouselRef as React.RefObject<HTMLElement>,
       box: "border-box",
     });
 
     const itemRef = useRef<HTMLDivElement>(null);
     const { width: itemWidth = 0 } = useResizeObserver({
-      ref: itemRef,
+      ref: itemRef as React.RefObject<HTMLElement>,
       box: "border-box",
     });
 
@@ -112,26 +112,31 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
       setPages(items.length - Math.round(carouselWidth / itemWidth) + 1);
     }, [itemWidth, carouselWidth, items.length]);
 
-    const [isFirst, setIsFirst] = useState(currentPage <= 1);
-    const [isLast, setIsLast] = useState(currentPage === pages);
+    const isFirst = currentPage <= 1;
+    const isLast = currentPage === pages;
     useEffect(() => {
-      setIsFirst(currentPage <= 1);
-      setIsLast(currentPage === pages);
-      onPageChange && onPageChange(currentPage);
-    }, [currentPage, onPageChange, pages]);
+      if (onPageChange) {
+        onPageChange(currentPage);
+      }
+    }, [currentPage, onPageChange]);
 
     const onClickPrev = useCallback(() => {
-      carouselRef.current && carouselRef.current.scrollBy({ behavior: "smooth", left: -itemWidth });
+      if (carouselRef.current) {
+        carouselRef.current.scrollBy({ behavior: "smooth", left: -itemWidth });
+      }
     }, [itemWidth]);
 
     const onClickNext = useCallback(() => {
-      carouselRef.current && carouselRef.current.scrollBy({ behavior: "smooth", left: itemWidth });
+      if (carouselRef.current) {
+        carouselRef.current.scrollBy({ behavior: "smooth", left: itemWidth });
+      }
     }, [itemWidth]);
 
     const onClick = useCallback(
       (page: number) => {
-        carouselRef.current &&
+        if (carouselRef.current) {
           carouselRef.current.scrollTo({ behavior: "smooth", left: itemWidth * page - itemWidth });
+        }
       },
       [itemWidth]
     );
