@@ -4,14 +4,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-- **Start development server**: `pnpm dev` or `npm run dev` (runs on http://localhost:5173)
-- **Build for production**: `pnpm build` or `npm run build` (runs TypeScript compilation + Vite build)
-- **Preview production build**: `pnpm preview` or `npm run preview`
-- **Lint code**: `pnpm lint` or `npm run lint` (ESLint with TypeScript and React plugins)
+**Core Development:**
+- **Start development server**: `pnpm dev` (runs on http://localhost:5173)
+- **Build for production**: `pnpm build` (TypeScript compilation + Vite build)
+- **Preview production build**: `pnpm preview`
+- **Type checking**: `pnpm type-check` (TypeScript without emitting files)
+
+**Code Quality:**
+- **Lint**: `pnpm lint` (ESLint checks)
+- **Lint and fix**: `pnpm lint:fix` (Auto-fix linting issues)
+
+**Testing:**
+- **Run tests**: `pnpm test` (Vitest unit tests)
+- **Interactive test UI**: `pnpm test:ui` (Visual test runner)
+- **Coverage report**: `pnpm test:coverage` (Generate coverage report)
+- **Single test file**: `pnpm test tests/utils/cn.test.ts` (Run specific test file)
+
+**Analysis & Performance:**
+- **Bundle analysis**: `pnpm analyze` (Visual bundle size report)
+- **Performance audit**: `pnpm performance:audit` (Lighthouse audit)
+- **Security audit**: `pnpm security:audit` (Vulnerability checks)
 
 ## Environment Setup
 
-The project uses The Movie Database (TMDB) API. You need to set up environment variables:
+The project uses The Movie Database (TMDB) API. Required environment variables:
 
 1. Copy `.env.example` to `.env`
 2. Set `VITE_API_URL="https://api.themoviedb.org/3"`
@@ -19,164 +35,142 @@ The project uses The Movie Database (TMDB) API. You need to set up environment v
 
 ## Project Architecture
 
+This is a **React 19 enterprise-grade movie website** with a sophisticated **3-tier service architecture**.
+
 ### Tech Stack
 
-- **Framework**: React 18 with TypeScript
-- **Bundler**: Vite (using rolldown-vite)
-- **Styling**: Tailwind CSS v4
-- **Routing**: React Router DOM v6
-- **HTTP Client**: Axios with custom interceptors
-- **Icons**: Iconify React with MDI icons
-- **Package Manager**: pnpm (preferred) - note pnpm-workspace.yaml configuration
+- **React 19** with TypeScript 5.9 (strict mode)
+- **Vite with rolldown-vite** for ultra-fast builds
+- **Tailwind CSS v4** with custom design system
+- **TanStack Query** for server state management
+- **Zustand** for client state management
+- **React Router DOM v7** for routing
+- **Zod** for runtime validation
+- **Vitest** for testing with MSW for API mocking
 
-### Professional Directory Structure
+### Enterprise Service Architecture
 
-The project follows a **feature-based architecture** with clear separation of concerns, designed for scalability and team collaboration:
+The application implements a **3-tier service architecture** that separates concerns:
+
+1. **Base Service Layer** (`src/services/base/`):
+   - `BaseService.ts` - Abstract base class with caching, retry logic, error handling
+   - `ServiceResponse.ts` - Standardized response wrapper types
+   - `cache.ts` - Intelligent caching with TTL and cleanup
+   - `errorHandling.ts` - Comprehensive error factory and retry handlers
+
+2. **Feature Service Layer** (`src/services/movie/`, `src/services/discovery/`):
+   - `MovieService.ts` - Complete TMDB movie API integration
+   - `DiscoveryService.ts` - Movie discovery and browsing
+   - Built-in Zod validation schemas
+   - Optimized batch requests and parallel processing
+
+3. **API Client Layer** (`src/utils/axios.ts`):
+   - Three specialized Axios instances:
+     - `withApiKey` - TMDB API calls (auto-includes API key)
+     - `withAuth` - Authenticated endpoints (Bearer token)
+     - `withoutAuth` - Public API calls
+   - Comprehensive interceptors for error handling and auth
+
+### Feature-Based Architecture
+
+The project follows a **feature-based organization** rather than technical layers:
 
 ```
-src/
-├── features/                      # Feature-based modules (business logic)
-│   ├── movies/                    # Movie management feature
-│   │   ├── components/            # Movie-specific components
-│   │   │   ├── MovieCard/         # Self-contained movie card component
-│   │   │   │   ├── MovieCard.tsx
-│   │   │   │   ├── MovieCard.test.tsx
-│   │   │   │   ├── MovieCard.types.ts
-│   │   │   │   └── index.ts
-│   │   │   ├── MovieList/         # Movie listing component
-│   │   │   ├── MovieDetails/      # Movie detail view component
-│   │   │   ├── MovieSearch/       # Movie search component
-│   │   │   └── CastList/          # Cast member listing
-│   │   ├── hooks/                 # Movie-specific hooks
-│   │   │   ├── useMovies.ts       # Movie data fetching with caching
-│   │   │   ├── useMovieDetails.ts # Individual movie details
-│   │   │   ├── useFavorites.ts    # Favorites management
-│   │   │   └── useMovieSearch.ts  # Search functionality
-│   │   ├── services/              # Movie API services
-│   │   │   ├── movieApi.ts        # TMDB movie API calls
-│   │   │   └── movieCache.ts      # Movie caching strategy
-│   │   ├── stores/                # Feature-specific state management
-│   │   │   └── movieStore.ts      # Zustand store for movie state
-│   │   ├── types/                 # Movie feature types
-│   │   │   └── movie.types.ts     # Movie-related type definitions
-│   │   └── index.ts               # Feature barrel export
-│   ├── auth/                      # Authentication feature
-│   ├── search/                    # Search functionality feature
-│   └── favorites/                 # User favorites feature
-│
-├── components/                # Reusable components
-│   ├── ui/                    # Basic UI components (design system)
-│   │   ├── Button/            # Button component with variants
-│   │   ├── Input/             # Input component with validation
-│   │   ├── Modal/             # Modal/overlay component
-│   │   ├── Loading/           # Loading states and spinners
-│   │   ├── ErrorBoundary/     # Error boundary components
-│   │   └── Layout/            # Layout components
-│   └── business/              # Business logic components
-│       ├── Carousel/          # Enhanced carousel component
-│       ├── Tabs/              # Tab navigation component
-│       └── Pagination/        # Pagination component
-├── hooks/                     # Shared hooks
-│   ├── useCarousel.ts         # Carousel functionality
-│   ├── useLocalStorage.ts     # Storage utilities
-│   └── useApi.ts              # Generic API hook
-├── types/                     # Shared type definitions
-│   ├── common.types.ts        # Common application types
-│   └── api.types.ts           # API response types
-├── utils/                     # Shared utilities
-│       ├── cn.ts              # Classname utility (clsx + tailwind-merge)
-│       ├── formatting.ts      # Formatting utilities
-│       ├── validation.ts      # Validation schemas
-│       └── constants.ts       # Shared constants
-│
-├── pages/                         # Route-level page components
-│   ├── Home/                      # Homepage
-│   │   ├── HomePage.tsx           # Main homepage component
-│   │   ├── HomePage.test.tsx      # Homepage tests
-│   │   └── index.ts               # Page export
-│   ├── Movies/                    # Movie pages
-│   │   ├── MovieListPage.tsx      # Movie listing page
-│   │   ├── MovieDetailPage.tsx    # Movie detail page
-│   │   ├── MovieListPage.test.tsx # Movie listing tests
-│   │   ├── MovieDetailPage.test.tsx # Movie detail tests
-│   │   └── index.ts               # Pages export
-│   ├── NotFound/                  # 404 error page
-│   └── _app/                      # App-level components
-│       ├── App.tsx                # Main app component with providers
-│       ├── App.styles.css         # App-level styles
-│       └── index.ts               # App export
-
-├── assets/                        # Static assets
-│   ├── images/                    # Image files
-│   ├── icons/                     # Icon files
-│   └── styles/                    # Global styles
-│       ├── variables.css          # CSS custom properties
-│       └── themes.css             # Theme definitions
-
-└── tests/                         # Global test configuration
-    ├── setup.ts                   # Test setup and configuration
-    ├── mocks/                     # API mocks and fixtures
-    │   └── handlers.ts            # MSW handlers for API mocking
-    └── utils/                     # Test utilities
-        ├── test-utils.tsx         # Custom render functions
-        └── render-with-providers.tsx # Test providers wrapper
+src/features/movies/
+├── components/           # Movie-specific UI components
+├── hooks/               # Movie-specific React hooks
+├── services/            # Movie API services
+├── stores/              # Zustand state stores
+└── types/               # TypeScript definitions
 ```
 
-### Architecture Principles
+### Path Aliases
 
-**Feature-Based Organization**: Components are organized by business features rather than technical layers, making it easier to find and modify related functionality.
+Comprehensive alias system configured in Vite and TypeScript:
+- `@/` - src/
+- `@components/` - src/components/
+- `@features/` - src/features/
+- `@pages/` - src/pages/
+- `@hooks/` - src/hooks/
+- `@types/` - src/types/
+- `@utils/` - src/utils/
+- `@assets/` - src/assets/
+- `@tests/` - tests/ (test files moved from src/)
 
-**Separation of Concerns**: Clear boundaries between UI components, business logic, data fetching, and state management.
+### State Management Strategy
 
-**Scalable State Management**: Zustand for feature-specific state with persistence and devtools integration.
+**Hybrid Approach:**
+- **TanStack Query** for server state (API caching, background updates)
+- **Zustand** for client state (UI state, user preferences)
+- **Service Layer** handles business logic and data transformation
+- **Component-level state** for local UI interactions
 
-**Type Safety**: Comprehensive TypeScript usage with strict type checking throughout the application.
+### Testing Infrastructure
 
-**Testing Infrastructure**: Complete testing setup with Vitest, React Testing Library, and MSW for API mocking.
+**Complete Testing Setup:**
+- **Vitest** as test runner with jsdom environment
+- **React Testing Library** for component testing
+- **MSW (Mock Service Worker)** for API mocking
+- **Coverage thresholds** set at 70% for all metrics
+- Tests located in `tests/` directory mirroring src/ structure
 
-**Developer Experience**: Path aliases, hot reloading, comprehensive tooling, and clear documentation.
+### Build & Performance Optimizations
 
-### API Architecture
+**Bundle Splitting Strategy:**
+- Manual chunk splitting by feature and vendor libraries
+- Separate chunks for React ecosystem, UI libraries, features, and pages
+- Code splitting for routes and components
+- Bundle size analysis tools integrated
 
-The project uses a structured API layer with three Axios instances in `src/utils/axios.ts`:
+**Performance Features:**
+- Intelligent caching in service layer with configurable TTL
+- Image optimization with responsive loading
+- Performance monitoring with custom hooks
+- Lighthouse CI integration
 
-- `withApiKey`: For TMDB API calls (includes api_key parameter)
-- `withAuth`: For authenticated endpoints (includes Bearer token)
-- `withoutAuth`: For public API calls without authentication
+### Styling System
 
-API functions are organized by endpoint (e.g., `main-movie.get.ts`, `now-playing.get.ts`) and include proper TypeScript types for responses.
+**Tailwind CSS v4 Configuration:**
+- Custom color system (primary, secondary, tertiary, grey variants)
+- Responsive breakpoints: lgMobile (480px), tablet (844px), desktop (1280px)
+- Dark/light theme support with CSS custom properties
+- Custom scrollbar styling
 
-### Component Architecture
+### Type Safety & Validation
 
-- **Layout**: DefaultLayout wraps all pages with Navbar and Footer
-- **Pages**: Route components in `src/pages/` directory
-- **Components**: Reusable UI components with a focus on movie-related components
-- **Routing**: Centralized in `src/routes.tsx` with React Router setup
+**Comprehensive TypeScript Usage:**
+- Strict TypeScript configuration
+- Zod schemas for API response validation
+- Service layer validates all external data
+- Generic types for reusable service patterns
 
-### Key Features
+### Key Architectural Patterns
 
-- **Movie discovery**: Popular, now playing, and upcoming movies
-- **Movie details**: Detailed view with images, cast, credits, videos
-- **Responsive design**: Mobile-first approach with Tailwind CSS
-- **Carousel functionality**: Custom carousel with scroll controls
-- **Tab navigation**: Dynamic content switching on homepage
+1. **Service Layer Pattern**: Clean separation between UI and data fetching
+2. **Repository Pattern**: Services encapsulate API interactions
+3. **Factory Pattern**: Error handling and service creation
+4. **Observer Pattern**: React hooks for state management
+5. **Strategy Pattern**: Multiple Axios instances for different auth needs
 
-### Styling Approach
+### Package Manager
 
-- Uses Tailwind CSS v4 with custom color system (secondary-500, tertiary-500, grey-500)
-- Responsive breakpoints: tablet, desktop, lgMobile
-- Component styling uses utility classes with some inline conditional styling
-- Custom components like Tabs, Carousel, MovieCard have their own styling logic
+- **pnpm** is the preferred package manager
+- Configured via pnpm-workspace.yaml with MSW override
+- Use `pnpm install` for dependencies
 
-### TypeScript Configuration
+### Testing Commands
 
-- Strict TypeScript enabled with comprehensive linting rules
-- Composite project setup with separate configs for app and node environments
-- JSX configured for React 18 with `react-jsx` transform
+The test files have been migrated from `src/` to `tests/` directory. When running tests:
+- Use relative paths from project root: `pnpm test tests/utils/`
+- All tests maintain the same structure and functionality
+- Test utilities are located at `tests/test-utils.tsx`
 
-### Development Notes
+### Important Implementation Details
 
-- The project uses pnpm as the package manager (see pnpm-workspace.yaml)
-- Vite is configured with rolldown for faster builds
-- ESLint includes Prettier integration for consistent code formatting
-- Environment variables are prefixed with `VITE_` for Vite compatibility
+- The service layer includes **memory leak prevention** with cleanup methods
+- **Retry logic** with exponential backoff for failed requests
+- **Batch processing** for multiple movie requests
+- **Cache invalidation** strategies
+- **Comprehensive error handling** with typed error responses
+- **Accessibility** prioritized in navigation components
+- **Mobile-first responsive design** throughout
