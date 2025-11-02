@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
-import { useMovieStore } from './movieStore';
-import type { Movie } from '@/types/api.types';
+import { useMovieStore } from '@features/movies/stores/movieStore';
+import type { Movie } from '@types/api.types';
 
 // Mock movie data
 const mockMovies: Movie[] = [

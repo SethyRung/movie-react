@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import { Modal } from './Modal';
-import Button from '@/components/ui/Button/Button';
+import { render } from "../../../test-utils";
+import { Modal } from "@components/ui/Modal/Modal";
+import Button from "@components/ui/Button/Button";
 
 import React from 'react';
 

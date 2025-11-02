@@ -6,8 +6,11 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    setupFiles: ['./src/tests/setup.ts'],
+    setupFiles: ['./tests/setup.ts'],
     globals: true,
+    include: [
+      'tests/**/*.{test,spec}.{ts,tsx}',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -23,6 +26,7 @@ export default defineConfig({
       ],
       include: [
         'src/**/*.{ts,tsx,js,jsx}',
+        'tests/**/*.{ts,tsx}',
       ],
       thresholds: {
         global: {

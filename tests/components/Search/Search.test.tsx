@@ -1,7 +1,8 @@
+import React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { screen, fireEvent } from "@testing-library/react";
-import { render } from "@tests/test-utils";
-import Search from "./Search";
+import { render } from "../../test-utils";
+import Search from "@components/Search/Search";
 
 // Mock Icon component
 interface MockIconProps {

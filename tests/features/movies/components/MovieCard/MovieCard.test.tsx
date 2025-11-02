@@ -1,7 +1,8 @@
+import React from "react";
 import { describe, it, expect } from "vitest";
 import { screen } from "@testing-library/react";
-import { render } from "@tests/test-utils";
-import MovieCard from "./MovieCard";
+import { render } from "../../../../test-utils";
+import MovieCard from "@features/movies/components/MovieCard/MovieCard";
 
 const mockMovie = {
   id: 1,

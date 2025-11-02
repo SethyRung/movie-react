@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { withApiKey } from './axios';
+import { withApiKey } from '../../src/utils/axios';
 
 // Mock axios
 vi.mock('axios', async () => {

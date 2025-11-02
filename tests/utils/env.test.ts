@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { envConfig } from './env';
+import { envConfig } from '../../src/utils/env';
 
 describe('Environment configuration', () => {
   it('should have API_URL configured', () => {

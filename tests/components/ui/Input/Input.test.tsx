@@ -1,8 +1,9 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
+import { render } from "../../../test-utils";
 import { useState } from 'react';
-import Input from './Input';
+import Input from "@components/ui/Input/Input";
 
 describe('Input', () => {
   it('renders with basic props', () => {

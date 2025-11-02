@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import Button from './Button';
+import { render } from "../../../test-utils";
+import Button from "@components/ui/Button/Button";
 
 describe('Button', () => {
   it('renders with default props', () => {

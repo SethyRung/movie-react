@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import HomePage from './HomePage';
+import { render } from "../../test-utils";
+import HomePage from "@pages/Home/HomePage";
 
 // Mock Icon component
 vi.mock('@iconify/react/dist/iconify.js', () => ({

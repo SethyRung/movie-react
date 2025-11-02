@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import MovieListPage from './MovieListPage';
+import { render } from "../../test-utils";
+import MovieListPage from "@pages/Movies/MovieListPage";
 
 // Mock MovieCard component and useMovieStore
 vi.mock('@features/movies', () => ({

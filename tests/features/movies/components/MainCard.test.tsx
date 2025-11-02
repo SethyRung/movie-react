@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import MainCard from './MainCard';
+import { render } from "../../../test-utils";
+import MainCard from "@features/movies/components/MainCard/MainCard";
 
 // Mock the carousel component
 interface MockCarouselProps {

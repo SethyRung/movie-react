@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import CastCard from './CastCard';
+import { render } from "../../../../test-utils";
+import CastCard from "@features/movies/components/CastCard/CastCard";
 
 // Mock the skeleton component
 interface MockSkeletonProps {

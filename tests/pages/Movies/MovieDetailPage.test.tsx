@@ -1,7 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import { render } from '@tests/test-utils';
-import MovieDetailPage from './MovieDetailPage';
+import { render } from "../../test-utils";
+import MovieDetailPage from "@pages/Movies/MovieDetailPage";
 
 // Mock useParams
 vi.mock('react-router-dom', async () => {
