@@ -19,6 +19,12 @@ const mockCast = {
   character: 'Main Character',
 };
 
+const mockCastWithoutProfile = {
+  profile: null,
+  name: 'Jane Smith',
+  character: 'Supporting Character',
+};
+
 describe('CastCard', () => {
   it('renders cast information correctly', () => {
     render(<CastCard {...mockCast} />);
@@ -55,6 +61,16 @@ describe('CastCard', () => {
 
     const characterElement = screen.getByText('Main Character');
     expect(characterElement).toHaveClass('text-grey-500', 'font-roboto', 'font-bold');
+  });
+
+  it('shows skeleton when no profile picture is provided', () => {
+    render(<CastCard {...mockCastWithoutProfile} />);
+
+    // Should show skeleton instead of image when profile is null
+    expect(screen.getByTestId('skeleton')).toBeInTheDocument();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('Supporting Character')).toBeInTheDocument();
   });
 
   it('has correct aspect ratio and dimensions', () => {

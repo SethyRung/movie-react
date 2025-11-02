@@ -3,10 +3,19 @@ import MainCard from "../components/movie/main-card";
 import MovieCard from "../components/movie/movie-card";
 import Tabs from "../components/tabs";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import getMainMovie, { type ResponseBody as Movie } from "../api/main-movie.get";
-import getNowPlaying, { type ResponseBody as MovieList } from "../api/now-playing.get";
-import getUpcoming from "../api/upcoming.get";
-import getPopular from "../api/popular.get";
+import { movieAPI } from "../services";
+import { isSuccessResponse } from "../services/base/ServiceResponse";
+import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
+
+type MovieImage = {
+  aspect_ratio: number;
+  file_path: string;
+  height: number;
+  iso_639_1?: string | null;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+};
 
 export default function Index() {
   const tabs = [
@@ -37,14 +46,22 @@ export default function Index() {
     }
   };
 
-  const [mainMovie, setMainMovie] = useState<Movie | undefined>(undefined);
-  const [movieList, setMovieList] = useState<MovieList>();
+  const [mainMovie, setMainMovie] = useState<DiscoveryMovie & { images?: { posters: MovieImage[]; backdrops: MovieImage[] } } | undefined>(undefined);
+  const [movieList, setMovieList] = useState<DiscoveryPaginatedResponse>();
 
-  
+
   useEffect(() => {
     const loadData = async () => {
-      const res = await getMainMovie();
-      setTimeout(() => setMainMovie(res), 0);
+      const response = await movieAPI.discovery.getMainMovie({ includeImages: true });
+      if (isSuccessResponse(response) && response.data.popular?.results?.length > 0) {
+        const firstMovie = response.data.popular.results[0];
+        // Add images to the movie object from the response
+        const movieWithImages = {
+          ...firstMovie,
+          images: response.data.images || { posters: [], backdrops: [] }
+        };
+        setTimeout(() => setMainMovie(movieWithImages), 0);
+      }
     };
 
     loadData();
@@ -52,13 +69,18 @@ export default function Index() {
 
   useEffect(() => {
     const loadMovieList = async () => {
-      const movies =
-        currentTab === "nowPlaying"
-          ? await getNowPlaying()
-          : currentTab === "upcoming"
-            ? await getUpcoming()
-            : await getPopular();
-      setTimeout(() => setMovieList(movies), 0);
+      let response;
+      if (currentTab === "nowPlaying") {
+        response = await movieAPI.discovery.getNowPlayingMovies();
+      } else if (currentTab === "upcoming") {
+        response = await movieAPI.discovery.getUpcomingMovies();
+      } else {
+        response = await movieAPI.discovery.getPopularMovies();
+      }
+
+      if (isSuccessResponse(response)) {
+        setTimeout(() => setMovieList(response.data), 0);
+      }
     };
 
     loadMovieList();

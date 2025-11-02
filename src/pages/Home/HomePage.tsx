@@ -3,7 +3,7 @@ import { MainCard, MovieCard } from "@features/movies";
 import Tabs from "@/components/tabs";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useMainMovie, useNowPlayingMovies, useUpcomingMovies, usePopularMovies } from "@features/movies/hooks";
-import { Movie } from "@/types/api.types";
+import { DiscoveryMovie } from "@/services/discovery/validation";
 
 export default function HomePage() {
   const tabs = [
@@ -58,11 +58,11 @@ export default function HomePage() {
   const movieList = getMovieList();
 
   // Transform main movie data for MainCard
-  const mainMovie = mainMovieData && {
-    id: mainMovieData.id,
+  const mainMovie = mainMovieData && mainMovieData.popular?.results?.[0] && {
+    id: mainMovieData.popular.results[0].id,
     genre: "", // API doesn't include genre names directly
-    title: mainMovieData.original_title,
-    overview: mainMovieData.overview,
+    title: mainMovieData.popular.results[0].original_title,
+    overview: mainMovieData.popular.results[0].overview,
     images: mainMovieData.images?.posters
       ?.slice(0, 6)
       ?.map((img: { file_path: string }) => `https://image.tmdb.org/t/p/original${img.file_path}`) || [],
@@ -75,7 +75,7 @@ export default function HomePage() {
           id={mainMovie.id}
           genre={mainMovie.genre}
           title={mainMovie.title}
-          overview={mainMovie.overview}
+          overview={mainMovie.overview || ''}
           images={mainMovie.images}
         />
       )}
@@ -105,15 +105,15 @@ export default function HomePage() {
       <div
         className="w-full h-fit bg-tertiary-500 p-4 flex overflow-x-scroll"
         ref={parentMovieCardRef}>
-        {movieList?.results?.map((movie: Movie) => (
+        {movieList?.results?.map((movie: DiscoveryMovie) => (
           <div className="w-52 flex-shrink-0 bg-secondary-500" key={movie.id}>
             <MovieCard
               id={movie.id}
-              images={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+              images={movie.poster_path ? `https://image.tmdb.org/t/p/original/${movie.poster_path}` : ''}
               title={movie.original_title}
               release={movie.release_date}
-              rating={movie?.vote_average.toFixed(2)}
-              language={movie.original_language.toLocaleUpperCase()}
+              rating={movie?.vote_average?.toFixed(2) || '0.0'}
+              language={movie.original_language?.toLocaleUpperCase() || ''}
             />
           </div>
         ))}

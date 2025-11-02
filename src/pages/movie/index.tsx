@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 import MovieCard from "../../components/movie/movie-card";
-import getPopular, { type ResponseBody as MovieList } from "../../api/popular.get";
+import { movieAPI } from "../../services";
+import { isSuccessResponse } from "../../services/base/ServiceResponse";
+import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
 
 export default function Index() {
-  const [movieList, setMovieList] = useState<MovieList>();
+  const [movieList, setMovieList] = useState<DiscoveryPaginatedResponse>();
   const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     const loadData = async () => {
-      const res = await getPopular(page);
-      if (!movieList) {
-        setTimeout(() => setMovieList(res), 0);
-      } else {
-        res?.results.unshift(...movieList!.results);
-        setTimeout(() => setMovieList(res), 0);
+      const response = await movieAPI.discovery.getPopularMovies({ page });
+      if (isSuccessResponse(response)) {
+        if (!movieList) {
+          setTimeout(() => setMovieList(response.data), 0);
+        } else {
+          const newData = {
+            ...response.data,
+            results: [...movieList.results, ...response.data.results]
+          };
+          setTimeout(() => setMovieList(newData), 0);
+        }
       }
     };
 
@@ -22,7 +29,7 @@ export default function Index() {
 
   return (
     <div className="w-full p-4 tablet:px-16 desktop:px-52 grid gap-4 grid-cols-[repeat(auto-fit,_minmax(208px,_1fr))]">
-      {movieList?.results.map((movie) => (
+      {movieList?.results.map((movie: DiscoveryMovie) => (
         <div className="w-full bg-tertiary-500" key={movie.id}>
           <MovieCard
             id={movie.id}

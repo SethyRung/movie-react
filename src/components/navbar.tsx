@@ -32,7 +32,7 @@ export default function NavBar() {
     if (isNavOpen) {
       setTimeout(() => setIsNavOpen(false), 0);
     }
-  }, [route]);
+  }, [route, isNavOpen]);
 
   useEffect(() => {
     // Close mobile menu when pressing Escape key

@@ -48,6 +48,12 @@ vi.mock('@features/movies/hooks', () => ({
           name: 'Test Actor 2',
           character: 'Supporting Character',
           profile_path: '/actor2.jpg'
+        },
+        {
+          id: 3,
+          name: 'Test Actor 3',
+          character: 'Background Character',
+          profile_path: null
         }
       ],
       crew: [
@@ -125,6 +131,10 @@ describe('MovieDetailPage', () => {
     expect(screen.getByText('Cast')).toBeInTheDocument();
     expect(screen.getByText('Test Actor 1')).toBeInTheDocument();
     expect(screen.getByText('Main Character')).toBeInTheDocument();
+    expect(screen.getByText('Test Actor 2')).toBeInTheDocument();
+    expect(screen.getByText('Supporting Character')).toBeInTheDocument();
+    expect(screen.getByText('Test Actor 3')).toBeInTheDocument();
+    expect(screen.getByText('Background Character')).toBeInTheDocument();
   });
 
   it('renders crew information', () => {

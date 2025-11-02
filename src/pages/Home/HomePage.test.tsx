@@ -12,10 +12,16 @@ vi.mock('@iconify/react/dist/iconify.js', () => ({
 vi.mock('@features/movies/hooks', () => ({
   useMainMovie: () => ({
     data: {
-      id: 1,
-      original_title: 'Test Movie',
-      overview: 'Test overview',
-      genres: [{ id: 1, name: 'Action' }],
+      popular: {
+        results: [
+          {
+            id: 1,
+            original_title: 'Test Movie',
+            overview: 'Test overview',
+            genres: [{ id: 1, name: 'Action' }],
+          }
+        ]
+      },
       images: {
         posters: [
           { file_path: '/poster1.jpg', width: 500, height: 750 },

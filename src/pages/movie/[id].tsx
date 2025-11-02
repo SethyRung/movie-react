@@ -2,38 +2,46 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import CastCard from "../../components/movie/cast-card";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import getMovieDetail, { type ResponseBody as MovieDetail } from "../../api/movie-detail.get";
-import getVideos from "../../api/movie-videos.get";
-import getMovieCredits, { type ResponseBody as Credits } from "../../api/movie-credits.get";
-import getKeyword, { type ResponseBody as Keywords } from "../../api/movie-keywords.get";
+import { movieAPI } from "../../services";
+import { isSuccessResponse } from "../../services/base/ServiceResponse";
+import { MovieDetails, MovieVideo, CastMember, CrewMember, MovieKeyword } from "@/services/movie/validation";
 
 export default function Index() {
   const { id: movieId } = useParams();
 
-  const [movie, setMovie] = useState<MovieDetail>();
+  const [movie, setMovie] = useState<MovieDetails>();
   const [movieTrailerURL, setMovieTrailerURL] = useState<string>("");
-  const [credits, setCredits] = useState<Credits>();
-  const [keywords, setKeywords] = useState<Keywords>();
+  const [credits, setCredits] = useState<{ cast: CastMember[]; crew: CrewMember[] }>();
+  const [keywords, setKeywords] = useState<{ keywords: MovieKeyword[] }>();
 
   useEffect(() => {
     (async () => {
       if (!movieId || isNaN(parseInt(movieId))) return;
       const movie_id = parseInt(movieId);
 
-      const movie = await getMovieDetail(movie_id);
-      setMovie(movie);
+      // Get complete movie data in one call
+      const movieResponse = await movieAPI.movie.getCompleteMovieData(movie_id, {
+        includeCredits: true,
+        includeVideos: true,
+        includeKeywords: true
+      });
 
-      const movieVideos = await getVideos(movie_id);
-      const video = movieVideos?.results.find((v) => v.site === "YouTube" && v.type === "Trailer");
-      if (video) {
-        setMovieTrailerURL(`https://www.youtube.com/watch?v=${video.key}`);
+      if (isSuccessResponse(movieResponse)) {
+        const movieData = movieResponse.data;
+        setMovie(movieData);
+
+        // Find trailer from videos
+        if (movieData.videos?.results) {
+          const video = movieData.videos.results.find((v: MovieVideo) => v.site === "YouTube" && v.type === "Trailer");
+          if (video) {
+            setMovieTrailerURL(`https://www.youtube.com/watch?v=${video.key}`);
+          }
+        }
+
+        // Set credits and keywords
+        setCredits(movieData.credits);
+        setKeywords(movieData.keywords);
       }
-
-      const credits = await getMovieCredits(movie_id);
-      setCredits(credits);
-
-      const keywords = await getKeyword(movie_id);
-      setKeywords(keywords);
     })();
   }, [movieId]);
 
@@ -63,7 +71,7 @@ export default function Index() {
               {movie?.original_title}
             </h1>
             <p className="text-grey-500 text-sm font-redHatText mt-2">
-              {`${movie?.release_date} (${movie?.original_language.toUpperCase()}) ${movie?.genres.map((m) => m.name).join(", ")} ${movie?.runtime && Math.floor(movie?.runtime / 60)}h ${movie?.runtime && Math.floor(movie?.runtime % 60)}mn`}
+              {`${movie?.release_date} (${movie?.original_language?.toUpperCase() || ''}) ${movie?.genres?.map((m: { id: number; name: string }) => m.name).join(", ")} ${movie?.runtime ? Math.floor(movie.runtime / 60) + 'h ' + Math.floor(movie.runtime % 60) + 'mn' : ''}`}
             </p>
           </div>
           <div className="flex items-center gap-7">
@@ -83,8 +91,8 @@ export default function Index() {
             <p className="mt-2 text-sm text-grey-500 text-justify">{movie?.overview}</p>
           </div>
           <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-4">
-            {credits?.crew.map(
-              (c, i) =>
+            {credits?.crew?.map(
+              (c: CrewMember, i: number) =>
                 i < 12 && (
                   <div className="w-full break-all" key={`${i}-${c.name}`}>
                     <h2 className="text-white font-redHatText font-bold text-sm mb-2">{c.name}</h2>
@@ -118,11 +126,11 @@ export default function Index() {
         <div
           className="w-full h-fit pb-4 flex gap-4 overflow-x-scroll overflow-y-hidden"
           ref={castCardRef}>
-          {credits?.cast.map((c, i) => (
+          {credits?.cast?.map((c: CastMember, i: number) => (
             <CastCard
               profile={`https://image.tmdb.org/t/p/original/${c.profile_path}`}
               name={c.name}
-              character={c.character}
+              character={c.character || ''}
               key={`${i}-${c.name}`}
             />
           ))}
@@ -135,14 +143,14 @@ export default function Index() {
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Original Language</h1>
-              <p className="text-grey-500 text-xs">{movie?.original_language.toUpperCase()}</p>
+              <p className="text-grey-500 text-xs">{movie?.original_language?.toUpperCase() || ''}</p>
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Revenue</h1>
               <p className="text-grey-500 text-xs">
-                {movie?.budget &&
+                {movie?.revenue &&
                   Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-                    movie?.revenue
+                    movie.revenue
                   )}
               </p>
             </div>
@@ -160,7 +168,7 @@ export default function Index() {
             <h1>KeyWord</h1>
             <div className="mt-4 flex flex-wrap gap-2">
               {keywords?.keywords.map(
-                (k, i) =>
+                (k: MovieKeyword, i: number) =>
                   i < 6 && (
                     <div className="w-fit py-2 px-4 bg-secondary-500 rounded-md" key={k.id}>
                       {k.name}

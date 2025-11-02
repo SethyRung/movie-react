@@ -1,5 +1,5 @@
 export interface CastCardProps {
-  profile: string;
+  profile: string | null;
   name: string;
   character: string;
 }

@@ -1,49 +1,85 @@
 import { useQuery } from '@tanstack/react-query';
-import getPopular from '@/api/popular.get';
-import getNowPlaying from '@/api/now-playing.get';
-import getUpcoming from '@/api/upcoming.get';
+import { discoveryService } from '@/services';
 import { useMovieStore } from '../stores/movieStore';
+import { ServiceResponse } from '@/services';
+import { DiscoveryPaginatedResponse } from '@/services/discovery/validation';
 import { Movie } from '@/types/api.types';
 
 export function useMovies(category: 'popular' | 'now-playing' | 'upcoming', page: number = 1) {
   const { setMovies, setLoading, setError, setTotalPages, setCurrentPage } = useMovieStore();
-
-  const getApiFunction = () => {
-    switch (category) {
-      case 'now-playing':
-        return getNowPlaying;
-      case 'upcoming':
-        return getUpcoming;
-      case 'popular':
-      default:
-        return getPopular;
-    }
-  };
 
   return useQuery({
     queryKey: ['movies', category, page],
     queryFn: async () => {
       setLoading(true);
       try {
-        const apiFunction = getApiFunction();
-        const response = await apiFunction(page);
+        let response: ServiceResponse<DiscoveryPaginatedResponse>;
 
-        if (!response) {
-          throw new Error('Failed to fetch movies');
+        switch (category) {
+          case 'now-playing':
+            response = await discoveryService.getNowPlayingMovies({ page });
+            break;
+          case 'upcoming':
+            response = await discoveryService.getUpcomingMovies({ page });
+            break;
+          case 'popular':
+          default:
+            response = await discoveryService.getPopularMovies({ page });
+            break;
         }
 
-        const moviesData = response.results;
+        if (!response.success || !response.data) {
+          throw new Error(response.error?.message || 'Failed to fetch movies');
+        }
+
+        const moviesData = response.data.results;
 
         if (page === 1) {
-          setMovies(moviesData as Movie[]);
+          setMovies(moviesData.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster_path: movie.poster_path || undefined,
+            backdrop_path: movie.backdrop_path || undefined,
+            overview: movie.overview || '',
+            release_date: movie.release_date || '',
+            vote_average: movie.vote_average,
+            vote_count: movie.vote_count,
+            popularity: movie.popularity || 0,
+            original_language: movie.original_language || '',
+            original_title: movie.original_title || '',
+            genre_ids: movie.genre_ids || [],
+            adult: movie.adult || false,
+            video: movie.video || false,
+          })));
         } else {
-          setMovies((prev) => [...prev, ...moviesData]);
+          setMovies((prev: Movie[]) => [...prev, ...moviesData.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster_path: movie.poster_path || undefined,
+            backdrop_path: movie.backdrop_path || undefined,
+            overview: movie.overview || '',
+            release_date: movie.release_date || '',
+            vote_average: movie.vote_average,
+            vote_count: movie.vote_count,
+            popularity: movie.popularity || 0,
+            original_language: movie.original_language || '',
+            original_title: movie.original_title || '',
+            genre_ids: movie.genre_ids || [],
+            adult: movie.adult || false,
+            video: movie.video || false,
+          }))]);
         }
 
-        setTotalPages(response.total_pages || 1);
+        setTotalPages(response.data.total_pages || 1);
         setCurrentPage(page);
 
-        return response;
+        // Transform to legacy format for compatibility
+        return {
+          results: moviesData,
+          page: response.data.page,
+          total_pages: response.data.total_pages,
+          total_results: response.data.total_results,
+        };
       } catch (error) {
         setError(error instanceof Error ? error.message : 'Failed to fetch movies');
         throw error;

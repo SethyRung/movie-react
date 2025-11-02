@@ -3,7 +3,7 @@ import { CastCard } from "@features/movies";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useMovieDetails, useMovieCredits, useMovieVideos } from "@features/movies/hooks";
-import { Cast, Crew } from "@/types/api.types";
+import { MovieVideo, CastMember, CrewMember } from "@/services/movie/validation";
 
 export default function MovieDetailPage() {
   const { id: movieId } = useParams();
@@ -15,7 +15,7 @@ export default function MovieDetailPage() {
 
   // Find trailer URL
   const trailer = videos?.results?.find(
-    (v) => v.site === "YouTube" && v.type === "Trailer"
+    (v: MovieVideo) => v.site === "YouTube" && v.type === "Trailer"
   );
   const movieTrailerURL = trailer
     ? `https://www.youtube.com/watch?v=${trailer.key}`
@@ -55,7 +55,7 @@ export default function MovieDetailPage() {
               {movie?.original_title}
             </h1>
             <p className="text-grey-500 text-sm font-redHatText mt-2">
-              {`${movie?.release_date} (${movie?.original_language.toUpperCase()}) ${movie?.genres?.map((m: { name: string }) => m.name).join(", ")} ${movie?.runtime && Math.floor(movie?.runtime / 60)}h ${movie?.runtime && Math.floor(movie?.runtime % 60)}mn`}
+              {`${movie?.release_date} (${movie?.original_language?.toUpperCase() || ''}) ${movie?.genres?.map((m: { name: string }) => m.name).join(", ")} ${movie?.runtime && Math.floor(movie?.runtime / 60)}h ${movie?.runtime && Math.floor(movie?.runtime % 60)}mn`}
             </p>
           </div>
           <div className="flex items-center gap-7">
@@ -76,7 +76,7 @@ export default function MovieDetailPage() {
           </div>
           <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-4">
             {credits?.crew?.map(
-              (c: Crew, i: number) =>
+              (c: CrewMember, i: number) =>
                 i < 12 && (
                   <div className="w-full break-all" key={`${i}-${c.name}`}>
                     <h2 className="text-white font-redHatText font-bold text-sm mb-2">{c.name}</h2>
@@ -112,11 +112,11 @@ export default function MovieDetailPage() {
         <div
           className="w-full h-fit pb-4 flex gap-4 overflow-x-scroll overflow-y-hidden"
           ref={castCardRef}>
-          {credits?.cast?.map((c: Cast, i: number) => (
+          {credits?.cast?.map((c: CastMember, i: number) => (
             <CastCard
-              profile={`https://image.tmdb.org/t/p/original/${c.profile_path}`}
+              profile={c.profile_path ? `https://image.tmdb.org/t/p/original/${c.profile_path}` : null}
               name={c.name}
-              character={c.character}
+              character={c.character || ''}
               key={`${i}-${c.name}`}
             />
           ))}
@@ -129,7 +129,7 @@ export default function MovieDetailPage() {
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Original Language</h1>
-              <p className="text-grey-500 text-xs">{movie?.original_language.toUpperCase()}</p>
+              <p className="text-grey-500 text-xs">{movie?.original_language?.toUpperCase() || ''}</p>
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Revenue</h1>

@@ -11,7 +11,7 @@ const CastCard: React.FC<CastCardProps> = ({
 
   return (
     <div className="w-36 flex-shrink-0 bg-tertiary-500 rounded-lg aspect-[9_/_16] flex flex-col">
-      {isLoadImgSuccess ? (
+      {isLoadImgSuccess && profile ? (
         <img
           src={profile}
           alt={`${name}_profile`}
