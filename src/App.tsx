@@ -1,16 +1,24 @@
 import { Route, Routes } from "react-router-dom";
-import DefaultLayout from "./layouts/default";
+import AppHeader from "@components/AppHeader";
+import AppFooter from "@components/AppFooter";
+import ScrollSmootherWrapper from "./components/ScrollSmootherWrapper";
 import { routes } from "./routes";
 
 function App() {
   return (
-    <DefaultLayout>
-      <Routes>
-        {routes.map((route) => (
-          <Route path={route.path} element={route.element} key={route.path} />
-        ))}
-      </Routes>
-    </DefaultLayout>
+    <div className="bg-tertiary-500 relative">
+      <AppHeader />
+      <ScrollSmootherWrapper>
+        <div className="pt-14">
+          <Routes>
+            {routes.map((route) => (
+              <Route path={route.path} element={route.element} key={route.path} />
+            ))}
+          </Routes>
+        </div>
+        <AppFooter />
+      </ScrollSmootherWrapper>
+    </div>
   );
 }
 

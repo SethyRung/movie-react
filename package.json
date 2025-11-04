@@ -18,6 +18,7 @@
     "security:audit": "pnpm audit --audit-level moderate"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@iconify-icons/mdi": "^1.2.48",
     "@iconify/react": "^6.0.2",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.548.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

@@ -37,17 +37,17 @@ export default function NavBar() {
   useEffect(() => {
     // Close mobile menu when pressing Escape key
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isNavOpen) {
+      if (event.key === "Escape" && isNavOpen) {
         setIsNavOpen(false);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isNavOpen]);
 
   return (
-    <div className="bg-tertiary-500 sticky top-0 z-[1000]">
+    <div className="bg-black fixed top-0 w-full z-1000">
       <div className="h-14 px-4 tablet:px-16 desktop:px-52 flex justify-between items-center">
         <img src="/assets/logo.svg" alt="logo" />
         <ul className="hidden tablet:flex justify-between items-center gap-8 text-white">
@@ -83,8 +83,7 @@ export default function NavBar() {
           onClick={() => setIsNavOpen(!isNavOpen)}
           className="tablet:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
           aria-label={isNavOpen ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={isNavOpen}
-        >
+          aria-expanded={isNavOpen}>
           {isNavOpen ? (
             <Icon icon="mdi-close" width="24" color="white" />
           ) : (

@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Red+Hat+Mono:ital,wght@0,300..700;1,300..700&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-background: hsl(0 0% 100%);
   --color-foreground: hsl(222.2 84% 4.9%);
@@ -94,10 +98,6 @@
   --color-grey-700: #3a3e48;
   --color-grey-800: #252831;
   --color-grey-900: #101219;
-
-  --breakpoint-lgMobile: 480px;
-  --breakpoint-tablet: 844px;
-  --breakpoint-desktop: 1280px;
 }
 
 ::-webkit-scrollbar {
@@ -122,12 +122,12 @@
   background-color: #4b5563;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Hide scrollbar for specific elements while keeping functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
