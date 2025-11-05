@@ -71,8 +71,8 @@ export const prefetchNotFoundPage = () => {
 
 // Critical components (non-lazy)
 export const CriticalComponents = {
-  Navbar: lazy(() => import('@/components/navbar')),
-  Footer: lazy(() => import('@/components/footer')),
+  Navbar: lazy(() => import('@/components/AppHeader')),
+  Footer: lazy(() => import('@/components/AppFooter')),
 };
 
 export default {
