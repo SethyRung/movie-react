@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import CastCard from "../../components/movie/cast-card";
+import CastCard from "@/features/movies/components/CastCard";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { movieAPI } from "../../services";

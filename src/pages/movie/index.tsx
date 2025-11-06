@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MovieCard from "../../components/movie/movie-card";
+import MovieCard from "@/features/movies/components/MovieCard";
 import { movieAPI } from "../../services";
 import { isSuccessResponse } from "../../services/base/ServiceResponse";
 import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
