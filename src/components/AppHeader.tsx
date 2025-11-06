@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Icon } from "@iconify/react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Search } from "@/components/Search";
 
 export default function NavBar() {
@@ -25,14 +25,6 @@ export default function NavBar() {
   ];
 
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const route = useLocation();
-
-  useEffect(() => {
-    // Close mobile menu when route changes
-    if (isNavOpen) {
-      setTimeout(() => setIsNavOpen(false), 0);
-    }
-  }, [route, isNavOpen]);
 
   useEffect(() => {
     // Close mobile menu when pressing Escape key
