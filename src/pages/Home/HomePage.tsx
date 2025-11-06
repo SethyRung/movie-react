@@ -96,26 +96,24 @@ export default function HomePage() {
           ui={{ wrapper: "sm:w-fit" }}
           onCurrentTabChange={(value: string) => setCurrentTab(value)}
         />
-        <div className="h-[1px] grow border border-grey-500 rounded hidden sm:block"></div>
+        <div className="h-px grow border border-grey-500 rounded hidden sm:block"></div>
         <div className="hidden sm:flex sm:gap-2">
           <button
-            className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
+            className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
             onClick={() => scrollTo("ToLeft")}>
             <Icon icon="mdi-chevron-left" />
           </button>
           <button
-            className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
+            className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
             onClick={() => scrollTo("ToRight")}>
             <Icon icon="mdi-chevron-right" />
           </button>
         </div>
       </div>
 
-      <div
-        className="w-full h-fit bg-tertiary-500 p-4 flex overflow-x-scroll"
-        ref={parentMovieCardRef}>
+      <div className="p-4 overflow-x-scroll flex gap-4" ref={parentMovieCardRef}>
         {movieList?.results?.map((movie: DiscoveryMovie) => (
-          <div className="w-52 flex-shrink-0 bg-secondary-500" key={movie.id}>
+          <div className="w-52 shrink-0" key={movie.id}>
             <MovieCard
               id={movie.id}
               images={
