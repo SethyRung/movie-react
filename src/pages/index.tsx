@@ -46,9 +46,10 @@ export default function Index() {
     }
   };
 
-  const [mainMovie, setMainMovie] = useState<DiscoveryMovie & { images?: { posters: MovieImage[]; backdrops: MovieImage[] } } | undefined>(undefined);
+  const [mainMovie, setMainMovie] = useState<
+    (DiscoveryMovie & { images?: { posters: MovieImage[]; backdrops: MovieImage[] } }) | undefined
+  >(undefined);
   const [movieList, setMovieList] = useState<DiscoveryPaginatedResponse>();
-
 
   useEffect(() => {
     const loadData = async () => {
@@ -58,7 +59,7 @@ export default function Index() {
         // Add images to the movie object from the response
         const movieWithImages = {
           ...firstMovie,
-          images: response.data.images || { posters: [], backdrops: [] }
+          images: response.data.images || { posters: [], backdrops: [] },
         };
         setTimeout(() => setMainMovie(movieWithImages), 0);
       }
@@ -87,7 +88,7 @@ export default function Index() {
   }, [currentTab]);
 
   return (
-    <div className="w-full p-4 tablet:px-16 desktop:px-52">
+    <div className="w-full p-4 md:px-16 lg:px-52">
       {mainMovie && (
         <MainCard
           id={mainMovie.id}
@@ -103,11 +104,11 @@ export default function Index() {
         <Tabs
           items={tabs}
           currentTab={currentTab}
-          ui={{ wrapper: "lgMobile:w-fit" }}
+          ui={{ wrapper: "sm:w-fit" }}
           onCurrentTabChange={(vlaue) => setCurrentTab(vlaue)}
         />
-        <div className="h-[1px] grow border border-grey-500 rounded hidden lgMobile:block"></div>
-        <div className="hidden lgMobile:flex lgMobile:gap-2">
+        <div className="h-[1px] grow border border-grey-500 rounded hidden sm:block"></div>
+        <div className="hidden sm:flex sm:gap-2">
           <button
             className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
             onClick={() => scrollTo("ToLeft")}>

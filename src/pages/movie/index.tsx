@@ -17,7 +17,7 @@ export default function Index() {
         } else {
           const newData = {
             ...response.data,
-            results: [...movieList.results, ...response.data.results]
+            results: [...movieList.results, ...response.data.results],
           };
           setTimeout(() => setMovieList(newData), 0);
         }
@@ -28,7 +28,7 @@ export default function Index() {
   }, [page, movieList]);
 
   return (
-    <div className="w-full p-4 tablet:px-16 desktop:px-52 grid gap-4 grid-cols-[repeat(auto-fit,_minmax(208px,_1fr))]">
+    <div className="w-full p-4 md:px-16 lg:px-52 grid gap-4 grid-cols-[repeat(auto-fit,_minmax(208px,_1fr))]">
       {movieList?.results.map((movie: DiscoveryMovie) => (
         <div className="w-full bg-tertiary-500" key={movie.id}>
           <MovieCard
@@ -43,7 +43,7 @@ export default function Index() {
       ))}
       <div className="my-6 col-start-1 col-end-[-1]">
         <button
-          className="mx-auto px-4 h-10 rounded text-grey-200 hover:text-white flex items-center justify-center gap-2 text-sm tablet:text-base transition-all"
+          className="mx-auto px-4 h-10 rounded text-grey-200 hover:text-white flex items-center justify-center gap-2 text-sm md:text-base transition-all"
           onClick={() => setPage((prev) => prev + 1)}>
           Load More
         </button>

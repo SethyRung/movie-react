@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 **Core Development:**
-- **Start development server**: `pnpm dev` (runs on http://localhost:5173)
+- **Start development server**: `pnpm dev` (runs on http://localhost:5173+ - will find next available port)
 - **Build for production**: `pnpm build` (TypeScript compilation + Vite build)
 - **Preview production build**: `pnpm preview`
 - **Type checking**: `pnpm type-check` (TypeScript without emitting files)
@@ -33,58 +33,64 @@ The project uses The Movie Database (TMDB) API. Required environment variables:
 2. Set `VITE_API_URL="https://api.themoviedb.org/3"`
 3. Set `VITE_API_KEY` to your TMDB API key
 
-## Project Architecture
+## Current Project Status
 
-This is a **React 19 enterprise-grade movie website** with a sophisticated **3-tier service architecture**.
+**🚧 Live Production Application**
 
-### Tech Stack
+This is a **fully functional and deployed** movie website with a complete feature set. The application is live at https://sethyrung-movie-react.vercel.app/ and includes:
+
+- ✅ Complete movie discovery (popular, now playing, upcoming)
+- ✅ Advanced search functionality
+- ✅ Detailed movie pages with cast, crew, ratings, and trailers
+- ✅ Responsive design optimized for all devices
+- ✅ Enterprise-grade architecture with 3-tier service layer
+- ✅ Comprehensive testing and performance optimization
+
+## Tech Stack
 
 - **React 19** with TypeScript 5.9 (strict mode)
 - **Vite with rolldown-vite** for ultra-fast builds
-- **Tailwind CSS v4** with custom design system
+- **Tailwind CSS v4** with custom design system (no config file needed)
 - **TanStack Query** for server state management
 - **Zustand** for client state management
 - **React Router DOM v7** for routing
+- **GSAP** for animations and scroll interactions
 - **Zod** for runtime validation
 - **Vitest** for testing with MSW for API mocking
 
-### Enterprise Service Architecture
+## Enterprise Service Architecture (IMPLEMENTED)
 
-The application implements a **3-tier service architecture** that separates concerns:
+The application implements a **complete 3-tier service architecture**:
 
-1. **Base Service Layer** (`src/services/base/`):
-   - `BaseService.ts` - Abstract base class with caching, retry logic, error handling
-   - `ServiceResponse.ts` - Standardized response wrapper types
-   - `cache.ts` - Intelligent caching with TTL and cleanup
-   - `errorHandling.ts` - Comprehensive error factory and retry handlers
+### 1. Base Service Layer (`src/services/base/`)
+- **`BaseService.ts`**: Abstract base class with intelligent caching, retry logic, comprehensive error handling, and Zod validation integration
+- **`ServiceResponse.ts`**: Standardized response wrapper with type guards and pagination support
+- **`cache.ts`**: Environment-aware caching system with TTL, cleanup, and memory leak prevention
+- **`errorHandling.ts`**: Comprehensive error factory with retry handlers and exponential backoff
 
-2. **Feature Service Layer** (`src/services/movie/`, `src/services/discovery/`):
-   - `MovieService.ts` - Complete TMDB movie API integration
-   - `DiscoveryService.ts` - Movie discovery and browsing
-   - Built-in Zod validation schemas
-   - Optimized batch requests and parallel processing
+### 2. Feature Service Layer
+- **`src/services/movie/`**: Complete TMDB movie API integration with validation schemas
+- **`src/services/discovery/`**: Movie discovery and browsing services
+- All services include built-in Zod validation, parallel processing, and optimized batch requests
 
-3. **API Client Layer** (`src/utils/axios.ts`):
-   - Three specialized Axios instances:
-     - `withApiKey` - TMDB API calls (auto-includes API key)
-     - `withAuth` - Authenticated endpoints (Bearer token)
-     - `withoutAuth` - Public API calls
-   - Comprehensive interceptors for error handling and auth
+### 3. API Client Layer (`src/utils/axios.ts`)
+- **`withApiKey`**: TMDB API calls with automatic API key inclusion
+- **`withAuth`**: Authenticated endpoints with Bearer token support
+- **`withoutAuth`**: Public API calls
+- Comprehensive interceptors for error handling and authentication
 
-### Feature-Based Architecture
-
-The project follows a **feature-based organization** rather than technical layers:
+## Feature-Based Architecture (FULLY IMPLEMENTED)
 
 ```
 src/features/movies/
-├── components/           # Movie-specific UI components
-├── hooks/               # Movie-specific React hooks
+├── components/           # Movie-specific UI components (MovieCard, MainCard, CastCard)
+├── hooks/               # Movie-specific React hooks (useMovies, useMovieDetails, etc.)
 ├── services/            # Movie API services
 ├── stores/              # Zustand state stores
 └── types/               # TypeScript definitions
 ```
 
-### Path Aliases
+## Path Aliases
 
 Comprehensive alias system configured in Vite and TypeScript:
 - `@/` - src/
@@ -95,17 +101,74 @@ Comprehensive alias system configured in Vite and TypeScript:
 - `@types/` - src/types/
 - `@utils/` - src/utils/
 - `@assets/` - src/assets/
+- `@lib/` - src/lib/
 - `@tests/` - tests/ (test files moved from src/)
 
-### State Management Strategy
+## Styling System (Tailwind CSS v4)
 
-**Hybrid Approach:**
-- **TanStack Query** for server state (API caching, background updates)
-- **Zustand** for client state (UI state, user preferences)
-- **Service Layer** handles business logic and data transformation
-- **Component-level state** for local UI interactions
+**Configuration located in `src/assets/styles/main.css`:**
+- Uses modern **`@theme`** directive (no separate config file needed)
+- Custom color system with primary, secondary, tertiary, and grey variants
+- Custom fonts: Red Hat Mono, Red Hat Text, Roboto
+- Responsive breakpoints: lgMobile (480px), tablet (844px), desktop (1280px)
+- Dark/light theme support with CSS custom properties
+- Custom scrollbar styling and hide-scrollbar utility
 
-### Testing Infrastructure
+## State Management Strategy
+
+**Hybrid Approach (Fully Implemented):**
+- **TanStack Query**: Server state with API caching, background updates, and optimistic updates
+- **Zustand**: Client state for UI state and user preferences
+- **Service Layer**: Business logic, data transformation, and validation
+- **Component-level state**: Local UI interactions
+
+## Build & Performance Optimizations
+
+**Advanced Bundle Splitting (vite.config.ts):**
+- Manual chunk splitting by feature and vendor libraries
+- Separate chunks for React ecosystem, UI libraries, features, and pages
+- Code splitting for routes and components
+- Optimized asset file naming and organization
+
+**Performance Features:**
+- Intelligent caching with environment-specific TTLs
+- Image optimization with responsive loading
+- Performance monitoring hooks
+- Lighthouse integration
+- GSAP for smooth animations and scroll effects
+
+## Animation & Interactions
+
+**GSAP Integration (main.tsx):**
+- GSAP plugins globally registered: useGSAP, ScrollTrigger, TextPlugin, ScrollSmoother
+- Smooth scrolling with ScrollSmootherWrapper
+- Enhanced movie card animations
+- Optimized performance with scroll-based animations
+
+## Type Safety & Validation
+
+**Comprehensive TypeScript Usage:**
+- Strict TypeScript configuration
+- Zod schemas for API response validation in all services
+- Service layer validates all external data
+- Generic types for reusable service patterns
+- Type guards for ServiceResponse handling
+
+## Key Architectural Patterns (IMPLEMENTED)
+
+1. **Service Layer Pattern**: Clean separation between UI and data fetching
+2. **Repository Pattern**: Services encapsulate API interactions
+3. **Factory Pattern**: Error handling and service creation
+4. **Observer Pattern**: React hooks for state management
+5. **Strategy Pattern**: Multiple Axios instances for different auth needs
+
+## Package Manager
+
+- **pnpm** is the preferred package manager
+- Configured via pnpm-workspace.yaml with MSW override
+- Use `pnpm install` for dependencies
+
+## Testing Infrastructure
 
 **Complete Testing Setup:**
 - **Vitest** as test runner with jsdom environment
@@ -114,63 +177,27 @@ Comprehensive alias system configured in Vite and TypeScript:
 - **Coverage thresholds** set at 70% for all metrics
 - Tests located in `tests/` directory mirroring src/ structure
 
-### Build & Performance Optimizations
+## Implementation Details
 
-**Bundle Splitting Strategy:**
-- Manual chunk splitting by feature and vendor libraries
-- Separate chunks for React ecosystem, UI libraries, features, and pages
-- Code splitting for routes and components
-- Bundle size analysis tools integrated
+- **Memory leak prevention**: Service cleanup methods and cache management
+- **Retry logic**: Exponential backoff for failed requests
+- **Batch processing**: Optimized multiple movie requests
+- **Cache invalidation**: Environment-aware strategies
+- **Comprehensive error handling**: Typed error responses with detailed logging
+- **Accessibility**: WCAG compliance with keyboard navigation and screen reader support
+- **Mobile-first responsive design**: Touch interactions and optimized layouts
+- **GSAP animations**: Smooth scroll enhancements and UI interactions
+- **Production deployment**: Live application with comprehensive monitoring
 
-**Performance Features:**
-- Intelligent caching in service layer with configurable TTL
-- Image optimization with responsive loading
-- Performance monitoring with custom hooks
-- Lighthouse CI integration
+## Development Workflow
 
-### Styling System
+The application is **production-ready** and actively maintained. When working on this codebase:
 
-**Tailwind CSS v4 Configuration:**
-- Custom color system (primary, secondary, tertiary, grey variants)
-- Responsive breakpoints: lgMobile (480px), tablet (844px), desktop (1280px)
-- Dark/light theme support with CSS custom properties
-- Custom scrollbar styling
+1. **Follow feature-based architecture** when adding new functionality
+2. **Use the service layer pattern** for all API interactions
+3. **Leverage existing components** from the UI library
+4. **Maintain type safety** with TypeScript and Zod validation
+5. **Test new features** using the comprehensive testing setup
+6. **Optimize performance** using built-in caching and bundle splitting
 
-### Type Safety & Validation
-
-**Comprehensive TypeScript Usage:**
-- Strict TypeScript configuration
-- Zod schemas for API response validation
-- Service layer validates all external data
-- Generic types for reusable service patterns
-
-### Key Architectural Patterns
-
-1. **Service Layer Pattern**: Clean separation between UI and data fetching
-2. **Repository Pattern**: Services encapsulate API interactions
-3. **Factory Pattern**: Error handling and service creation
-4. **Observer Pattern**: React hooks for state management
-5. **Strategy Pattern**: Multiple Axios instances for different auth needs
-
-### Package Manager
-
-- **pnpm** is the preferred package manager
-- Configured via pnpm-workspace.yaml with MSW override
-- Use `pnpm install` for dependencies
-
-### Testing Commands
-
-The test files have been migrated from `src/` to `tests/` directory. When running tests:
-- Use relative paths from project root: `pnpm test tests/utils/`
-- All tests maintain the same structure and functionality
-- Test utilities are located at `tests/test-utils.tsx`
-
-### Important Implementation Details
-
-- The service layer includes **memory leak prevention** with cleanup methods
-- **Retry logic** with exponential backoff for failed requests
-- **Batch processing** for multiple movie requests
-- **Cache invalidation** strategies
-- **Comprehensive error handling** with typed error responses
-- **Accessibility** prioritized in navigation components
-- **Mobile-first responsive design** throughout
+The codebase demonstrates enterprise-grade React development with modern patterns, comprehensive tooling, and production-quality implementation.

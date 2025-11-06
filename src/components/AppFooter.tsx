@@ -29,7 +29,7 @@ export default function Footer() {
         {
           link: {
             name: "Movie",
-            to: "/movie",
+            to: "/movies",
           },
         },
         {
@@ -78,9 +78,9 @@ export default function Footer() {
     },
   ];
   return (
-    <div className="w-full p-4 tablet:py-8 tablet:px-16 desktop:px-52 bg-tertiary-500 flex flex-col tablet:flex-row items-center justify-between gap-6">
+    <div className="w-full p-4 md:py-8 md:px-16 lg:px-52 bg-tertiary-500 flex flex-col md:flex-row items-center justify-between gap-6">
       {footerItems.map((ft, i) => (
-        <div key={i} className="flex flex-col items-center tablet:items-start gap-2">
+        <div key={i} className="flex flex-col items-center md:items-start gap-2">
           {i === 0 && <img src="/assets/logo.svg" alt="logo" />}
           <h2 className="text-white text-center">{ft.sectionTitle}</h2>
           {ft.sectionItems.map((st, i) => (

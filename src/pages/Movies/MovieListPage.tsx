@@ -19,7 +19,7 @@ export default function MovieListPage() {
   }, [page, isLoading]);
 
   return (
-    <div className="w-full p-4 tablet:px-16 desktop:px-52 grid gap-4 grid-cols-[repeat(auto-fit,minmax(208px,1fr))]">
+    <div className="w-full p-4 md:px-16 lg:px-52 grid gap-4 grid-cols-[repeat(auto-fit,minmax(208px,1fr))]">
       {movies.map((movie: Movie) => (
         <div className="w-full bg-tertiary-500" key={movie.id}>
           <MovieCard
@@ -35,7 +35,7 @@ export default function MovieListPage() {
 
       <div className="my-6 col-start-1 -col-end-1">
         <button
-          className={`mx-auto px-4 h-10 rounded text-grey-200 hover:text-white flex items-center justify-center gap-2 text-sm tablet:text-base transition-all ${
+          className={`mx-auto px-4 h-10 rounded text-grey-200 hover:text-white flex items-center justify-center gap-2 text-sm md:text-base transition-all ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleLoadMore}

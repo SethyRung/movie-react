@@ -27,7 +27,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ id, images, title, release, langu
         <Link
           to={`/movies/${id}`}
           className={cn(
-            "w-full h-8 text-white rounded bg-primary-500 hover:bg-primary-600 transition-all flex items-center justify-center gap-2 text-xs tablet:text-base"
+            "w-full h-8 text-white rounded bg-primary-500 hover:bg-primary-600 transition-all flex items-center justify-center gap-2 text-xs md:text-base"
           )}>
           <Icon icon="mdi-eye" width="16" />
           View Details

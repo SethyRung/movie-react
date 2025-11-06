@@ -48,9 +48,9 @@ export default function NavBar() {
 
   return (
     <div className="bg-black fixed top-0 w-full z-1000">
-      <div className="h-14 px-4 tablet:px-16 desktop:px-52 flex justify-between items-center">
+      <div className="h-14 px-4 md:px-16 lg:px-52 flex justify-between items-center">
         <img src="/assets/logo.svg" alt="logo" />
-        <ul className="hidden tablet:flex justify-between items-center gap-8 text-white">
+        <ul className="hidden md:flex justify-between items-center gap-8 text-white">
           {navItems.map((item) => (
             <li key={item.to}>
               <NavLink
@@ -68,7 +68,7 @@ export default function NavBar() {
             </li>
           ))}
         </ul>
-        <div className="hidden tablet:block">
+        <div className="hidden md:block">
           <Search
             placeholder="Search here"
             className="w-56"
@@ -81,7 +81,7 @@ export default function NavBar() {
         </div>
         <button
           onClick={() => setIsNavOpen(!isNavOpen)}
-          className="tablet:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
+          className="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
           aria-label={isNavOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isNavOpen}>
           {isNavOpen ? (
@@ -95,13 +95,13 @@ export default function NavBar() {
         <>
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-black/50 z-[999] tablet:hidden transition-opacity duration-300"
+            className="fixed inset-0 bg-black/50 z-[999] md:hidden transition-opacity duration-300"
             onClick={() => setIsNavOpen(false)}
             aria-label="Close mobile menu"
           />
 
           {/* Mobile menu */}
-          <div className="fixed top-14 left-0 right-0 bg-tertiary-500 shadow-lg z-[1000] tablet:hidden max-h-[calc(100vh-3.5rem)] overflow-y-auto transition-transform duration-300 ease-out">
+          <div className="fixed top-14 left-0 right-0 bg-tertiary-500 shadow-lg z-[1000] md:hidden max-h-[calc(100vh-3.5rem)] overflow-y-auto transition-transform duration-300 ease-out">
             <div className="px-4 py-4">
               <Search
                 placeholder="Search here"

@@ -9,17 +9,15 @@ export default function MovieDetailPage() {
   const { id: movieId } = useParams();
 
   // Use custom hooks for data fetching
-  const { data: movie, isLoading: movieLoading } = useMovieDetails(parseInt(movieId || '0'));
-  const { data: credits } = useMovieCredits(parseInt(movieId || '0'));
-  const { data: videos } = useMovieVideos(parseInt(movieId || '0'));
+  const { data: movie, isLoading: movieLoading } = useMovieDetails(parseInt(movieId || "0"));
+  const { data: credits } = useMovieCredits(parseInt(movieId || "0"));
+  const { data: videos } = useMovieVideos(parseInt(movieId || "0"));
 
   // Find trailer URL
   const trailer = videos?.results?.find(
     (v: MovieVideo) => v.site === "YouTube" && v.type === "Trailer"
   );
-  const movieTrailerURL = trailer
-    ? `https://www.youtube.com/watch?v=${trailer.key}`
-    : "";
+  const movieTrailerURL = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : "";
 
   const castCardRef = useRef<HTMLDivElement>(null);
 
@@ -42,8 +40,8 @@ export default function MovieDetailPage() {
   }
 
   return (
-    <div className="w-full p-4 tablet:px-16 desktop:px-52">
-      <div className="p-4 bg-tertiary-500 rounded-lg flex flex-col tablet:flex-row tablet:gap-4">
+    <div className="w-full p-4 md:px-16 lg:px-52">
+      <div className="p-4 bg-tertiary-500 rounded-lg flex flex-col md:flex-row md:gap-4">
         <img
           src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
           alt={`${movie?.original_title}_Poster`}
@@ -55,7 +53,7 @@ export default function MovieDetailPage() {
               {movie?.original_title}
             </h1>
             <p className="text-grey-500 text-sm font-redHatText mt-2">
-              {`${movie?.release_date} (${movie?.original_language?.toUpperCase() || ''}) ${movie?.genres?.map((m: { name: string }) => m.name).join(", ")} ${movie?.runtime && Math.floor(movie?.runtime / 60)}h ${movie?.runtime && Math.floor(movie?.runtime % 60)}mn`}
+              {`${movie?.release_date} (${movie?.original_language?.toUpperCase() || ""}) ${movie?.genres?.map((m: { name: string }) => m.name).join(", ")} ${movie?.runtime && Math.floor(movie?.runtime / 60)}h ${movie?.runtime && Math.floor(movie?.runtime % 60)}mn`}
             </p>
           </div>
           <div className="flex items-center gap-7">
@@ -74,7 +72,7 @@ export default function MovieDetailPage() {
             <h2 className="font-redHatText font-bold text-base">Overview</h2>
             <p className="mt-2 text-sm text-grey-500 text-justify">{movie?.overview}</p>
           </div>
-          <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {credits?.crew?.map(
               (c: CrewMember, i: number) =>
                 i < 12 && (
@@ -108,20 +106,22 @@ export default function MovieDetailPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 tablet:grid-cols-2 tablet:gap-4 my-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4 my-8">
         <div
           className="w-full h-fit pb-4 flex gap-4 overflow-x-scroll overflow-y-hidden"
           ref={castCardRef}>
           {credits?.cast?.map((c: CastMember, i: number) => (
             <CastCard
-              profile={c.profile_path ? `https://image.tmdb.org/t/p/original/${c.profile_path}` : null}
+              profile={
+                c.profile_path ? `https://image.tmdb.org/t/p/original/${c.profile_path}` : null
+              }
               name={c.name}
-              character={c.character || ''}
+              character={c.character || ""}
               key={`${i}-${c.name}`}
             />
           ))}
         </div>
-        <div className="w-full h-full p-4 bg-tertiary-500 rounded grid grid-cols-1 gap-6 lgMobile:grid-cols-2 lgMobile:gap-0">
+        <div className="w-full h-full p-4 bg-tertiary-500 rounded grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-0">
           <div className="grid gap-3">
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Status</h1>
@@ -129,7 +129,9 @@ export default function MovieDetailPage() {
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Original Language</h1>
-              <p className="text-grey-500 text-xs">{movie?.original_language?.toUpperCase() || ''}</p>
+              <p className="text-grey-500 text-xs">
+                {movie?.original_language?.toUpperCase() || ""}
+              </p>
             </div>
             <div className="font-redHatText font-bold">
               <h1 className="text-white text-sm mb-1">Revenue</h1>
@@ -153,11 +155,12 @@ export default function MovieDetailPage() {
           <div className="font-redHatText font-bold text-white text-sm">
             <h1>Genres</h1>
             <div className="mt-4 flex flex-wrap gap-2">
-              {Array.isArray(movie?.genres) && movie?.genres.slice(0, 6).map((genre: { id: number; name: string }) => (
-                <div className="w-fit py-2 px-4 bg-secondary-500 rounded-md" key={genre.id}>
-                  {genre.name}
-                </div>
-              ))}
+              {Array.isArray(movie?.genres) &&
+                movie?.genres.slice(0, 6).map((genre: { id: number; name: string }) => (
+                  <div className="w-fit py-2 px-4 bg-secondary-500 rounded-md" key={genre.id}>
+                    {genre.name}
+                  </div>
+                ))}
             </div>
           </div>
         </div>
