@@ -1,12 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainCard from "../components/movie/main-card";
 import MovieCard from "../components/movie/movie-card";
 import Tabs from "../components/tabs";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import getMainMovie, { type ResponseBody as Movie } from "../api/main-movie.get";
-import getNowPlaying, { type ResponseBody as MovieList } from "../api/now-playing.get";
-import getUpcoming from "../api/upcoming.get";
-import getPopular from "../api/popular.get";
+import { movieAPI } from "../services";
+import { isSuccessResponse } from "../services/base/ServiceResponse";
+import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
+
+type MovieImage = {
+  aspect_ratio: number;
+  file_path: string;
+  height: number;
+  iso_639_1?: string | null;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+};
 
 export default function Index() {
   const tabs = [
@@ -37,34 +46,49 @@ export default function Index() {
     }
   };
 
-  const [mainMovie, setMainMovie] = useState<Movie | undefined>(undefined);
-  const [movieList, setMovieList] = useState<MovieList>();
-
-  const loadMovieList = useCallback(async () => {
-    const movies =
-      currentTab === "nowPlaying"
-        ? await getNowPlaying()
-        : currentTab === "upcoming"
-          ? await getUpcoming()
-          : await getPopular();
-    setMovieList(movies);
-  }, [currentTab]);
-
-  const loadData = async () => {
-    const res = await getMainMovie();
-    setMainMovie(res);
-  };
+  const [mainMovie, setMainMovie] = useState<
+    (DiscoveryMovie & { images?: { posters: MovieImage[]; backdrops: MovieImage[] } }) | undefined
+  >(undefined);
+  const [movieList, setMovieList] = useState<DiscoveryPaginatedResponse>();
 
   useEffect(() => {
+    const loadData = async () => {
+      const response = await movieAPI.discovery.getMainMovie({ includeImages: true });
+      if (isSuccessResponse(response) && response.data.popular?.results?.length > 0) {
+        const firstMovie = response.data.popular.results[0];
+        // Add images to the movie object from the response
+        const movieWithImages = {
+          ...firstMovie,
+          images: response.data.images || { posters: [], backdrops: [] },
+        };
+        setTimeout(() => setMainMovie(movieWithImages), 0);
+      }
+    };
+
     loadData();
   }, []);
 
   useEffect(() => {
+    const loadMovieList = async () => {
+      let response;
+      if (currentTab === "nowPlaying") {
+        response = await movieAPI.discovery.getNowPlayingMovies();
+      } else if (currentTab === "upcoming") {
+        response = await movieAPI.discovery.getUpcomingMovies();
+      } else {
+        response = await movieAPI.discovery.getPopularMovies();
+      }
+
+      if (isSuccessResponse(response)) {
+        setTimeout(() => setMovieList(response.data), 0);
+      }
+    };
+
     loadMovieList();
-  }, [loadMovieList]);
+  }, [currentTab]);
 
   return (
-    <div className="w-full p-4 tablet:px-16 desktop:px-52">
+    <div className="w-full p-4 md:px-16 lg:px-52">
       {mainMovie && (
         <MainCard
           id={mainMovie.id}
@@ -80,11 +104,11 @@ export default function Index() {
         <Tabs
           items={tabs}
           currentTab={currentTab}
-          ui={{ wrapper: "lgMobile:w-fit" }}
+          ui={{ wrapper: "sm:w-fit" }}
           onCurrentTabChange={(vlaue) => setCurrentTab(vlaue)}
         />
-        <div className="h-[1px] grow border border-grey-500 rounded hidden lgMobile:block"></div>
-        <div className="hidden lgMobile:flex lgMobile:gap-2">
+        <div className="h-[1px] grow border border-grey-500 rounded hidden sm:block"></div>
+        <div className="hidden sm:flex sm:gap-2">
           <button
             className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
             onClick={() => scrollTo("ToLeft")}>

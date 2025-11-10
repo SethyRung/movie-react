@@ -49,7 +49,9 @@ const Tabs = ({ items, currentTab, onCurrentTabChange, ui }: ITabsProps) => {
 
   const onTabClick = (key: string) => {
     setSelectTab(key);
-    onCurrentTabChange && onCurrentTabChange(key);
+    if (onCurrentTabChange) {
+      onCurrentTabChange(key);
+    }
   };
 
   return (

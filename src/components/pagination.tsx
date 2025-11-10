@@ -1,7 +1,7 @@
-import { mergeUI } from "../utils/helpers";
+import React, { useEffect, useState } from "react";
+import { mergeUI } from "../lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { twMerge } from "tailwind-merge";
-import { useEffect, useState } from "react";
 
 export interface IPaginationUI {
   wrapper?: string;
@@ -47,10 +47,10 @@ export interface IPaginationProps {
     icon?: string;
   };
   slot?: {
-    prev?: (onClick: () => void) => JSX.Element;
-    next?: (onClick: () => void) => JSX.Element;
-    first?: (onClick: () => void) => JSX.Element;
-    last?: (onClick: () => void) => JSX.Element;
+    prev?: (onClick: () => void) => React.JSX.Element;
+    next?: (onClick: () => void) => React.JSX.Element;
+    first?: (onClick: () => void) => React.JSX.Element;
+    last?: (onClick: () => void) => React.JSX.Element;
   };
 }
 
