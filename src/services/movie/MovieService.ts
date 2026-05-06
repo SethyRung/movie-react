@@ -1,8 +1,8 @@
 import { BaseService } from "../base/BaseService";
-import { ServiceResponse, ServiceError } from "../base/ServiceResponse";
+import type { ServiceResponse, ServiceError } from "../base/ServiceResponse";
 import { withApiKey } from "../../utils/axios";
-import {
-  MovieValidationSchemas,
+import { MovieValidationSchemas } from "./validation";
+import type {
   MovieDetails,
   MovieCredits,
   MovieImages,

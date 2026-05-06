@@ -60,13 +60,13 @@ The app runs at `http://localhost:5173`.
 
 ### Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Start development server |
-| `pnpm build` | Build for production (`tsc -b && vite build`) |
-| `pnpm preview` | Preview production build locally |
-| `pnpm lint` / `pnpm lint:fix` | Run oxlint |
-| `pnpm fmt` / `pnpm fmt:check` | Run oxfmt formatter |
+| Script                        | Description                                   |
+| ----------------------------- | --------------------------------------------- |
+| `pnpm dev`                    | Start development server                      |
+| `pnpm build`                  | Build for production (`tsc -b && vite build`) |
+| `pnpm preview`                | Preview production build locally              |
+| `pnpm lint` / `pnpm lint:fix` | Run oxlint                                    |
+| `pnpm fmt` / `pnpm fmt:check` | Run oxfmt formatter                           |
 
 ## Project Architecture 📁
 

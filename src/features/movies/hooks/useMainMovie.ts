@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { discoveryService } from "@/services";
 import { useMovieStore } from "../stores/movieStore";
-import { ServiceResponse } from "@/services";
-import { MainMovieResponse } from "@/services/discovery/validation";
+import type { ServiceResponse } from "@/services";
+import type { MainMovieResponse } from "@/services/discovery/validation";
 
 export function useMainMovie() {
   const { setLoading, setError } = useMovieStore();

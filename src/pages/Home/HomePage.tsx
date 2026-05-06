@@ -8,7 +8,7 @@ import {
   useUpcomingMovies,
   usePopularMovies,
 } from "@features/movies/hooks";
-import { DiscoveryMovie } from "@/services/discovery/validation";
+import type { DiscoveryMovie } from "@/services/discovery/validation";
 
 export default function HomePage() {
   const tabs = [

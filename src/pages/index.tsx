@@ -5,7 +5,7 @@ import Tabs from "../components/tabs";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { movieAPI } from "../services";
 import { isSuccessResponse } from "../services/base/ServiceResponse";
-import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
+import type { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
 
 type MovieImage = {
   aspect_ratio: number;

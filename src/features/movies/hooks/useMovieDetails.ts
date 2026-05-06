@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { movieService } from "@/services";
 import { useMovieStore } from "../stores/movieStore";
-import { ExtendedMovie } from "../types/movie.types";
+import type { ExtendedMovie } from "../types/movie.types";
 
 export function useMovieDetails(movieId: number) {
   const { setCurrentMovie, setLoading, setError } = useMovieStore();

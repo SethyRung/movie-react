@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { movieService } from "@/services";
 import { useMovieStore } from "../stores/movieStore";
-import { Movie } from "@/types/api.types";
+import type { Movie } from "@/types/api.types";
 
 export function useMovieSearch() {
   const [searchQuery, setSearchQuery] = useState("");

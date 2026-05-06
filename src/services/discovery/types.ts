@@ -1,7 +1,7 @@
 // Re-export all types from validation
 export type { DiscoveryMovie, DiscoveryPaginatedResponse, MainMovieResponse } from "./validation";
 
-import { DiscoveryPaginatedResponse as DiscoveryPaginatedResponseType } from "./validation";
+import type { DiscoveryPaginatedResponse as DiscoveryPaginatedResponseType } from "./validation";
 
 // Additional service-specific types
 export interface PopularMoviesOptions {

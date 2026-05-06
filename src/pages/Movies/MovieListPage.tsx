@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { MovieCard } from "@features/movies";
 import { usePopularMovies } from "@features/movies/hooks";
 import { useMovieStore } from "@features/movies";
-import { Movie } from "@/types/api.types";
+import type { Movie } from "@/types/api.types";
 
 export default function MovieListPage() {
   const [page, setPage] = useState<number>(1);

@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 import HomePage from "@pages/Home";
 import { MovieListPage, MovieDetailPage } from "@pages/Movies";
 import NotFoundPage from "@pages/NotFound";

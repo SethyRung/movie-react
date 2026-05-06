@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { ServiceError } from "./ServiceResponse";
+import type { ServiceError } from "./ServiceResponse";
 
 export class ServiceErrorFactory {
   static fromAxiosError(error: AxiosError): ServiceError {

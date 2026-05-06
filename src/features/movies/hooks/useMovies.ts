@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { discoveryService } from "@/services";
 import { useMovieStore } from "../stores/movieStore";
-import { ServiceResponse } from "@/services";
-import { DiscoveryPaginatedResponse } from "@/services/discovery/validation";
-import { Movie } from "@/types/api.types";
+import type { ServiceResponse } from "@/services";
+import type { DiscoveryPaginatedResponse } from "@/services/discovery/validation";
+import type { Movie } from "@/types/api.types";
 
 export function useMovies(category: "popular" | "now-playing" | "upcoming", page: number = 1) {
   const { setMovies, setLoading, setError, setTotalPages, setCurrentPage } = useMovieStore();

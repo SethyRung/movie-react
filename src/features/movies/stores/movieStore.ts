@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 // Import types from the existing types
-import { Movie } from "@/types/api.types";
+import type { Movie } from "@/types/api.types";
 
 // Define MovieDetails interface (can be expanded based on API response)
 interface MovieDetails extends Omit<Movie, "overview"> {

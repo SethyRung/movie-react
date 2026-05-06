@@ -1,5 +1,5 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
-import {
+import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+import type {
   ServiceResponse,
   ServiceError,
   RequestConfig,
@@ -8,7 +8,7 @@ import {
 } from "./ServiceResponse";
 import { ServiceErrorFactory, RetryHandler } from "./errorHandling";
 import { ServiceCache } from "./cache";
-import { ZodSchema } from "zod";
+import type { ZodSchema } from "zod";
 
 // Generic type for request parameters
 type RequestParams = Record<string, string | number | boolean | undefined | null>;

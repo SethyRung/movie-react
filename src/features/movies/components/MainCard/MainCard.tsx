@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, forwardRef } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link } from "react-router-dom";
-import Carousel, { ICarouselRef } from "@/components/carousel";
+import Carousel, { type ICarouselRef } from "@/components/carousel";
 import Skeleton from "@/components/skeleton";
 import Pagination from "@/components/pagination";
 import { cn } from "@utils/cn";
 import { useWindowSize } from "@react-hooks-library/core";
-import { MainCardProps } from "./MainCard.types";
+import type { MainCardProps } from "./MainCard.types";
 
 const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
   ({ id, title, overview, genre, images }, ref) => {

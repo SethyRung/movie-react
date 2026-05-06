@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MovieCard from "@/features/movies/components/MovieCard";
 import { movieAPI } from "../../services";
 import { isSuccessResponse } from "../../services/base/ServiceResponse";
-import { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
+import type { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
 
 export default function Index() {
   const [movieList, setMovieList] = useState<DiscoveryPaginatedResponse>();

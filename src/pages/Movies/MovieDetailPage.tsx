@@ -3,7 +3,7 @@ import { CastCard } from "@features/movies";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useMovieDetails, useMovieCredits, useMovieVideos } from "@features/movies/hooks";
-import { MovieVideo, CastMember, CrewMember } from "@/services/movie/validation";
+import type { MovieVideo, CastMember, CrewMember } from "@/services/movie/validation";
 
 export default function MovieDetailPage() {
   const { id: movieId } = useParams();

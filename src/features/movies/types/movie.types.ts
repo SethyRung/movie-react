@@ -1,4 +1,4 @@
-import { Movie } from "@/types/api.types";
+import type { Movie } from "@/types/api.types";
 
 // Extended movie interface with additional properties
 export interface ExtendedMovie extends Movie {

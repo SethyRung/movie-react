@@ -1,4 +1,4 @@
-import { CacheOptions } from "./ServiceResponse";
+import type { CacheOptions } from "./ServiceResponse";
 
 interface CacheEntry<T> {
   data: T;

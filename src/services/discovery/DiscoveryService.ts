@@ -1,12 +1,9 @@
 import { BaseService } from "../base/BaseService";
-import { ServiceResponse, ServiceError } from "../base/ServiceResponse";
+import type { ServiceResponse, ServiceError } from "../base/ServiceResponse";
 import { withApiKey } from "../../utils/axios";
 import { z } from "zod";
-import {
-  DiscoveryValidationSchemas,
-  DiscoveryPaginatedResponse,
-  MainMovieResponse,
-} from "./validation";
+import { DiscoveryValidationSchemas } from "./validation";
+import type { DiscoveryPaginatedResponse, MainMovieResponse } from "./validation";
 
 // Import RequestParams type from BaseService
 type RequestParams = Record<string, string | number | boolean | undefined | null>;
