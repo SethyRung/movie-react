@@ -33,7 +33,16 @@ export interface MovieCardProps {
   onError?: (error: Error) => void;
 }
 
-export default function AnimatedMovieCard({ id, images, title, release, language, rating, onImageLoad, onError }: MovieCardProps) {
+export default function AnimatedMovieCard({
+  id,
+  images,
+  title,
+  release,
+  language,
+  rating,
+  onImageLoad,
+  onError,
+}: MovieCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -76,7 +85,7 @@ export default function AnimatedMovieCard({ id, images, title, release, language
     gsap.fromTo(
       card,
       { opacity: 0, y: 30, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out", delay: 0.1 }
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out", delay: 0.1 },
     );
 
     let tl: gsap.core.Timeline | null = null;
@@ -99,7 +108,7 @@ export default function AnimatedMovieCard({ id, images, title, release, language
         tl.to(
           image,
           { scale: 1.08, duration: 0.5, ease: "power2.out" },
-          "<" // start at same time
+          "<", // start at same time
         );
 
       if (playButton)
@@ -150,7 +159,8 @@ export default function AnimatedMovieCard({ id, images, title, release, language
       ref={cardRef}
       className="flex flex-col h-full"
       role="article"
-      aria-label={`Movie: ${title}`}>
+      aria-label={`Movie: ${title}`}
+    >
       <Link to={`/movies/${id}`} className="block h-full">
         <div className="relative group cursor-pointer h-full">
           <div className="relative h-full flex flex-col overflow-hidden rounded-xl bg-tertiary-900/80 backdrop-blur-sm border border-tertiary-700/30 transition-all duration-300 hover:border-primary-500/20">
@@ -173,16 +183,16 @@ export default function AnimatedMovieCard({ id, images, title, release, language
               {parseFloat(rating) > 0 && (
                 <div
                   className="rating-badge absolute top-3 right-3 px-2.5 py-1.5 bg-black/80 backdrop-blur-sm rounded-full flex items-center gap-1.5 border border-white/10 transition-colors duration-300"
-                  aria-label={`Rating: ${formatRating(rating)} out of 10`}>
+                  aria-label={`Rating: ${formatRating(rating)} out of 10`}
+                >
                   <Icon icon="mdi-star" className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
-                  <span className="text-xs font-semibold text-white">
-                    {formatRating(rating)}
-                  </span>
+                  <span className="text-xs font-semibold text-white">{formatRating(rating)}</span>
                 </div>
               )}
               <div
                 className="play-button absolute inset-0 flex items-center justify-center opacity-0 scale-90 pointer-events-none"
-                aria-hidden="true">
+                aria-hidden="true"
+              >
                 <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20">
                   <Icon icon="mdi-play" className="w-6 h-6 text-white ml-0.5" />
                 </div>
@@ -192,7 +202,8 @@ export default function AnimatedMovieCard({ id, images, title, release, language
               <div className="space-y-2">
                 <h3
                   className="movie-title font-semibold text-white text-sm line-clamp-2 leading-tight transition-colors duration-300"
-                  title={title}>
+                  title={title}
+                >
                   {title}
                 </h3>
 

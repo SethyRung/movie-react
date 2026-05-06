@@ -15,6 +15,7 @@ https://sethyrung-movie-react.vercel.app/
 ## Features ✨
 
 ### Core Functionality
+
 - **🎬 Movie Discovery**: Browse popular, now playing, and upcoming movies
 - **🔍 Advanced Search**: Real-time movie search with intelligent filtering
 - **📖 Detailed Movie Information**: Comprehensive movie pages with synopsis, cast, crew, ratings, and trailers
@@ -23,6 +24,7 @@ https://sethyrung-movie-react.vercel.app/
 - **📱 Responsive Design**: Optimized for all devices with mobile-first approach
 
 ### Technical Features
+
 - **⚡ Lightning Fast**: Built with Vite and rolldown for optimal performance
 - **🔄 Smart Caching**: Intelligent data caching and state management with React Query
 - **🎯 TypeScript**: Full type safety across the entire application
@@ -34,25 +36,30 @@ https://sethyrung-movie-react.vercel.app/
 ## Tech Stack 🛠️
 
 ### Frontend Framework & Runtime
+
 - **React 19**: Latest React version with modern hooks and concurrent features
 - **TypeScript 5.9**: Strict type checking and enhanced developer experience
 - **Vite with rolldown**: Ultra-fast build tool and development server
 
 ### Styling & UI
+
 - **Tailwind CSS v4**: Utility-first CSS framework with custom design system
 - **Lucide React**: Beautiful, consistent icon system
 - **Radix UI**: Accessible, unstyled component primitives
 - **Tailwind Variants**: Component variant system for consistent UI patterns
 
 ### State Management & Data Fetching
+
 - **Zustand**: Lightweight, performant state management
 - **TanStack Query**: Powerful server state management and caching
 - **Axios**: HTTP client with interceptors and error handling
 
 ### Routing & Navigation
+
 - **React Router DOM v7**: Declarative routing with modern patterns
 
 ### Development & Testing
+
 - **Vitest**: Fast unit testing framework
 - **Testing Library**: Component testing utilities
 - **MSW**: API mocking for testing
@@ -60,6 +67,7 @@ https://sethyrung-movie-react.vercel.app/
 - **Commitlint**: Conventional commit standards
 
 ### Utilities & Libraries
+
 - **date-fns**: Modern date utility library
 - **Zod**: TypeScript-first schema validation
 - **clsx & tailwind-merge**: Utility class management
@@ -68,6 +76,7 @@ https://sethyrung-movie-react.vercel.app/
 ## Getting Started 🚀
 
 ### Prerequisites
+
 - **Node.js**: Version 18+ (LTS recommended)
 - **pnpm**: Preferred package manager (install with `npm install -g pnpm`)
 - **TMDB API Key**: Register at [TMDB](https://www.themoviedb.org/signup) to get your free API key
@@ -75,18 +84,21 @@ https://sethyrung-movie-react.vercel.app/
 ### Installation Steps
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/SethyRung/Movie-Website-React.git
    cd Movie-Website-React
    ```
 
 2. **Install Dependencies**
+
    ```bash
    pnpm install
    # alternatively: npm install
    ```
 
 3. **Environment Setup**
+
    ```bash
    # Copy the environment template
    cp .env.example .env
@@ -97,6 +109,7 @@ https://sethyrung-movie-react.vercel.app/
    ```
 
 4. **Start Development Server**
+
    ```bash
    pnpm dev
    # alternatively: npm run dev
@@ -107,23 +120,28 @@ https://sethyrung-movie-react.vercel.app/
 ### Available Scripts
 
 #### Development
+
 - `pnpm dev` - Start development server with hot reload
 - `pnpm type-check` - Run TypeScript type checking without emitting files
 
 #### Building & Production
+
 - `pnpm build` - Build for production (TypeScript compilation + Vite build)
 - `pnpm preview` - Preview production build locally
 
 #### Code Quality
+
 - `pnpm lint` - Run ESLint for code quality checks
 - `pnpm lint:fix` - Auto-fix linting issues
 
 #### Testing
+
 - `pnpm test` - Run unit tests with Vitest
 - `pnpm test:ui` - Run tests with interactive UI
 - `pnpm test:coverage` - Generate test coverage report
 
 #### Analysis & Performance
+
 - `pnpm analyze` - Analyze bundle size with visual report
 - `pnpm performance:audit` - Run Lighthouse performance audit
 - `pnpm security:audit` - Check for security vulnerabilities
@@ -262,6 +280,7 @@ src/
 ## Development Workflow 🛠️
 
 ### Code Quality Standards
+
 This project maintains high code quality standards with automated tooling:
 
 - **ESLint**: Enforces code quality and consistency
@@ -270,12 +289,14 @@ This project maintains high code quality standards with automated tooling:
 - **Commitlint**: Ensures conventional commit messages
 
 ### Testing Strategy
+
 - **Unit Tests**: Component-level testing with React Testing Library
 - **Integration Tests**: API service and hook testing
 - **Mock Service Worker (MSW)**: API mocking for reliable testing
 - **Coverage Reports**: Maintain high test coverage across the codebase
 
 ### Git Workflow
+
 ```bash
 # Create feature branch
 git checkout -b feature/your-feature-name
@@ -293,11 +314,13 @@ git push origin feature/your-feature-name
 We welcome contributions! Please follow our contribution guidelines:
 
 ### Before Contributing
+
 1. **Read the Architecture**: Understand the feature-based architecture
 2. **Check Issues**: Look for existing issues or create one for your contribution
 3. **Setup Development**: Ensure your local environment is working
 
 ### Contribution Process
+
 1. **Fork** the repository
 2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
 3. **Follow Code Standards**:
@@ -316,6 +339,7 @@ We welcome contributions! Please follow our contribution guidelines:
 7. **Create a Pull Request** with a detailed description
 
 ### Development Guidelines
+
 - **Follow the feature-based architecture** when adding new functionality
 - **Write tests** for all new features and bug fixes
 - **Update documentation** when adding new features
@@ -325,6 +349,7 @@ We welcome contributions! Please follow our contribution guidelines:
 ## Performance & Optimization 📈
 
 The application is optimized for performance with:
+
 - **Bundle Analysis**: Regular bundle size monitoring
 - **Code Splitting**: Lazy loading of components and routes
 - **Image Optimization**: Responsive images with proper loading strategies
@@ -334,6 +359,7 @@ The application is optimized for performance with:
 ## Security 🔒
 
 Security measures implemented:
+
 - **Environment Variables**: Sensitive data stored securely
 - **API Key Protection**: TMDB API key properly secured
 - **Dependency Auditing**: Regular security vulnerability checks
@@ -343,6 +369,7 @@ Security measures implemented:
 ## Deployment 🚀
 
 ### Production Build
+
 ```bash
 # Build for production
 pnpm build
@@ -352,7 +379,9 @@ pnpm preview
 ```
 
 ### Environment Variables for Production
+
 Ensure these environment variables are set in your production environment:
+
 - `VITE_API_URL`: TMDB API endpoint
 - `VITE_API_KEY`: Your TMDB API key
 
@@ -363,6 +392,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact 📧
 
 For any inquiries, suggestions, or collaborations:
+
 - **GitHub**: [Sethy Rung](https://github.com/SethyRung)
 - **Project Link**: [https://github.com/SethyRung/Movie-Website-React](https://github.com/SethyRung/Movie-Website-React)
 - **Live Demo**: [https://sethyrung-movie-react.vercel.app/](https://sethyrung-movie-react.vercel.app/)

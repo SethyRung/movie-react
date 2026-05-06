@@ -5,5 +5,5 @@ export interface SearchProps {
   value?: string;
   onChange?: (value: string) => void;
   debounceMs?: number;
-  size?: 'sm' | 'default' | 'lg';
+  size?: "sm" | "default" | "lg";
 }

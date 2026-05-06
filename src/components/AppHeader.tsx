@@ -52,9 +52,10 @@ export default function NavBar() {
                     "w-full h-10 flex flex-col justify-center items-center gap-1 transition-all hover:text-primary-500 hover:after:w-3/4 hover:after:border-b-2 hover:after:border-b-primary-500",
                     isActive
                       ? "text-primary-500 after:w-3/4 after:border-b-2 after:border-b-primary-500"
-                      : ""
+                      : "",
                   )
-                }>
+                }
+              >
                 {item.name}
               </NavLink>
             </li>
@@ -75,7 +76,8 @@ export default function NavBar() {
           onClick={() => setIsNavOpen(!isNavOpen)}
           className="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors"
           aria-label={isNavOpen ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={isNavOpen}>
+          aria-expanded={isNavOpen}
+        >
           {isNavOpen ? (
             <Icon icon="mdi-close" width="24" color="white" />
           ) : (
@@ -115,9 +117,10 @@ export default function NavBar() {
                       className={({ isActive }) =>
                         twMerge(
                           "w-full h-12 flex justify-center items-center text-white text-center transition-colors hover:bg-white/10",
-                          isActive ? "text-primary-500 bg-primary-500/10" : ""
+                          isActive ? "text-primary-500 bg-primary-500/10" : "",
                         )
-                      }>
+                      }
+                    >
                       {item.name}
                     </NavLink>
                   </li>

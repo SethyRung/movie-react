@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Basic movie schema
 const MovieSchema = z.object({
@@ -20,29 +20,45 @@ const MovieSchema = z.object({
 // Movie details schema
 const MovieDetailsSchema = MovieSchema.extend({
   budget: z.number().optional(),
-  genres: z.array(z.object({
-    id: z.number(),
-    name: z.string(),
-  })).optional(),
+  genres: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+      }),
+    )
+    .optional(),
   homepage: z.string().nullable().optional(),
   imdb_id: z.string().nullable().optional(),
-  production_companies: z.array(z.object({
-    id: z.number(),
-    logo_path: z.string().nullable().optional(),
-    name: z.string(),
-    origin_country: z.string(),
-  })).optional(),
-  production_countries: z.array(z.object({
-    iso_3166_1: z.string(),
-    name: z.string(),
-  })).optional(),
+  production_companies: z
+    .array(
+      z.object({
+        id: z.number(),
+        logo_path: z.string().nullable().optional(),
+        name: z.string(),
+        origin_country: z.string(),
+      }),
+    )
+    .optional(),
+  production_countries: z
+    .array(
+      z.object({
+        iso_3166_1: z.string(),
+        name: z.string(),
+      }),
+    )
+    .optional(),
   revenue: z.number().optional(),
   runtime: z.number().nullable().optional(),
-  spoken_languages: z.array(z.object({
-    english_name: z.string(),
-    iso_639_1: z.string(),
-    name: z.string(),
-  })).optional(),
+  spoken_languages: z
+    .array(
+      z.object({
+        english_name: z.string(),
+        iso_639_1: z.string(),
+        name: z.string(),
+      }),
+    )
+    .optional(),
   status: z.string().optional(),
   tagline: z.string().nullable().optional(),
   video: z.boolean().optional(),

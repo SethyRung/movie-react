@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { envConfig } from './env';
+import axios from "axios";
+import { envConfig } from "./env";
 
 // TMDB API client with API key
 export const withApiKey = axios.create({
@@ -24,46 +24,46 @@ withApiKey.interceptors.request.use(
     // Ensure params object exists
     config.params = config.params || {};
     config.params.api_key = envConfig.API_KEY;
-    config.headers['Content-Type'] = 'application/json';
+    config.headers["Content-Type"] = "application/json";
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Setup interceptors for authenticated API
 withAuth.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    config.headers['Content-Type'] = 'application/json';
+    config.headers["Content-Type"] = "application/json";
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Setup interceptors for public API
 withoutAuth.interceptors.request.use(
   (config) => {
-    config.headers['Content-Type'] = 'application/json';
+    config.headers["Content-Type"] = "application/json";
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptors for error handling
-[withApiKey, withAuth, withoutAuth].forEach(instance => {
+[withApiKey, withAuth, withoutAuth].forEach((instance) => {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
         // Handle auth errors
-        console.error('Authentication error');
+        console.error("Authentication error");
         // Redirect to login or refresh token
       }
       return Promise.reject(error);
-    }
+    },
   );
 });
 

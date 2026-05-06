@@ -240,7 +240,8 @@ const Pagination = ({
               disabled={!canGoFirstOrPrev || disabled}
               aria-label="First"
               className={twMerge(ui.base, ui.rounded, ui.firstButton)}
-              onClick={onClickFirst}>
+              onClick={onClickFirst}
+            >
               <Icon
                 icon={
                   firstButton && firstButton.icon ? firstButton.icon : "mdi-chevron-double-left"
@@ -258,7 +259,8 @@ const Pagination = ({
               disabled={!canGoFirstOrPrev || disabled}
               aria-label="Prev"
               className={twMerge(ui.base, ui.rounded, ui.prevButton)}
-              onClick={onClickPrev}>
+              onClick={onClickPrev}
+            >
               <Icon
                 icon={prevButton && prevButton.icon ? prevButton.icon : "mdi-chevron-left"}
                 className={ui.icon}
@@ -276,9 +278,10 @@ const Pagination = ({
             className={twMerge(
               ui.base,
               ui.rounded,
-              page === currentPage ? ui.activeButton : ui.inactiveButton
+              page === currentPage ? ui.activeButton : ui.inactiveButton,
             )}
-            onClick={() => onClickPage(page)}>
+            onClick={() => onClickPage(page)}
+          >
             {page}
           </button>
         ))}
@@ -290,7 +293,8 @@ const Pagination = ({
               disabled={!canGoLastOrNext || disabled}
               aria-label="Next"
               className={twMerge(ui.base, ui.rounded, ui.nextButton)}
-              onClick={onClickNext}>
+              onClick={onClickNext}
+            >
               <Icon
                 icon={nextButton && nextButton.icon ? nextButton.icon : "mdi-chevron-right"}
                 className={ui.icon}
@@ -306,7 +310,8 @@ const Pagination = ({
               disabled={!canGoLastOrNext || disabled}
               aria-label="Last"
               className={twMerge(ui.base, ui.rounded, ui.lastButton)}
-              onClick={onClickLast}>
+              onClick={onClickLast}
+            >
               <Icon
                 icon={lastButton && lastButton.icon ? lastButton.icon : "mdi-chevron-double-right"}
                 className={ui.icon}

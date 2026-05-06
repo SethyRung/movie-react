@@ -39,7 +39,8 @@ export default function MovieListPage() {
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleLoadMore}
-          disabled={isLoading}>
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Load More"}
         </button>
       </div>

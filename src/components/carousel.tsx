@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useCallback,
+} from "react";
 import { mergeUI } from "../lib/utils";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import clsx from "clsx";
@@ -49,14 +56,18 @@ export interface ICarouselProps {
     default: (item: string, index: number) => React.JSX.Element;
     prev?: (onClick: () => void, disabled: boolean) => React.JSX.Element;
     next?: (onClick: () => void, disabled: boolean) => React.JSX.Element;
-    indicator?: (onClick: (page: number) => void, page: number, active: boolean) => React.JSX.Element;
+    indicator?: (
+      onClick: (page: number) => void,
+      page: number,
+      active: boolean,
+    ) => React.JSX.Element;
   };
 }
 
 const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
   (
     { items, ui, arrows = false, prevButton, nextButton, indicators = false, onPageChange, slot },
-    ref
+    ref,
   ) => {
     const defaultUI: ICarouselUI = {
       wrapper: "relative",
@@ -138,7 +149,7 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
           carouselRef.current.scrollTo({ behavior: "smooth", left: itemWidth * page - itemWidth });
         }
       },
-      [itemWidth]
+      [itemWidth],
     );
 
     useImperativeHandle(ref, () => {
@@ -169,7 +180,8 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
               <button
                 onClick={onClickPrev}
                 disabled={isFirst}
-                className={clsx(ui.arrows?.prevButton, isFirst && "cursor-not-allowed")}>
+                className={clsx(ui.arrows?.prevButton, isFirst && "cursor-not-allowed")}
+              >
                 <Icon
                   icon={prevButton && prevButton.icon ? prevButton.icon : "mdi-arrow-left-circle"}
                 />
@@ -183,7 +195,8 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
               <button
                 onClick={onClickNext}
                 disabled={isLast}
-                className={clsx(ui.arrows?.nextButton, isLast && "cursor-not-allowed")}>
+                className={clsx(ui.arrows?.nextButton, isLast && "cursor-not-allowed")}
+              >
                 <Icon
                   icon={nextButton && nextButton.icon ? nextButton.icon : "mdi-arrow-right-circle"}
                 />
@@ -204,16 +217,17 @@ const Carousel = forwardRef<ICarouselRef, ICarouselProps>(
                   aria-label={`set slide ${page}`}
                   className={clsx(
                     ui.indicators?.base,
-                    page === currentPage ? ui.indicators?.active : ui.indicators?.inactive
+                    page === currentPage ? ui.indicators?.active : ui.indicators?.inactive,
                   )}
-                  onClick={() => onClick(page)}></button>
-              )
+                  onClick={() => onClick(page)}
+                ></button>
+              ),
             )}
           </div>
         )}
       </div>
     );
-  }
+  },
 );
 
 export default Carousel;

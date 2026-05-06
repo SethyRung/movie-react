@@ -65,7 +65,7 @@ export interface MovieVideo {
   key: string;
   site: string;
   size: number;
-  type: 'Trailer' | 'Teaser' | 'Clip' | 'Featurette' | 'Behind the Scenes' | 'Bloopers';
+  type: "Trailer" | "Teaser" | "Clip" | "Featurette" | "Behind the Scenes" | "Bloopers";
   official: boolean;
   published_at: string;
 }

@@ -1,11 +1,11 @@
 // Export the main service class
-import { DiscoveryService } from './DiscoveryService';
+import { DiscoveryService } from "./DiscoveryService";
 
 export { DiscoveryService };
 
 // Export types and validation schemas
-export * from './types';
-export * from './validation';
+export * from "./types";
+export * from "./validation";
 
 // Create and export a singleton instance
 export const discoveryService = new DiscoveryService();

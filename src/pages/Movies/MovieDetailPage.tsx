@@ -15,7 +15,7 @@ export default function MovieDetailPage() {
 
   // Find trailer URL
   const trailer = videos?.results?.find(
-    (v: MovieVideo) => v.site === "YouTube" && v.type === "Trailer"
+    (v: MovieVideo) => v.site === "YouTube" && v.type === "Trailer",
   );
   const movieTrailerURL = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : "";
 
@@ -63,7 +63,8 @@ export default function MovieDetailPage() {
             <Link
               to={movieTrailerURL}
               target="_blank"
-              className="p-2 bg-primary-500/30 rounded text-white flex items-center gap-2">
+              className="p-2 bg-primary-500/30 rounded text-white flex items-center gap-2"
+            >
               <Icon icon="mdi-play-circle" />
               <span className="font-redHatText text-base font-bold">Play Trailer</span>
             </Link>
@@ -80,7 +81,7 @@ export default function MovieDetailPage() {
                     <h2 className="text-white font-redHatText font-bold text-sm mb-2">{c.name}</h2>
                     <h2 className="text-grey-500 text-xs">{c.job || c.department}</h2>
                   </div>
-                )
+                ),
             )}
           </div>
         </div>
@@ -95,12 +96,14 @@ export default function MovieDetailPage() {
         <div className="flex gap-2">
           <button
             className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
-            onClick={() => scrollTo("ToLeft")}>
+            onClick={() => scrollTo("ToLeft")}
+          >
             <Icon icon="mdi-chevron-left" />
           </button>
           <button
             className="p-1.5 w-8 h-8 focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0 font-medium text-left break-all line-clamp-1 inline-flex justify-center items-center text-sm gap-x-1.5 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400"
-            onClick={() => scrollTo("ToRight")}>
+            onClick={() => scrollTo("ToRight")}
+          >
             <Icon icon="mdi-chevron-right" />
           </button>
         </div>
@@ -109,7 +112,8 @@ export default function MovieDetailPage() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4 my-8">
         <div
           className="w-full h-fit pb-4 flex gap-4 overflow-x-scroll overflow-y-hidden"
-          ref={castCardRef}>
+          ref={castCardRef}
+        >
           {credits?.cast?.map((c: CastMember, i: number) => (
             <CastCard
               profile={
@@ -138,7 +142,7 @@ export default function MovieDetailPage() {
               <p className="text-grey-500 text-xs">
                 {movie?.revenue &&
                   Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-                    movie?.revenue
+                    movie?.revenue,
                   )}
               </p>
             </div>
@@ -147,7 +151,7 @@ export default function MovieDetailPage() {
               <p className="text-grey-500 text-xs">
                 {movie?.budget &&
                   Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-                    movie?.budget
+                    movie?.budget,
                   )}
               </p>
             </div>

@@ -13,7 +13,7 @@ export type {
   MovieKeywords,
   PaginatedMovieResponse,
   CompleteMovieData,
-} from './validation';
+} from "./validation";
 
 // Additional service-specific types
 export interface MovieSearchOptions {

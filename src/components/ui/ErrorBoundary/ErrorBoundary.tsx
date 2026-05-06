@@ -1,6 +1,6 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Component, ErrorInfo, ReactNode } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 // Enhanced error tracking interface
 interface ErrorReport {
@@ -70,7 +70,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error("Uncaught error:", error, errorInfo);
 
     const newState = {
       error,
@@ -98,14 +98,14 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   private createErrorReport = (error: Error, errorInfo: ErrorInfo): ErrorReport => ({
-    id: this.state.errorId || 'unknown',
+    id: this.state.errorId || "unknown",
     timestamp: new Date().toISOString(),
     error: {
       message: error.message,
       name: error.name,
       stack: error.stack,
     },
-    componentStack: errorInfo.componentStack || '',
+    componentStack: errorInfo.componentStack || "",
     userAgent: navigator.userAgent,
     url: window.location.href,
     sessionId: this.sessionId,
@@ -120,9 +120,9 @@ class ErrorBoundary extends Component<Props, State> {
 
     try {
       const response = await fetch(this.props.reportingEndpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(errorReport),
       });
@@ -131,9 +131,9 @@ class ErrorBoundary extends Component<Props, State> {
         throw new Error(`Failed to report error: ${response.statusText}`);
       }
 
-      console.log('Error reported successfully:', errorReport.id);
+      console.log("Error reported successfully:", errorReport.id);
     } catch (reportingError) {
-      console.error('Failed to report error:', reportingError);
+      console.error("Failed to report error:", reportingError);
       this.setState({ reportFailed: true });
     } finally {
       this.setState({ isReporting: false });
@@ -156,7 +156,7 @@ class ErrorBoundary extends Component<Props, State> {
     });
 
     // Clear any pending retry timeouts
-    this.retryTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.retryTimeouts.forEach((timeout) => clearTimeout(timeout));
     this.retryTimeouts = [];
   };
 
@@ -167,7 +167,7 @@ class ErrorBoundary extends Component<Props, State> {
     if (retryCount < maxRetries) {
       const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
       const timeout = setTimeout(() => {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           retryCount: prevState.retryCount + 1,
         }));
         this.handleReset();
@@ -193,26 +193,29 @@ URL: ${window.location.href}
 Session ID: ${this.sessionId}
     `.trim();
 
-    navigator.clipboard.writeText(errorText).then(() => {
-      // Show success message (could use a toast notification)
-      console.log('Error details copied to clipboard');
-    }).catch(err => {
-      console.error('Failed to copy error details:', err);
-    });
+    navigator.clipboard
+      .writeText(errorText)
+      .then(() => {
+        // Show success message (could use a toast notification)
+        console.log("Error details copied to clipboard");
+      })
+      .catch((err) => {
+        console.error("Failed to copy error details:", err);
+      });
   };
 
   private getErrorCategory = (error: Error): string => {
-    if (error.name === 'ChunkLoadError') return 'Code Splitting Error';
-    if (error.message.includes('Network')) return 'Network Error';
-    if (error.message.includes('Permission')) return 'Permission Error';
-    if (error.message.includes('TypeError')) return 'Type Error';
-    if (error.message.includes('ReferenceError')) return 'Reference Error';
-    return 'Application Error';
+    if (error.name === "ChunkLoadError") return "Code Splitting Error";
+    if (error.message.includes("Network")) return "Network Error";
+    if (error.message.includes("Permission")) return "Permission Error";
+    if (error.message.includes("TypeError")) return "Type Error";
+    if (error.message.includes("ReferenceError")) return "Reference Error";
+    return "Application Error";
   };
 
   public componentWillUnmount() {
     // Clean up timeouts
-    this.retryTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.retryTimeouts.forEach((timeout) => clearTimeout(timeout));
   }
 
   public render() {
@@ -221,7 +224,7 @@ Session ID: ${this.sessionId}
       fallback,
       fallbackComponent: FallbackComponent,
       showErrorDetails,
-      maxRetries = 3
+      maxRetries = 3,
     } = this.props;
 
     if (hasError && error) {
@@ -233,11 +236,7 @@ Session ID: ${this.sessionId}
       // Use custom fallback component if provided
       if (FallbackComponent) {
         return (
-          <FallbackComponent
-            error={error}
-            retry={this.handleRetry}
-            reset={this.handleReset}
-          />
+          <FallbackComponent error={error} retry={this.handleRetry} reset={this.handleReset} />
         );
       }
 
@@ -281,14 +280,14 @@ Session ID: ${this.sessionId}
 
                 {/* Error Message */}
                 <p className="text-muted-foreground mb-4">
-                  {error.message || 'An unexpected error occurred'}
+                  {error.message || "An unexpected error occurred"}
                 </p>
 
                 {/* Retry Info */}
                 {retryCount > 0 && (
                   <p className="text-sm text-muted-foreground mb-4">
                     Retry attempt {retryCount} of {maxRetries}
-                    {!canRetry && ' - Maximum retries reached'}
+                    {!canRetry && " - Maximum retries reached"}
                   </p>
                 )}
 
@@ -297,9 +296,25 @@ Session ID: ${this.sessionId}
                   <div className="mb-4">
                     {isReporting && (
                       <div className="flex items-center justify-center text-sm text-muted-foreground">
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Reporting error...
                       </div>
@@ -346,7 +361,7 @@ Session ID: ${this.sessionId}
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   {canRetry && (
                     <Button onClick={this.handleRetry} variant="outline" disabled={isReporting}>
-                      {retryCount === 0 ? 'Try Again' : `Retry (${retryCount}/${maxRetries})`}
+                      {retryCount === 0 ? "Try Again" : `Retry (${retryCount}/${maxRetries})`}
                     </Button>
                   )}
                   <Button onClick={this.handleReset} disabled={isReporting}>

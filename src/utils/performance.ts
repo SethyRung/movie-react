@@ -72,7 +72,7 @@ class PerformanceMonitor {
   async measureAsync<T>(
     name: string,
     fn: () => Promise<T>,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
   ): Promise<T> {
     this.startMeasure(name, metadata);
     try {
@@ -86,11 +86,7 @@ class PerformanceMonitor {
   }
 
   // Measure sync function execution
-  measureSync<T>(
-    name: string,
-    fn: () => T,
-    metadata?: Record<string, unknown>
-  ): T {
+  measureSync<T>(name: string, fn: () => T, metadata?: Record<string, unknown>): T {
     this.startMeasure(name, metadata);
     try {
       const result = fn();
@@ -104,17 +100,17 @@ class PerformanceMonitor {
 
   // Monitor Web Vitals
   observeWebVitals(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     // Largest Contentful Paint (LCP)
     try {
       new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
-        console.log('🎯 LCP:', lastEntry.startTime);
-      }).observe({ entryTypes: ['largest-contentful-paint'] });
+        console.log("🎯 LCP:", lastEntry.startTime);
+      }).observe({ entryTypes: ["largest-contentful-paint"] });
     } catch {
-      console.warn('LCP observation not supported');
+      console.warn("LCP observation not supported");
     }
 
     // First Input Delay (FID)
@@ -122,11 +118,14 @@ class PerformanceMonitor {
       new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
-          console.log('⚡ FID:', (entry as PerformanceEventTiming).processingStart - entry.startTime);
+          console.log(
+            "⚡ FID:",
+            (entry as PerformanceEventTiming).processingStart - entry.startTime,
+          );
         });
-      }).observe({ entryTypes: ['first-input'] });
+      }).observe({ entryTypes: ["first-input"] });
     } catch {
-      console.warn('FID observation not supported');
+      console.warn("FID observation not supported");
     }
 
     // Cumulative Layout Shift (CLS)
@@ -135,20 +134,24 @@ class PerformanceMonitor {
       new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
-          if (!(entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }).hadRecentInput) {
-            clsValue += (entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }).value || 0;
+          if (
+            !(entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number })
+              .hadRecentInput
+          ) {
+            clsValue +=
+              (entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }).value || 0;
           }
         });
-        console.log('📐 CLS:', clsValue);
-      }).observe({ entryTypes: ['layout-shift'] });
+        console.log("📐 CLS:", clsValue);
+      }).observe({ entryTypes: ["layout-shift"] });
     } catch {
-      console.warn('CLS observation not supported');
+      console.warn("CLS observation not supported");
     }
   }
 
   // Disconnect all observers
   disconnect(): void {
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
     this.observers = [];
   }
 }
@@ -159,7 +162,7 @@ export const performanceMonitor = new PerformanceMonitor();
 // Debounce utility for performance
 export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
@@ -171,7 +174,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 // Throttle utility for performance
 export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   return (...args: Parameters<T>) => {
@@ -186,7 +189,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 // Memoization utility
 export function memoize<T extends (...args: unknown[]) => unknown>(
   func: T,
-  keyGenerator?: (...args: Parameters<T>) => string
+  keyGenerator?: (...args: Parameters<T>) => string,
 ): T {
   const cache = new Map<string, ReturnType<T>>();
 
@@ -206,7 +209,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
 // Request idle callback utility
 export function requestIdleCallback(
   callback: (deadline?: IdleDeadline) => void,
-  options?: IdleRequestOptions
+  options?: IdleRequestOptions,
 ): number {
   if (window.requestIdleCallback) {
     return window.requestIdleCallback(callback, options);
@@ -225,15 +228,15 @@ export function cancelIdleCallback(handle: number): void {
 }
 
 // Preload resources
-export function preloadResource(url: string, type: 'image' | 'script' | 'style'): Promise<void> {
+export function preloadResource(url: string, type: "image" | "script" | "style"): Promise<void> {
   return new Promise((resolve, reject) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
+    const link = document.createElement("link");
+    link.rel = "preload";
     link.href = url;
     link.as = type;
 
-    if (type === 'image') {
-      link.type = 'image/webp'; // Default to webp for images
+    if (type === "image") {
+      link.type = "image/webp"; // Default to webp for images
     }
 
     link.onload = () => {
@@ -253,10 +256,10 @@ export function preloadResource(url: string, type: 'image' | 'script' | 'style')
 // Intersection Observer utility for lazy loading
 export function createIntersectionObserver(
   callback: IntersectionObserverCallback,
-  options?: IntersectionObserverInit
+  options?: IntersectionObserverInit,
 ): IntersectionObserver {
   return new IntersectionObserver(callback, {
-    rootMargin: '50px 0px',
+    rootMargin: "50px 0px",
     threshold: 0.1,
     ...options,
   });
@@ -265,7 +268,7 @@ export function createIntersectionObserver(
 // Resize Observer utility with debouncing
 export function createResizeObserver(
   callback: ResizeObserverCallback,
-  delay: number = 100
+  delay: number = 100,
 ): ResizeObserver {
   let timeoutId: NodeJS.Timeout;
 

@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
 
 // Import types from the existing types
-import { Movie } from '@/types/api.types';
+import { Movie } from "@/types/api.types";
 
 // Define MovieDetails interface (can be expanded based on API response)
-interface MovieDetails extends Omit<Movie, 'overview'> {
+interface MovieDetails extends Omit<Movie, "overview"> {
   overview: string;
   genres: Array<{ id: number; name: string }>;
   runtime?: number;
@@ -33,7 +33,7 @@ interface MovieStore {
   // Pagination and filtering
   currentPage: number;
   totalPages: number;
-  currentCategory: 'popular' | 'now-playing' | 'upcoming' | 'top-rated';
+  currentCategory: "popular" | "now-playing" | "upcoming" | "top-rated";
 
   // Actions
   setMovies: (movies: Movie[] | ((prev: Movie[]) => Movie[])) => void;
@@ -49,7 +49,7 @@ interface MovieStore {
   // Pagination actions
   setCurrentPage: (page: number) => void;
   setTotalPages: (pages: number) => void;
-  setCurrentCategory: (category: 'popular' | 'now-playing' | 'upcoming' | 'top-rated') => void;
+  setCurrentCategory: (category: "popular" | "now-playing" | "upcoming" | "top-rated") => void;
 
   // Utility actions
   isFavorite: (movieId: number) => boolean;
@@ -71,33 +71,34 @@ export const useMovieStore = create<MovieStore>()(
         error: null,
         currentPage: 1,
         totalPages: 1,
-        currentCategory: 'popular',
+        currentCategory: "popular",
 
         // Actions
-        setMovies: (movies) => set((state) => ({
-          movies: typeof movies === 'function' ? movies(state.movies) : movies
-        })),
+        setMovies: (movies) =>
+          set((state) => ({
+            movies: typeof movies === "function" ? movies(state.movies) : movies,
+          })),
 
         setCurrentMovie: (movie) => set({ currentMovie: movie }),
 
         addToFavorites: (movieId) =>
           set((state) => ({
-            favorites: [...new Set([...state.favorites, movieId])]
+            favorites: [...new Set([...state.favorites, movieId])],
           })),
 
         removeFromFavorites: (movieId) =>
           set((state) => ({
-            favorites: state.favorites.filter(id => id !== movieId)
+            favorites: state.favorites.filter((id) => id !== movieId),
           })),
 
         addToWatchlist: (movieId) =>
           set((state) => ({
-            watchlist: [...new Set([...state.watchlist, movieId])]
+            watchlist: [...new Set([...state.watchlist, movieId])],
           })),
 
         removeFromWatchlist: (movieId) =>
           set((state) => ({
-            watchlist: state.watchlist.filter(id => id !== movieId)
+            watchlist: state.watchlist.filter((id) => id !== movieId),
           })),
 
         setLoading: (isLoading) => set({ isLoading }),
@@ -126,13 +127,13 @@ export const useMovieStore = create<MovieStore>()(
         clearCurrentMovie: () => set({ currentMovie: null }),
       }),
       {
-        name: 'movie-store',
+        name: "movie-store",
         partialize: (state) => ({
           favorites: state.favorites,
           watchlist: state.watchlist,
           currentCategory: state.currentCategory,
         }),
-      }
-    )
-  )
+      },
+    ),
+  ),
 );

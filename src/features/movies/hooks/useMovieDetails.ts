@@ -1,14 +1,14 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { movieService } from '@/services';
-import { useMovieStore } from '../stores/movieStore';
-import { ExtendedMovie } from '../types/movie.types';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { movieService } from "@/services";
+import { useMovieStore } from "../stores/movieStore";
+import { ExtendedMovie } from "../types/movie.types";
 
 export function useMovieDetails(movieId: number) {
   const { setCurrentMovie, setLoading, setError } = useMovieStore();
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: ['movie', movieId],
+    queryKey: ["movie", movieId],
     queryFn: async () => {
       setLoading(true);
       try {
@@ -20,33 +20,33 @@ export function useMovieDetails(movieId: number) {
         });
 
         if (!response.success || !response.data) {
-          throw new Error(response.error?.message || 'Movie not found');
+          throw new Error(response.error?.message || "Movie not found");
         }
 
         const movieData = response.data;
 
         setCurrentMovie({
-          ...movieData as unknown as ExtendedMovie,
-          genres: movieData.genres || []
+          ...(movieData as unknown as ExtendedMovie),
+          genres: movieData.genres || [],
         });
 
         // Prefetch individual queries for existing components that expect them
         queryClient.prefetchQuery({
-          queryKey: ['movie', movieId, 'credits'],
+          queryKey: ["movie", movieId, "credits"],
           queryFn: async () => {
             return movieData.credits || { cast: [], crew: [] };
           },
         });
 
         queryClient.prefetchQuery({
-          queryKey: ['movie', movieId, 'images'],
+          queryKey: ["movie", movieId, "images"],
           queryFn: async () => {
             return movieData.images || { backdrops: [], posters: [] };
           },
         });
 
         queryClient.prefetchQuery({
-          queryKey: ['movie', movieId, 'videos'],
+          queryKey: ["movie", movieId, "videos"],
           queryFn: async () => {
             return movieData.videos || { results: [] };
           },
@@ -54,7 +54,7 @@ export function useMovieDetails(movieId: number) {
 
         return movieData;
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to fetch movie details');
+        setError(error instanceof Error ? error.message : "Failed to fetch movie details");
         throw error;
       } finally {
         setLoading(false);
@@ -67,7 +67,7 @@ export function useMovieDetails(movieId: number) {
 
 export function useMovieCredits(movieId: number) {
   return useQuery({
-    queryKey: ['movie', movieId, 'credits'],
+    queryKey: ["movie", movieId, "credits"],
     queryFn: async () => {
       const response = await movieService.getMovieCredits(movieId);
       if (!response.success || !response.data) {
@@ -82,7 +82,7 @@ export function useMovieCredits(movieId: number) {
 
 export function useMovieImages(movieId: number) {
   return useQuery({
-    queryKey: ['movie', movieId, 'images'],
+    queryKey: ["movie", movieId, "images"],
     queryFn: async () => {
       const response = await movieService.getMovieImages(movieId);
       if (!response.success || !response.data) {
@@ -97,7 +97,7 @@ export function useMovieImages(movieId: number) {
 
 export function useMovieVideos(movieId: number) {
   return useQuery({
-    queryKey: ['movie', movieId, 'videos'],
+    queryKey: ["movie", movieId, "videos"],
     queryFn: async () => {
       const response = await movieService.getMovieVideos(movieId);
       if (!response.success || !response.data) {

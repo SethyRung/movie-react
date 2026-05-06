@@ -16,7 +16,7 @@ export interface PaginatedResponse<T> {
   totalResults: number;
 }
 
-export type SortOrder = 'asc' | 'desc';
+export type SortOrder = "asc" | "desc";
 
 export interface SearchParams {
   query?: string;

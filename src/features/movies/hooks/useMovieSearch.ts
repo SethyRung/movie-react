@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { movieService } from '@/services';
-import { useMovieStore } from '../stores/movieStore';
-import { Movie } from '@/types/api.types';
+import { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { movieService } from "@/services";
+import { useMovieStore } from "../stores/movieStore";
+import { Movie } from "@/types/api.types";
 
 export function useMovieSearch() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchPage, setSearchPage] = useState(1);
   const { setMovies, setLoading, setError, setTotalPages } = useMovieStore();
 
@@ -15,7 +15,7 @@ export function useMovieSearch() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['search-movies', searchQuery, searchPage],
+    queryKey: ["search-movies", searchQuery, searchPage],
     queryFn: async () => {
       if (!searchQuery.trim()) {
         return { results: [], total_pages: 0, total_results: 0, page: 1 };
@@ -25,50 +25,55 @@ export function useMovieSearch() {
       try {
         const response = await movieService.searchMovies(searchQuery.trim(), {
           page: searchPage,
-          language: 'en-US',
+          language: "en-US",
           includeAdult: false,
         });
 
         if (!response.success || !response.data) {
-          throw new Error(response.error?.message || 'Failed to search movies');
+          throw new Error(response.error?.message || "Failed to search movies");
         }
 
         const searchData = response.data.results;
 
         if (searchPage === 1) {
-          setMovies(searchData.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster_path: movie.poster_path || undefined,
-            backdrop_path: movie.backdrop_path || undefined,
-            overview: movie.overview || '',
-            release_date: movie.release_date || '',
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-            popularity: movie.popularity || 0,
-            original_language: movie.original_language || '',
-            original_title: movie.original_title || '',
-            genre_ids: movie.genre_ids || [],
-            adult: movie.adult || false,
-            video: movie.video || false,
-          })));
+          setMovies(
+            searchData.map((movie) => ({
+              id: movie.id,
+              title: movie.title,
+              poster_path: movie.poster_path || undefined,
+              backdrop_path: movie.backdrop_path || undefined,
+              overview: movie.overview || "",
+              release_date: movie.release_date || "",
+              vote_average: movie.vote_average,
+              vote_count: movie.vote_count,
+              popularity: movie.popularity || 0,
+              original_language: movie.original_language || "",
+              original_title: movie.original_title || "",
+              genre_ids: movie.genre_ids || [],
+              adult: movie.adult || false,
+              video: movie.video || false,
+            })),
+          );
         } else {
-          setMovies((prev: Movie[]) => [...prev, ...searchData.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster_path: movie.poster_path || undefined,
-            backdrop_path: movie.backdrop_path || undefined,
-            overview: movie.overview || '',
-            release_date: movie.release_date || '',
-            vote_average: movie.vote_average,
-            vote_count: movie.vote_count,
-            popularity: movie.popularity || 0,
-            original_language: movie.original_language || '',
-            original_title: movie.original_title || '',
-            genre_ids: movie.genre_ids || [],
-            adult: movie.adult || false,
-            video: movie.video || false,
-          }))]);
+          setMovies((prev: Movie[]) => [
+            ...prev,
+            ...searchData.map((movie) => ({
+              id: movie.id,
+              title: movie.title,
+              poster_path: movie.poster_path || undefined,
+              backdrop_path: movie.backdrop_path || undefined,
+              overview: movie.overview || "",
+              release_date: movie.release_date || "",
+              vote_average: movie.vote_average,
+              vote_count: movie.vote_count,
+              popularity: movie.popularity || 0,
+              original_language: movie.original_language || "",
+              original_title: movie.original_title || "",
+              genre_ids: movie.genre_ids || [],
+              adult: movie.adult || false,
+              video: movie.video || false,
+            })),
+          ]);
         }
 
         setTotalPages(response.data.total_pages);
@@ -81,7 +86,7 @@ export function useMovieSearch() {
           total_results: response.data.total_results,
         };
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to search movies');
+        setError(error instanceof Error ? error.message : "Failed to search movies");
         throw error;
       } finally {
         setLoading(false);
@@ -99,7 +104,7 @@ export function useMovieSearch() {
         refetch();
       }
     },
-    [refetch]
+    [refetch],
   );
 
   const loadMoreResults = useCallback(() => {
@@ -111,7 +116,7 @@ export function useMovieSearch() {
   }, [searchPage, searchResults, refetch]);
 
   const clearSearch = useCallback(() => {
-    setSearchQuery('');
+    setSearchQuery("");
     setSearchPage(1);
     setMovies([]);
   }, [setMovies]);

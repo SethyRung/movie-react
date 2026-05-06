@@ -1,24 +1,24 @@
-import { useQuery } from '@tanstack/react-query';
-import { discoveryService } from '@/services';
-import { useMovieStore } from '../stores/movieStore';
-import { ServiceResponse } from '@/services';
-import { MainMovieResponse } from '@/services/discovery/validation';
+import { useQuery } from "@tanstack/react-query";
+import { discoveryService } from "@/services";
+import { useMovieStore } from "../stores/movieStore";
+import { ServiceResponse } from "@/services";
+import { MainMovieResponse } from "@/services/discovery/validation";
 
 export function useMainMovie() {
   const { setLoading, setError } = useMovieStore();
 
   return useQuery({
-    queryKey: ['main-movie'],
+    queryKey: ["main-movie"],
     queryFn: async () => {
       setLoading(true);
       try {
         const response: ServiceResponse<MainMovieResponse> = await discoveryService.getMainMovie({
-          language: 'en-US',
+          language: "en-US",
           includeImages: true,
         });
 
         if (!response.success || !response.data) {
-          throw new Error(response.error?.message || 'No movies found');
+          throw new Error(response.error?.message || "No movies found");
         }
 
         // Transform to legacy format for compatibility
@@ -32,7 +32,7 @@ export function useMainMovie() {
           images: response.data.images,
         };
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to fetch main movie');
+        setError(error instanceof Error ? error.message : "Failed to fetch main movie");
         throw error;
       } finally {
         setLoading(false);

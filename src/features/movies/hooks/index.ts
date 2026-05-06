@@ -1,25 +1,14 @@
-export {
-  useMovies,
-  usePopularMovies,
-  useNowPlayingMovies,
-  useUpcomingMovies,
-} from './useMovies';
+export { useMovies, usePopularMovies, useNowPlayingMovies, useUpcomingMovies } from "./useMovies";
 
 export {
   useMovieDetails,
   useMovieCredits,
   useMovieImages,
   useMovieVideos,
-} from './useMovieDetails';
+} from "./useMovieDetails";
 
-export {
-  useFavorites,
-} from './useFavorites';
+export { useFavorites } from "./useFavorites";
 
-export {
-  useMovieSearch,
-} from './useMovieSearch';
+export { useMovieSearch } from "./useMovieSearch";
 
-export {
-  useMainMovie,
-} from './useMainMovie';
+export { useMainMovie } from "./useMainMovie";

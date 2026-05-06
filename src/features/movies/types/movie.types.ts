@@ -1,4 +1,4 @@
-import { Movie } from '@/types/api.types';
+import { Movie } from "@/types/api.types";
 
 // Extended movie interface with additional properties
 export interface ExtendedMovie extends Movie {
@@ -12,7 +12,7 @@ export interface ExtendedMovie extends Movie {
 }
 
 // Movie categories
-export type MovieCategory = 'popular' | 'now-playing' | 'upcoming' | 'top-rated';
+export type MovieCategory = "popular" | "now-playing" | "upcoming" | "top-rated";
 
 // Movie list response
 export interface MovieListResponse {

@@ -1,8 +1,8 @@
-import { lazy } from 'react';
-import { withLazyLoad } from '@/components/ui/Loading';
+import { lazy } from "react";
+import { withLazyLoad } from "@/components/ui/Loading";
 
 // Lazy loaded components with error boundaries
-export const LazyHomePage = withLazyLoad(() => import('@/pages/Home'), {
+export const LazyHomePage = withLazyLoad(() => import("@/pages/Home"), {
   errorBoundary: true,
   retryCount: 3,
   fallback: (
@@ -15,7 +15,7 @@ export const LazyHomePage = withLazyLoad(() => import('@/pages/Home'), {
   ),
 });
 
-export const LazyMovieListPage = withLazyLoad(() => import('@/pages/Movies/MovieListPage'), {
+export const LazyMovieListPage = withLazyLoad(() => import("@/pages/Movies/MovieListPage"), {
   errorBoundary: true,
   retryCount: 3,
   fallback: (
@@ -28,7 +28,7 @@ export const LazyMovieListPage = withLazyLoad(() => import('@/pages/Movies/Movie
   ),
 });
 
-export const LazyMovieDetailPage = withLazyLoad(() => import('@/pages/Movies/MovieDetailPage'), {
+export const LazyMovieDetailPage = withLazyLoad(() => import("@/pages/Movies/MovieDetailPage"), {
   errorBoundary: true,
   retryCount: 3,
   fallback: (
@@ -41,7 +41,7 @@ export const LazyMovieDetailPage = withLazyLoad(() => import('@/pages/Movies/Mov
   ),
 });
 
-export const LazyNotFoundPage = withLazyLoad(() => import('@/pages/NotFound/NotFoundPage'), {
+export const LazyNotFoundPage = withLazyLoad(() => import("@/pages/NotFound/NotFoundPage"), {
   errorBoundary: true,
   retryCount: 2,
   fallback: (
@@ -57,22 +57,22 @@ export const LazyNotFoundPage = withLazyLoad(() => import('@/pages/NotFound/NotF
 /* eslint-disable react-refresh/only-export-components */
 // Prefetch utilities
 export const prefetchHomePage = () => {
-  import('@/pages/Home');
+  import("@/pages/Home");
 };
 
 export const prefetchMoviePages = () => {
-  import('@/pages/Movies/MovieListPage');
-  import('@/pages/Movies/MovieDetailPage');
+  import("@/pages/Movies/MovieListPage");
+  import("@/pages/Movies/MovieDetailPage");
 };
 
 export const prefetchNotFoundPage = () => {
-  import('@/pages/NotFound/NotFoundPage');
+  import("@/pages/NotFound/NotFoundPage");
 };
 
 // Critical components (non-lazy)
 export const CriticalComponents = {
-  Navbar: lazy(() => import('@/components/AppHeader')),
-  Footer: lazy(() => import('@/components/AppFooter')),
+  Navbar: lazy(() => import("@/components/AppHeader")),
+  Footer: lazy(() => import("@/components/AppFooter")),
 };
 
 export default {

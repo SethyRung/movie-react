@@ -66,10 +66,11 @@ const Tabs = ({ items, currentTab, onCurrentTabChange, ui }: ITabsProps) => {
                 : ui.button!.inactive
               : index === 0
                 ? ui.button!.active
-                : ui.button!.inactive
+                : ui.button!.inactive,
           )}
           key={index}
-          onClick={() => onTabClick(btn.key)}>
+          onClick={() => onTabClick(btn.key)}
+        >
           {btn.icon && <Icon icon={btn.icon} key={index} className={ui.button?.icon} />}
           <span key={index} className={ui.button?.title}>
             {btn.title}

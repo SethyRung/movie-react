@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import Skeleton from "@/components/skeleton";
-import { CastCardProps } from './CastCard.types';
+import { CastCardProps } from "./CastCard.types";
 
-const CastCard: React.FC<CastCardProps> = ({
-  profile,
-  name,
-  character,
-}) => {
+const CastCard: React.FC<CastCardProps> = ({ profile, name, character }) => {
   const [isLoadImgSuccess, setIsLoadImgSuccess] = useState(true);
 
   return (

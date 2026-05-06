@@ -1,18 +1,17 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
+import { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 import {
   ServiceResponse,
   ServiceError,
   RequestConfig,
   CacheOptions,
-  PaginationParams
-} from './ServiceResponse';
-import { ServiceErrorFactory, RetryHandler } from './errorHandling';
-import { ServiceCache } from './cache';
-import { ZodSchema } from 'zod';
+  PaginationParams,
+} from "./ServiceResponse";
+import { ServiceErrorFactory, RetryHandler } from "./errorHandling";
+import { ServiceCache } from "./cache";
+import { ZodSchema } from "zod";
 
 // Generic type for request parameters
 type RequestParams = Record<string, string | number | boolean | undefined | null>;
-
 
 export abstract class BaseService {
   protected httpClient: AxiosInstance;
@@ -58,13 +57,13 @@ export abstract class BaseService {
   protected async request<T>(
     config: AxiosRequestConfig,
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
+    validationSchema?: ZodSchema<T>,
   ): Promise<ServiceResponse<T>> {
     const startTime = Date.now();
     const cacheKey = this.cache.generateKeyForService(
-      config.url || '',
+      config.url || "",
       config.params as RequestParams,
-      this.serviceName
+      this.serviceName,
     );
 
     // Check cache first if caching is enabled
@@ -92,7 +91,7 @@ export abstract class BaseService {
       const response = await RetryHandler.retryWithBackoff(
         () => this.httpClient.request(requestConfig),
         options.retries ?? this.defaultRetries,
-        options.retryDelay ?? this.defaultRetryDelay
+        options.retryDelay ?? this.defaultRetryDelay,
       );
 
       let data = response.data;
@@ -119,7 +118,6 @@ export abstract class BaseService {
         fromCache: false,
         success: true,
       };
-
     } catch (error) {
       const serviceError = this.handleRequestError(error, options);
       return this.createErrorResponse<T>(serviceError, Date.now() - startTime);
@@ -130,16 +128,16 @@ export abstract class BaseService {
     url: string,
     params?: RequestParams,
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
+    validationSchema?: ZodSchema<T>,
   ): Promise<ServiceResponse<T>> {
     return this.request<T>(
       {
-        method: 'GET',
+        method: "GET",
         url,
         params,
       },
       options,
-      validationSchema
+      validationSchema,
     );
   }
 
@@ -147,16 +145,16 @@ export abstract class BaseService {
     url: string,
     data?: unknown,
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
+    validationSchema?: ZodSchema<T>,
   ): Promise<ServiceResponse<T>> {
     return this.request<T>(
       {
-        method: 'POST',
+        method: "POST",
         url,
         data,
       },
       options,
-      validationSchema
+      validationSchema,
     );
   }
 
@@ -164,31 +162,31 @@ export abstract class BaseService {
     url: string,
     data?: unknown,
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
+    validationSchema?: ZodSchema<T>,
   ): Promise<ServiceResponse<T>> {
     return this.request<T>(
       {
-        method: 'PUT',
+        method: "PUT",
         url,
         data,
       },
       options,
-      validationSchema
+      validationSchema,
     );
   }
 
   protected async delete<T>(
     url: string,
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
+    validationSchema?: ZodSchema<T>,
   ): Promise<ServiceResponse<T>> {
     return this.request<T>(
       {
-        method: 'DELETE',
+        method: "DELETE",
         url,
       },
       options,
-      validationSchema
+      validationSchema,
     );
   }
 
@@ -197,19 +195,27 @@ export abstract class BaseService {
     url: string,
     params: PaginationParams & RequestParams = {},
     options: RequestConfig = {},
-    validationSchema?: ZodSchema<T>
-  ): Promise<ServiceResponse<{
-    results: T[];
-    page: number;
-    total_pages: number;
-    total_results: number;
-  }>> {
+    validationSchema?: ZodSchema<T>,
+  ): Promise<
+    ServiceResponse<{
+      results: T[];
+      page: number;
+      total_pages: number;
+      total_results: number;
+    }>
+  > {
     const response = await this.get(url, params, options, validationSchema);
 
     if (response.success && response.data) {
       // Check if response.data has TMDB pagination format
       const data = response.data as unknown;
-      if (data && typeof data === 'object' && 'results' in data && 'page' in data && 'total_pages' in data) {
+      if (
+        data &&
+        typeof data === "object" &&
+        "results" in data &&
+        "page" in data &&
+        "total_pages" in data
+      ) {
         const { results, page, total_pages, total_results } = data as {
           results: T[];
           page: number;
@@ -242,7 +248,7 @@ export abstract class BaseService {
 
   private handleRequestError(error: unknown, options: RequestConfig): ServiceError {
     // Handle timeout errors
-    if (error instanceof Error && error.message.includes('timeout')) {
+    if (error instanceof Error && error.message.includes("timeout")) {
       return ServiceErrorFactory.fromTimeoutError(options.timeout ?? this.defaultTimeout);
     }
 
@@ -256,7 +262,7 @@ export abstract class BaseService {
   }
 
   private isAxiosError(error: unknown): error is AxiosError {
-    return error instanceof Object && 'isAxiosError' in error;
+    return error instanceof Object && "isAxiosError" in error;
   }
 
   private createErrorResponse<T>(error: ServiceError, duration: number): ServiceResponse<T> {
@@ -281,9 +287,7 @@ export abstract class BaseService {
     if (pattern) {
       // Invalidate cache entries matching pattern
       const stats = this.cache.getStats();
-      stats.keys
-        .filter(key => key.includes(pattern))
-        .forEach(key => this.cache.delete(key));
+      stats.keys.filter((key) => key.includes(pattern)).forEach((key) => this.cache.delete(key));
     } else {
       // Clear all cache
       this.cache.clear();

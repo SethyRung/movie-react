@@ -64,7 +64,8 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
     return (
       <div
         ref={ref}
-        className="p-2 md:p-4 lg:pl-6 text-white bg-tertiary-500 rounded-lg flex flex-col sm:flex-row-reverse justify-between gap-4 md:gap-8">
+        className="p-2 md:p-4 lg:pl-6 text-white bg-tertiary-500 rounded-lg flex flex-col sm:flex-row-reverse justify-between gap-4 md:gap-8"
+      >
         <div className="w-full sm:w-[60%] aspect-video overflow-hidden">
           <Carousel
             ref={carouselRef}
@@ -84,7 +85,7 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
                     onLoad={() => index === 0 && setCarouselImgLoading(false)}
                     className={cn(
                       "w-full h-full object-cover",
-                      carouselImgLoading ? "hidden" : "block"
+                      carouselImgLoading ? "hidden" : "block",
                     )}
                     key={index}
                   />
@@ -123,7 +124,8 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
           </div>
           <Link
             to={`/movies/${id}`}
-            className="w-32 h-8 bg-primary-500 hover:bg-primary-600 transition-all rounded-2xl flex items-center justify-center gap-2 text-xs md:text-base">
+            className="w-32 h-8 bg-primary-500 hover:bg-primary-600 transition-all rounded-2xl flex items-center justify-center gap-2 text-xs md:text-base"
+          >
             <Icon icon="mdi-eye" width="16" />
             See details
           </Link>
@@ -153,7 +155,7 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default MainCard;

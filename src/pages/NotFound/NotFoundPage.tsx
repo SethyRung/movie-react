@@ -16,14 +16,16 @@ export default function NotFoundPage() {
       <div className="flex flex-col sm:flex-row gap-4">
         <Link
           to="/"
-          className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2">
+          className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
           <Icon icon="mdi-home" />
           Go Home
         </Link>
 
         <Link
           to="/movies"
-          className="px-6 py-3 bg-secondary-500 hover:bg-secondary-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2">
+          className="px-6 py-3 bg-secondary-500 hover:bg-secondary-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
           <Icon icon="mdi-movie" />
           Browse Movies
         </Link>

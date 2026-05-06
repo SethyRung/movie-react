@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
-import { Icon } from '@iconify/react';
+import React, { useState, useRef, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Icon } from "@iconify/react";
 
 interface SearchProps {
   placeholder?: string;
@@ -9,19 +9,19 @@ interface SearchProps {
   value?: string;
   onChange?: (value: string) => void;
   debounceMs?: number;
-  size?: 'sm' | 'default' | 'lg';
+  size?: "sm" | "default" | "lg";
 }
 
 const Search: React.FC<SearchProps> = ({
-  placeholder = 'Search here',
+  placeholder = "Search here",
   onSearch,
   className,
   value: controlledValue,
   onChange,
   debounceMs = 300,
-  size = 'default',
+  size = "default",
 }) => {
-  const [internalValue, setInternalValue] = useState('');
+  const [internalValue, setInternalValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -30,9 +30,9 @@ const Search: React.FC<SearchProps> = ({
   const value = controlledValue !== undefined ? controlledValue : internalValue;
 
   const sizeClasses = {
-    sm: 'h-8 text-sm',
-    default: 'h-10',
-    lg: 'h-12 text-lg',
+    sm: "h-8 text-sm",
+    default: "h-10",
+    lg: "h-12 text-lg",
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ const Search: React.FC<SearchProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && onSearch) {
+    if (e.key === "Enter" && onSearch) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -69,11 +69,11 @@ const Search: React.FC<SearchProps> = ({
 
   const handleClear = () => {
     if (controlledValue !== undefined && onChange) {
-      onChange('');
+      onChange("");
     } else {
-      setInternalValue('');
+      setInternalValue("");
     }
-    onSearch?.('');
+    onSearch?.("");
     inputRef.current?.focus();
   };
 
@@ -90,7 +90,7 @@ const Search: React.FC<SearchProps> = ({
       <Icon
         icon="mdi-magnify"
         className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-colors ${
-          isFocused ? 'text-primary' : ''
+          isFocused ? "text-primary" : ""
         }`}
         width="20"
         height="20"
@@ -114,11 +114,7 @@ const Search: React.FC<SearchProps> = ({
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-sm hover:bg-muted"
           aria-label="Clear search"
         >
-          <Icon
-            icon="mdi-close"
-            width="16"
-            height="16"
-          />
+          <Icon icon="mdi-close" width="16" height="16" />
         </button>
       )}
     </div>

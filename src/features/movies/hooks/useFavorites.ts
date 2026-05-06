@@ -1,13 +1,8 @@
-import { useCallback } from 'react';
-import { useMovieStore } from '../stores/movieStore';
+import { useCallback } from "react";
+import { useMovieStore } from "../stores/movieStore";
 
 export function useFavorites() {
-  const {
-    favorites,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
-  } = useMovieStore();
+  const { favorites, addToFavorites, removeFromFavorites, isFavorite } = useMovieStore();
 
   const toggleFavorite = useCallback(
     (movieId: number) => {
@@ -17,7 +12,7 @@ export function useFavorites() {
         addToFavorites(movieId);
       }
     },
-    [isFavorite, addToFavorites, removeFromFavorites]
+    [isFavorite, addToFavorites, removeFromFavorites],
   );
 
   const addFavorite = useCallback(
@@ -26,7 +21,7 @@ export function useFavorites() {
         addToFavorites(movieId);
       }
     },
-    [isFavorite, addToFavorites]
+    [isFavorite, addToFavorites],
   );
 
   const removeFavorite = useCallback(
@@ -35,7 +30,7 @@ export function useFavorites() {
         removeFromFavorites(movieId);
       }
     },
-    [isFavorite, removeFromFavorites]
+    [isFavorite, removeFromFavorites],
   );
 
   return {

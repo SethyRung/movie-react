@@ -1,11 +1,11 @@
 // Components
-export * from './components';
+export * from "./components";
 
 // Hooks
-export * from './hooks';
+export * from "./hooks";
 
 // Stores
-export { useMovieStore, type MovieStore } from './stores/movieStore';
+export { useMovieStore, type MovieStore } from "./stores/movieStore";
 
 // Types
 export type {
@@ -15,5 +15,5 @@ export type {
   MovieDetailsResponse,
   CastMember,
   CrewMember,
-  MovieSearchFilters
-} from './types/movie.types';
+  MovieSearchFilters,
+} from "./types/movie.types";

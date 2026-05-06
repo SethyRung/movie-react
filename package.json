@@ -6,20 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
-    "type-check": "tsc --noEmit",
-    "analyze": "tsc -b && vite build && npx vite-bundle-analyzer dist/stats.html",
-    "performance:audit": "lighthouse http://localhost:5173 --output html --output-path ./lighthouse-report.html",
-    "security:audit": "pnpm audit --audit-level moderate"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@iconify-icons/mdi": "^1.2.48",
+    "@iconify-json/lucide": "^1.2.105",
     "@iconify/react": "^6.0.2",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
@@ -27,11 +23,9 @@
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-query": "^5.100.9",
     "axios": "^1.16.0",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "gsap": "^3.15.0",
-    "lucide-react": "^1.14.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.15.0",
@@ -43,32 +37,18 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
     "@commitlint/cli": "^20.5.3",
     "@commitlint/config-conventional": "^20.5.3",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@types/babel__core": "^7.20.5",
     "@types/node": "^25.6.0",
-    "@types/react": "^19.2.14",
+    "@types/react": "latest",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
-    "@typescript-eslint/parser": "^8.59.2",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/coverage-v8": "^4.1.5",
-    "autoprefixer": "^10.5.0",
-    "eslint": "^10.3.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "jsdom": "^29.1.1",
-    "msw": "^2.14.3",
-    "prettier": "^3.8.3",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
     "typescript": "^6.0.3",
-    "vite": "8.0.10",
-    "vitest": "^4.1.5"
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@7.1.14"
+    "vite": "8.0.10"
   }
 }

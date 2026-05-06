@@ -33,7 +33,7 @@ export const useCarouselScroll = (target: React.RefObject<HTMLElement>) => {
 
       target.current.scrollBy(-delta, 0);
     },
-    [target]
+    [target],
   );
 
   const onMouseDown = useCallback(
@@ -50,7 +50,7 @@ export const useCarouselScroll = (target: React.RefObject<HTMLElement>) => {
       window.addEventListener("mousemove", onMouseMove as EventListener);
       window.addEventListener("mouseup", onMouseUp as EventListener);
     },
-    [onMouseMove, onMouseUp, target]
+    [onMouseMove, onMouseUp, target],
   );
 
   useEffect(() => {

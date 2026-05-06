@@ -1,7 +1,7 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Re-use movie schemas from movie service
-import { MovieSchema } from '../movie/validation';
+import { MovieSchema } from "../movie/validation";
 
 // Extended movie schema for discovery endpoints (includes additional fields)
 const DiscoveryMovieSchema = MovieSchema.extend({
@@ -28,24 +28,28 @@ const DiscoveryPaginatedResponseSchema = z.object({
 const MainMovieResponseSchema = z.object({
   popular: DiscoveryPaginatedResponseSchema,
   images: z.object({
-    backdrops: z.array(z.object({
-      aspect_ratio: z.number(),
-      file_path: z.string(),
-      height: z.number(),
-      iso_639_1: z.string().nullable().optional(),
-      vote_average: z.number(),
-      vote_count: z.number(),
-      width: z.number(),
-    })),
-    posters: z.array(z.object({
-      aspect_ratio: z.number(),
-      file_path: z.string(),
-      height: z.number(),
-      iso_639_1: z.string().nullable().optional(),
-      vote_average: z.number(),
-      vote_count: z.number(),
-      width: z.number(),
-    })),
+    backdrops: z.array(
+      z.object({
+        aspect_ratio: z.number(),
+        file_path: z.string(),
+        height: z.number(),
+        iso_639_1: z.string().nullable().optional(),
+        vote_average: z.number(),
+        vote_count: z.number(),
+        width: z.number(),
+      }),
+    ),
+    posters: z.array(
+      z.object({
+        aspect_ratio: z.number(),
+        file_path: z.string(),
+        height: z.number(),
+        iso_639_1: z.string().nullable().optional(),
+        vote_average: z.number(),
+        vote_count: z.number(),
+        width: z.number(),
+      }),
+    ),
   }),
 });
 
@@ -57,11 +61,7 @@ export const DiscoveryValidationSchemas = {
 } as const;
 
 // Export individual schemas for convenience
-export {
-  DiscoveryMovieSchema,
-  DiscoveryPaginatedResponseSchema,
-  MainMovieResponseSchema,
-};
+export { DiscoveryMovieSchema, DiscoveryPaginatedResponseSchema, MainMovieResponseSchema };
 
 // Type exports (inferred from schemas)
 export type DiscoveryMovie = z.infer<typeof DiscoveryMovieSchema>;

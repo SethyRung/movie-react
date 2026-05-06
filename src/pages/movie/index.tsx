@@ -44,7 +44,8 @@ export default function Index() {
       <div className="my-6 col-start-1 col-end-[-1]">
         <button
           className="mx-auto px-4 h-10 rounded text-grey-200 hover:text-white flex items-center justify-center gap-2 text-sm md:text-base transition-all"
-          onClick={() => setPage((prev) => prev + 1)}>
+          onClick={() => setPage((prev) => prev + 1)}
+        >
           Load More
         </button>
       </div>

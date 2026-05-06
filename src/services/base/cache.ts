@@ -1,4 +1,4 @@
-import { CacheOptions } from './ServiceResponse';
+import { CacheOptions } from "./ServiceResponse";
 
 interface CacheEntry<T> {
   data: T;
@@ -16,8 +16,8 @@ export class ServiceCache {
   }
 
   private getEnvironmentSpecificTTL(): number {
-    const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === 'development';
-    const isTest = import.meta.env.MODE === 'test' || process.env.NODE_ENV === 'test';
+    const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === "development";
+    const isTest = import.meta.env.MODE === "test" || process.env.NODE_ENV === "test";
 
     if (isTest) {
       return 30 * 1000; // 30 seconds for tests
@@ -87,23 +87,32 @@ export class ServiceCache {
   }
 
   // Generate cache key from URL and parameters, with optional service name prefix
-  static generateKey(baseUrl: string, params?: Record<string, string | number | boolean | undefined | null>, serviceName?: string): string {
+  static generateKey(
+    baseUrl: string,
+    params?: Record<string, string | number | boolean | undefined | null>,
+    serviceName?: string,
+  ): string {
     const paramString = params
-      ? '?' + new URLSearchParams(
+      ? "?" +
+        new URLSearchParams(
           Object.entries(params)
             .filter(([, value]) => value !== undefined && value !== null)
             .sort(([a], [b]) => a.localeCompare(b))
-            .map(([key, value]) => [key, String(value)])
+            .map(([key, value]) => [key, String(value)]),
         ).toString()
-      : '';
+      : "";
 
     // Include service name to prevent cache key collisions between services
-    const prefix = serviceName ? `${serviceName}:` : '';
+    const prefix = serviceName ? `${serviceName}:` : "";
     return `${prefix}${baseUrl}${paramString}`;
   }
 
   // Generate cache key for a specific service instance
-  generateKeyForService(baseUrl: string, params?: Record<string, string | number | boolean | undefined | null>, serviceName?: string): string {
+  generateKeyForService(
+    baseUrl: string,
+    params?: Record<string, string | number | boolean | undefined | null>,
+    serviceName?: string,
+  ): string {
     return ServiceCache.generateKey(baseUrl, params, serviceName);
   }
 }
