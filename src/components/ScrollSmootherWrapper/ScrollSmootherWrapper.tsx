@@ -1,4 +1,4 @@
-import { ReactNode, useRef, FC } from "react";
+import { useRef, type ReactNode, type FC } from "react";
 import { useGSAP } from "@gsap/react";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 
