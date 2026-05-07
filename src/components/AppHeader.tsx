@@ -5,6 +5,7 @@ import { useDebounceValue } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { useTheme } from "@/hooks/useTheme";
 
 const navLinks = [
   { href: "/", label: "Home", icon: "lucide:house" },
@@ -121,15 +122,7 @@ function MobileThemeRow({ isDark, onToggle }: { isDark: boolean; onToggle: () =>
 
 export default function AppHeader() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-
-  const toggleTheme = useCallback(() => {
-    setIsDark((prev) => {
-      const newValue = !prev;
-      document.documentElement.classList.toggle("dark", newValue);
-      return newValue;
-    });
-  }, []);
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">

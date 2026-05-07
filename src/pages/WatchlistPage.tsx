@@ -2,10 +2,13 @@ import { Link } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCard } from "@/components/movie/MovieCard";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
 export default function WatchlistPage() {
+  usePageTitle("My Watchlist");
+
   const { watchlist, removeFromWatchlist } = useWatchlist();
 
   return (

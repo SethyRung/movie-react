@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const WATCHLIST_KEY = "cinephil_watchlist";
 
@@ -43,18 +44,24 @@ export function useWatchlist() {
   const addToWatchlist = useCallback((item: Omit<WatchlistItem, "addedAt">) => {
     setWatchlist((prev) => {
       if (prev.some((i) => i.id === item.id)) return prev;
+      toast.success(`"${item.title}" added to watchlist`);
       return [...prev, { ...item, addedAt: Date.now() }];
     });
   }, []);
 
-  const removeFromWatchlist = useCallback((id: number) => {
-    setWatchlist((prev) => prev.filter((item) => item.id !== id));
+  const removeFromWatchlist = useCallback((id: number, title?: string) => {
+    setWatchlist((prev) => {
+      const item = prev.find((i) => i.id === id);
+      const name = title || item?.title || "Movie";
+      toast.info(`"${name}" removed from watchlist`);
+      return prev.filter((i) => i.id !== id);
+    });
   }, []);
 
   const toggleWatchlist = useCallback(
     (item: Omit<WatchlistItem, "addedAt">) => {
       if (isInWatchlist(item.id)) {
-        removeFromWatchlist(item.id);
+        removeFromWatchlist(item.id, item.title);
       } else {
         addToWatchlist(item);
       }

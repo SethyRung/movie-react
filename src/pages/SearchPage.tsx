@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
+import { ErrorState } from "@/components/ErrorState";
 import { useSearchMovies } from "@/hooks/useSearch";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
 export default function SearchPage() {
+  usePageTitle("Search");
+
   const [searchParams, setSearchParams] = useSearchParams();
   const urlQuery = searchParams.get("q") || "";
   const [inputValue, setInputValue] = useState(urlQuery);
@@ -20,7 +24,7 @@ export default function SearchPage() {
     setPage(1);
   }, [urlQuery]);
 
-  const { data, isLoading } = useSearchMovies(query, page);
+  const { data, isLoading, isError, refetch } = useSearchMovies(query, page);
   const movies = data?.data?.results;
   const totalPages = data?.data?.total_pages ?? 1;
   const totalResults = data?.data?.total_results ?? 0;
@@ -33,6 +37,15 @@ export default function SearchPage() {
       setPage(1);
     }
   };
+
+  if (isError) {
+    return (
+      <PageContainer>
+        <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Search Movies</h1>
+        <ErrorState message="Failed to load search results." onRetry={refetch} />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -58,6 +71,15 @@ export default function SearchPage() {
             ? "Searching..."
             : `${totalResults.toLocaleString()} result${totalResults !== 1 ? "s" : ""} for "${query}"`}
         </p>
+      )}
+
+      {!isLoading && query && movies?.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <Icon icon="lucide:search-x" className="w-10 h-10 text-muted-foreground mb-4" />
+          <p className="text-sm text-muted-foreground">
+            No movies found for "{query}". Try a different search term.
+          </p>
+        </div>
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">

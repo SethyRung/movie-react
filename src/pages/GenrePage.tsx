@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
+import { ErrorState } from "@/components/ErrorState";
 import { useMoviesByGenre } from "@/hooks/useDiscovery";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { useState } from "react";
@@ -33,11 +35,22 @@ export default function GenrePage() {
   const id = Number(genreId);
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useMoviesByGenre(id, page);
+  const { data, isLoading, isError, refetch } = useMoviesByGenre(id, page);
   const movies = data?.data?.results;
   const totalPages = data?.data?.total_pages ?? 1;
 
   const genreName = GENRE_MAP[id] || "Genre";
+
+  usePageTitle(`${genreName} Movies`);
+
+  if (isError) {
+    return (
+      <PageContainer>
+        <h1 className="font-heading text-2xl font-bold text-foreground mb-6">{genreName} Movies</h1>
+        <ErrorState message="Failed to load movies." onRetry={refetch} />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>

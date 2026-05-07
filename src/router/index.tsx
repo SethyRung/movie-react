@@ -8,6 +8,7 @@ const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const GenrePage = lazy(() => import("@/pages/GenrePage"));
 const PersonDetailPage = lazy(() => import("@/pages/PersonDetailPage"));
 const WatchlistPage = lazy(() => import("@/pages/WatchlistPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 function PageLoader() {
   return (
@@ -71,6 +72,14 @@ export const routes: RouteObject[] = [
     element: (
       <Suspense fallback={<PageLoader />}>
         <WatchlistPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <NotFoundPage />
       </Suspense>
     ),
   },

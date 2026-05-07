@@ -2,19 +2,30 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
+import { ErrorState } from "@/components/ErrorState";
 import {
   usePopularMovies,
   useNowPlayingMovies,
   useUpcomingMovies,
   useTopRatedMovies,
 } from "@/hooks/useDiscovery";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
 type SortOption = "popular" | "now_playing" | "upcoming" | "top_rated";
 
+const SORT_LABELS: Record<SortOption, string> = {
+  popular: "Popular",
+  now_playing: "Now Playing",
+  upcoming: "Upcoming",
+  top_rated: "Top Rated",
+};
+
 export default function MovieListPage() {
+  usePageTitle("Movies");
+
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = (searchParams.get("sort") as SortOption) || "popular";
   const [page, setPage] = useState(1);
@@ -41,11 +52,23 @@ export default function MovieListPage() {
   const movies = currentQuery.data?.data?.results;
   const totalPages = currentQuery.data?.data?.total_pages ?? 1;
   const isLoading = currentQuery.isLoading;
+  const isError = currentQuery.isError;
+
+  if (isError) {
+    return (
+      <PageContainer>
+        <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Movies</h1>
+        <ErrorState message="Failed to load movies." onRetry={() => currentQuery.refetch()} />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Movies</h1>
+        <h1 className="font-heading text-2xl font-bold text-foreground">
+          {SORT_LABELS[sort]} Movies
+        </h1>
         <Tabs value={sort} onValueChange={handleSortChange}>
           <TabsList>
             <TabsTrigger value="popular">Popular</TabsTrigger>

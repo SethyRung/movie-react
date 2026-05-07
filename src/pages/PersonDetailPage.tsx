@@ -1,7 +1,11 @@
 import { useParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
+import { usePageTitle } from "@/hooks/usePageTitle";
+
 export default function PersonDetailPage() {
   const { personId } = useParams<{ personId: string }>();
+
+  usePageTitle("Person");
 
   return (
     <PageContainer>

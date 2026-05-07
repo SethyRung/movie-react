@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
+import { ErrorState } from "@/components/ErrorState";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +12,7 @@ import { Icon } from "@/components/ui/icon";
 import { useCompleteMovieData } from "@/hooks/useMovie";
 import { useSimilarMovies, useMovieRecommendations } from "@/hooks/useMovie";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const BACKDROP_BASE = "https://image.tmdb.org/t/p/original";
 const POSTER_BASE = "https://image.tmdb.org/t/p/w500";
@@ -20,13 +22,23 @@ export default function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
 
-  const { data, isLoading } = useCompleteMovieData(movieId);
+  const { data, isLoading, isError, refetch } = useCompleteMovieData(movieId);
   const similar = useSimilarMovies(movieId);
   const recommendations = useMovieRecommendations(movieId);
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
 
   const movie = data?.data;
   const isSaved = movie ? isInWatchlist(movie.id) : false;
+
+  usePageTitle(movie?.title || "Movie Details");
+
+  if (isError) {
+    return (
+      <PageContainer className="min-h-[50vh]">
+        <ErrorState message="Failed to load movie details." onRetry={refetch} />
+      </PageContainer>
+    );
+  }
 
   if (isLoading || !movie) {
     return (
