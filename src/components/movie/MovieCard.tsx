@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { movieAPI } from "@/services";
 import type { Movie } from "@/services/movie/validation";
 import type { DiscoveryMovie } from "@/services/discovery/validation";
 
@@ -12,11 +14,24 @@ export type MovieCardProps = {
 };
 
 export function MovieCard({ movie, className }: MovieCardProps) {
+  const queryClient = useQueryClient();
   const posterUrl = movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : null;
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
 
+  const handleMouseEnter = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["movie", "details", movie.id],
+      queryFn: () => movieAPI.movie.getMovieDetails(movie.id),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
   return (
-    <Link to={`/movies/${movie.id}`} className={`group block w-full ${className || ""}`}>
+    <Link
+      to={`/movies/${movie.id}`}
+      className={`group block w-full ${className || ""}`}
+      onMouseEnter={handleMouseEnter}
+    >
       <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
         {posterUrl ? (
           <img

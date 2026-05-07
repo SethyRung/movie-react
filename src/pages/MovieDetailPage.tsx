@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
 import { ErrorState } from "@/components/ErrorState";
@@ -21,6 +21,7 @@ const PROFILE_BASE = "https://image.tmdb.org/t/p/w185";
 export default function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, refetch } = useCompleteMovieData(movieId);
   const similar = useSimilarMovies(movieId);
@@ -72,6 +73,15 @@ export default function MovieDetailPage() {
       </div>
 
       <PageContainer className="-mt-32 relative z-10">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(-1)}
+          className="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
+        >
+          <Icon icon="lucide:arrow-left" className="w-4 h-4 mr-2" />
+          Back
+        </Button>
         <div className="flex flex-col md:flex-row gap-6 md:gap-10">
           <div className="shrink-0 mx-auto md:mx-0">
             {movie.poster_path ? (
@@ -111,9 +121,14 @@ export default function MovieDetailPage() {
             {movie.genres && movie.genres.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {movie.genres.map((g) => (
-                  <Badge key={g.id} variant="outline" className="text-xs">
-                    {g.name}
-                  </Badge>
+                  <Link key={g.id} to={`/genre/${g.id}`}>
+                    <Badge
+                      variant="outline"
+                      className="text-xs cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                      {g.name}
+                    </Badge>
+                  </Link>
                 ))}
               </div>
             )}

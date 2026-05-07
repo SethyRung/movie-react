@@ -1,11 +1,12 @@
-import { useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Icon } from "@/components/ui/icon";
 import { useDebounceValue } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { useTheme } from "@/hooks/useTheme";
+import { useWatchlist } from "@/hooks/useWatchlist";
 
 const navLinks = [
   { href: "/", label: "Home", icon: "lucide:house" },
@@ -13,7 +14,7 @@ const navLinks = [
   { href: "/watchlist", label: "Watchlist", icon: "lucide:bookmark" },
 ];
 
-function SearchBar() {
+function SearchBar({ inputRef }: { inputRef?: React.RefObject<HTMLInputElement | null> }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebounceValue(query, 300);
@@ -36,6 +37,7 @@ function SearchBar() {
         className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"
       />
       <Input
+        ref={inputRef}
         type="search"
         placeholder="Search movies..."
         value={query}
@@ -50,40 +52,65 @@ function NavLink({
   href,
   label,
   icon,
+  isActive,
+  badge,
   onClick,
 }: {
   href: string;
   label: string;
   icon: string;
+  isActive?: boolean;
+  badge?: number;
   onClick?: () => void;
 }) {
   return (
     <Link
       to={href}
       onClick={onClick}
-      className="flex items-center gap-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+      className={`flex items-center gap-3 py-2 text-sm font-medium transition-colors ${
+        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      }`}
     >
       <Icon icon={icon} className="w-5 h-5" />
-      {label}
+      <span>{label}</span>
+      {badge ? (
+        <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+          {badge}
+        </span>
+      ) : null}
     </Link>
   );
 }
 
-function DesktopNav() {
+function DesktopNav({ pathname, watchlistCount }: { pathname: string; watchlistCount: number }) {
   return (
     <nav className="hidden md:flex items-center gap-6">
       {navLinks.map(({ href, label, icon }) => (
-        <NavLink key={href} href={href} label={label} icon={icon} />
+        <NavLink
+          key={href}
+          href={href}
+          label={label}
+          icon={icon}
+          isActive={pathname === href || (href !== "/" && pathname.startsWith(href))}
+          badge={href === "/watchlist" ? watchlistCount : undefined}
+        />
       ))}
     </nav>
   );
 }
 
-function MobileNav() {
+function MobileNav({ pathname, watchlistCount }: { pathname: string; watchlistCount: number }) {
   return (
     <nav className="flex flex-col gap-4">
       {navLinks.map(({ href, label, icon }) => (
-        <NavLink key={href} href={href} label={label} icon={icon} />
+        <NavLink
+          key={href}
+          href={href}
+          label={label}
+          icon={icon}
+          isActive={pathname === href || (href !== "/" && pathname.startsWith(href))}
+          badge={href === "/watchlist" ? watchlistCount : undefined}
+        />
       ))}
     </nav>
   );
@@ -123,6 +150,28 @@ function MobileThemeRow({ isDark, onToggle }: { isDark: boolean; onToggle: () =>
 export default function AppHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { pathname } = useLocation();
+  const { watchlist } = useWatchlist();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const target = e.target as HTMLElement;
+        if (
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable
+        ) {
+          return;
+        }
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -137,7 +186,7 @@ export default function AppHeader() {
 
         <div className="flex-1 flex justify-center px-4 md:px-0">
           <div className="hidden md:block w-full max-w-md">
-            <SearchBar />
+            <SearchBar inputRef={searchInputRef} />
           </div>
         </div>
 
@@ -145,7 +194,7 @@ export default function AppHeader() {
           <div className="hidden md:flex items-center gap-1">
             <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
           </div>
-          <DesktopNav />
+          <DesktopNav pathname={pathname} watchlistCount={watchlist.length} />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon" className="w-9 h-9">
@@ -165,7 +214,7 @@ export default function AppHeader() {
                 <div className="md:hidden">
                   <SearchBar />
                 </div>
-                <MobileNav />
+                <MobileNav pathname={pathname} watchlistCount={watchlist.length} />
                 <div className="md:hidden">
                   <MobileThemeRow isDark={isDark} onToggle={toggleTheme} />
                 </div>

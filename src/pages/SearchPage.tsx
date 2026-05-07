@@ -5,6 +5,7 @@ import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
 import { ErrorState } from "@/components/ErrorState";
 import { useSearchMovies } from "@/hooks/useSearch";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { useRecentSearches } from "@/hooks/useRecentSearches";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -17,6 +18,7 @@ export default function SearchPage() {
   const [inputValue, setInputValue] = useState(urlQuery);
   const [query, setQuery] = useState(urlQuery);
   const [page, setPage] = useState(1);
+  const { recent, addRecentSearch, removeRecentSearch, clearRecentSearches } = useRecentSearches();
 
   useEffect(() => {
     setInputValue(urlQuery);
@@ -32,6 +34,7 @@ export default function SearchPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.trim()) {
+      addRecentSearch(inputValue.trim());
       setSearchParams({ q: inputValue.trim() });
       setQuery(inputValue.trim());
       setPage(1);
@@ -64,6 +67,58 @@ export default function SearchPage() {
           className="pl-10 pr-4 h-10"
         />
       </form>
+
+      {!query && recent.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Recent Searches
+            </h2>
+            <button
+              type="button"
+              onClick={clearRecentSearches}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Clear
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {recent.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => {
+                  setInputValue(term);
+                  setSearchParams({ q: term });
+                  setQuery(term);
+                  addRecentSearch(term);
+                }}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-foreground hover:bg-muted transition-colors"
+              >
+                <Icon icon="lucide:history" className="w-3 h-3 text-muted-foreground" />
+                {term}
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeRecentSearch(term);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                      removeRecentSearch(term);
+                    }
+                  }}
+                  className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+                >
+                  <Icon icon="lucide:x" className="w-3 h-3" />
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {query && (
         <p className="text-sm text-muted-foreground mb-4">
