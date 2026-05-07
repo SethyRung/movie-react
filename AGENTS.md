@@ -10,59 +10,61 @@
 | Lint          | `pnpm lint` / `pnpm lint:fix`              |
 | Format        | `pnpm fmt` / `pnpm fmt:check`              |
 
-**Verification order:** `lint` → `fmt` → `build`. There is no separate `type-check` or `test` script.
+**Verification order:** `lint` → `fmt` → `build`. No `test` or `type-check` scripts exist.
 
 ## Environment
 
 - **Node.js 18+** required; **pnpm** preferred.
-- Copy `.env.example` to `.env` and set `VITE_API_URL` and `VITE_API_KEY` (TMDB key).
+- `.env` already exists with placeholder `VITE_API_KEY`. Set a real TMDB key to use the API.
 
 ## Build & Type-Check Gotchas
 
-- **`pnpm build` currently fails** because `babel-plugin-react-compiler` is missing. It is required by `@rolldown/plugin-babel` + `reactCompilerPreset()` in `vite.config.ts`.
-- **`tsc -b` currently fails** because `tsconfig.app.json` lacks `paths`, so many alias imports (e.g., `@components/AppHeader`, `@features/movies`) are unresolved.
-- **`pnpm dev` works** — the dev server does not run the Babel production transform and Vite resolves aliases at runtime.
+- **`pnpm build` currently fails at `tsc -b`** because:
+  1. `src/services/base/BaseService.ts` uses `NodeJS.Timeout` and `src/services/base/cache.ts` uses `process.env.NODE_ENV`, but `tsconfig.app.json` only includes `"types": ["vite/client"]` — missing `"node"`.
+  2. `src/utils/axios.ts` imports `./env`, which does not exist. It should export `envConfig` with `API_URL` and `API_KEY`.
+- **`pnpm dev` works** — Vite doesn't run `tsc -b` and resolves aliases at runtime.
+- `dist/` contains a **stale build** from Nov 2025.
 
 ## Project Architecture
 
 - **Frontend:** React 19 + TypeScript + Vite 8 (bundler is rolldown).
-- **Styling:** Tailwind CSS **v4** — config lives in `src/assets/styles/main.css` via `@theme`; **no `tailwind.config.js`**.
-- **State:** Zustand (client) + TanStack Query (server).
-- **Routing:** React Router DOM v7.
+- **Styling:** Tailwind CSS **v4** — config lives in `src/assets/css/main.css` via `@theme`; **no `tailwind.config.js`**.
+- **State:** TanStack Query (server). No Zustand stores currently exist.
+- **Routing:** React Router DOM v7. Routes are defined in `src/router/index.ts` (currently an empty array).
 - **Animations:** GSAP with `ScrollTrigger`, `TextPlugin`, `ScrollSmoother`; plugins registered **globally** in `main.tsx`.
 
 ### Directory Layout
 
-- `src/features/movies/` — primary feature module (components, hooks, stores, types).
-- `src/components/ui/` — design-system primitives (Button, Input, Modal, Loading, etc.).
-- `src/components/` — shared business components (AppHeader, AppFooter, Search, carousel, tabs).
-- `src/pages/Home/HomePage.tsx` — real homepage entrypoint.
-- `src/services/` — API layer with a `movieAPI` singleton exposing `.movie` and `.discovery` services.
-- `src/routes.tsx` — active route table (eager imports).
-- `src/lib/utils.ts` — `cn()` (clsx + tailwind-merge) and `mergeUI()` for merging Tailwind classes in props.
+- `src/router/index.ts` — active route table (eager imports, currently empty).
+- `src/pages/` — exists but is **empty**.
+- `src/hooks/` — exists but is **empty**.
+- `src/features/` — does **not** exist.
+- `src/components/` — shared business components (`AppHeader`, `AppFooter`, `ScrollSmootherWrapper`).
+- `src/components/ui/` — design-system primitives (only `button.tsx` currently).
+- `src/services/` — API layer with a `MovieAPI` singleton exposing `.movie` and `.discovery` services.
+- `src/lib/utils.ts` — `cn()` utility (clsx + tailwind-merge).
+- `src/types/indext.ts` — empty file with a **typo in the filename** (`indext` not `index`).
 
 ### Gotchas
 
-- `src/pages/index.tsx` is an **orphaned legacy file**; the router imports from `@pages/Home`, so edits there have no effect.
-- `src/routes/lazy.tsx` exists but is **unused** in the current app. All routes are eagerly loaded from `src/routes.tsx`.
-- `components.json` (shadcn/ui style) references `src/index.css`, but the actual global stylesheet is **`src/assets/styles/main.css`**.
-- **Two `cn()` utilities exist:** `src/lib/utils.ts` (used by shadcn components via `@/lib/utils`) and `src/utils/cn.ts` (legacy/duplicate). Prefer `src/lib/utils.ts` for new UI work.
-- `class-variance-authority` is imported in `src/components/ui/*` but is **not listed in `package.json`**.
+- **Only the `@` alias is defined** (in both `vite.config.ts` and `tsconfig.app.json`). No `@components`, `@features`, etc. aliases exist, despite old notes claiming otherwise.
+- `src/utils/axios.ts` imports `./env`, which is missing. This file needs to be created to satisfy the build.
+- `components.json` (shadcn/ui style) correctly references `src/assets/css/main.css`.
+- `class-variance-authority` **is** listed in `package.json` and is used by shadcn components.
+- Only **one** `cn()` utility exists: `src/lib/utils.ts`. The old duplicate at `src/utils/cn.ts` has been removed.
 
 ### Path Aliases
 
-Defined in `vite.config.ts`:
-`@`, `@components`, `@features`, `@pages`, `@hooks`, `@types`, `@utils`, `@assets`, `@tests`, `@lib`
+Defined in `vite.config.ts` and `tsconfig.app.json`:
+```
+"@/*": ["./src/*"]
+```
 
-**Caveats:**
-
-- `tsconfig.app.json` does **not** define `paths`, so `tsc -b` cannot resolve most aliases. Code uses both `@components/X` and `@/components/X` styles inconsistently.
-- `@tests` resolves to `src/tests/` which **does not exist**.
-- `@lib` is defined in Vite but missing from `tsconfig.app.json` and is unused in the codebase.
+No other aliases are configured. The shadcn CLI relies on the root `tsconfig.json` having `paths` to resolve `@/components/ui`. If it is missing, shadcn components install to the wrong location.
 
 ## Testing
 
-- **No testing infrastructure is installed.** There are no `test`, `test:ui`, or `test:coverage` scripts, no `/tests/` directory, and no Vitest/Testing Library/MSW dependencies in `package.json`.
+- **No testing infrastructure is installed.** There are no `test` scripts, no `/tests/` directory, and no Vitest/Testing Library/MSW dependencies in `package.json`.
 
 ## TypeScript Quirks
 
@@ -77,3 +79,13 @@ Defined in `vite.config.ts`:
 - **Linter:** `oxlint` — config in `oxlint.config.ts`; typescript and react plugins enabled.
 - **Formatter:** `oxfmt` — config in `oxfmt.config.ts`; 2-space tabs, printWidth 100, trailingComma `all`, semi, singleQuote `false`.
 - `oxlint.config.ts` disables `@typescript-eslint/no-explicit-any`, `@typescript-eslint/ban-types`, and `@typescript-eslint/no-empty-object-type`.
+
+## shadcn/ui
+
+- Install components with `pnpm dlx shadcn@latest add <component>`.
+- The root `tsconfig.json` must define `paths` so the CLI can resolve `@/components/ui`. If components install to the wrong location, check that `tsconfig.json` contains:
+  ```json
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] }
+  }
+  ```
