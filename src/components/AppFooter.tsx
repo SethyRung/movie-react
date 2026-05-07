@@ -11,9 +11,7 @@ const footerLinks = {
   ],
   company: [
     { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/privacy", label: "Privacy Policy" },
-    { href: "/terms", label: "Terms of Service" },
+    { href: "https://www.themoviedb.org", label: "TMDB", external: true },
   ],
 };
 
@@ -59,14 +57,25 @@ export default function AppFooter() {
           <div>
             <h4 className="font-medium text-foreground mb-4">Company</h4>
             <ul className="space-y-3">
-              {footerLinks.company.map(({ href, label }) => (
+              {footerLinks.company.map(({ href, label, external }) => (
                 <li key={href}>
-                  <Link
-                    to={href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {label}
-                  </Link>
+                  {external ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

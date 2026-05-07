@@ -10,7 +10,7 @@ interface PageContainerProps {
 export default function PageContainer({
   children,
   className,
-  as: Component = "main",
+  as: Component = "section",
 }: PageContainerProps) {
   return (
     <Component className={cn("container mx-auto px-4 py-6 md:py-8", className)}>

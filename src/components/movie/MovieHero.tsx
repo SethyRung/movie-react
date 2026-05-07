@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
+import { SafeImage } from "@/components/SafeImage";
 import type { DiscoveryMovie } from "@/services/discovery/validation";
 
 const BACKDROP_BASE = "https://image.tmdb.org/t/p/original";
@@ -33,10 +34,11 @@ export function MovieHero({ movie, backdropPath, isLoading }: MovieHeroProps) {
   return (
     <div className="relative w-full h-[60vh] min-h-[400px] max-h-[700px] overflow-hidden">
       {bgUrl && (
-        <img
+        <SafeImage
           src={bgUrl}
           alt={movie.title}
           className="absolute inset-0 w-full h-full object-cover"
+          fallbackClassName="absolute inset-0 w-full h-full"
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />

@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
 import { ErrorState } from "@/components/ErrorState";
+import { SafeImage } from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -63,10 +64,11 @@ export default function MovieDetailPage() {
     <div>
       <div className="relative w-full h-[50vh] min-h-[350px] max-h-[600px] overflow-hidden">
         {movie.backdrop_path && (
-          <img
+          <SafeImage
             src={`${BACKDROP_BASE}${movie.backdrop_path}`}
             alt={movie.title}
             className="absolute inset-0 w-full h-full object-cover"
+            fallbackClassName="absolute inset-0 w-full h-full"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
@@ -85,10 +87,11 @@ export default function MovieDetailPage() {
         <div className="flex flex-col md:flex-row gap-6 md:gap-10">
           <div className="shrink-0 mx-auto md:mx-0">
             {movie.poster_path ? (
-              <img
+              <SafeImage
                 src={`${POSTER_BASE}${movie.poster_path}`}
                 alt={movie.title}
                 className="w-48 md:w-64 rounded-lg shadow-lg"
+                fallbackClassName="w-48 md:w-64 aspect-[2/3] rounded-lg"
               />
             ) : (
               <div className="w-48 md:w-64 aspect-[2/3] rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm">

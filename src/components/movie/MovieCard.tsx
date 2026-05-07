@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SafeImage } from "@/components/SafeImage";
 import { movieAPI } from "@/services";
 import type { Movie } from "@/services/movie/validation";
 import type { DiscoveryMovie } from "@/services/discovery/validation";
@@ -34,11 +35,11 @@ export function MovieCard({ movie, className }: MovieCardProps) {
     >
       <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
         {posterUrl ? (
-          <img
+          <SafeImage
             src={posterUrl}
             alt={movie.title}
-            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fallbackClassName="h-full w-full"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted-foreground text-sm">
