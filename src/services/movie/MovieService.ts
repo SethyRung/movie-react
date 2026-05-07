@@ -1,15 +1,15 @@
-import { BaseService } from '../base/BaseService';
-import { ServiceResponse, ServiceError } from '../base/ServiceResponse';
-import { withApiKey } from '../../utils/axios';
-import {
-  MovieValidationSchemas,
+import { BaseService } from "../base/BaseService";
+import type { ServiceResponse, ServiceError } from "../base/ServiceResponse";
+import { withApiKey } from "../../utils/axios";
+import { MovieValidationSchemas } from "./validation";
+import type {
   MovieDetails,
   MovieCredits,
   MovieImages,
   MovieVideos,
   MovieKeywords,
   CompleteMovieData,
-} from './validation';
+} from "./validation";
 
 // Import RequestParams type from BaseService
 type RequestParams = Record<string, string | number | boolean | undefined | null>;
@@ -21,7 +21,7 @@ type MovieBatchError = {
 };
 
 export class MovieService extends BaseService {
-  protected readonly serviceName = 'movie';
+  protected readonly serviceName = "movie";
 
   constructor() {
     super(withApiKey);
@@ -35,16 +35,16 @@ export class MovieService extends BaseService {
    */
   async getMovieDetails(
     movieId: number,
-    options: { language?: string; appendToResponse?: string } = {}
+    options: { language?: string; appendToResponse?: string } = {},
   ): Promise<ServiceResponse<MovieDetails>> {
     const params = new URLSearchParams();
 
     if (options.language) {
-      params.append('language', options.language);
+      params.append("language", options.language);
     }
 
     if (options.appendToResponse) {
-      params.append('append_to_response', options.appendToResponse);
+      params.append("append_to_response", options.appendToResponse);
     }
 
     return this.get(
@@ -54,7 +54,7 @@ export class MovieService extends BaseService {
         cache: this.createCacheOptions(30 * 60 * 1000), // 30 minutes
         timeout: 15000, // 15 seconds for detailed requests
       },
-      MovieValidationSchemas.MovieDetails
+      MovieValidationSchemas.MovieDetails,
     );
   }
 
@@ -66,12 +66,12 @@ export class MovieService extends BaseService {
    */
   async getMovieCredits(
     movieId: number,
-    options: { language?: string } = {}
+    options: { language?: string } = {},
   ): Promise<ServiceResponse<MovieCredits>> {
     const params = new URLSearchParams();
 
     if (options.language) {
-      params.append('language', options.language);
+      params.append("language", options.language);
     }
 
     return this.get(
@@ -80,7 +80,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(60 * 60 * 1000), // 1 hour (cast/crew changes rarely)
       },
-      MovieValidationSchemas.MovieCredits
+      MovieValidationSchemas.MovieCredits,
     );
   }
 
@@ -92,16 +92,16 @@ export class MovieService extends BaseService {
    */
   async getMovieImages(
     movieId: number,
-    options: { language?: string[]; includeImageLanguage?: string[] } = {}
+    options: { language?: string[]; includeImageLanguage?: string[] } = {},
   ): Promise<ServiceResponse<MovieImages>> {
     const params = new URLSearchParams();
 
     if (options.language && options.language.length > 0) {
-      params.append('language', options.language.join(','));
+      params.append("language", options.language.join(","));
     }
 
     if (options.includeImageLanguage && options.includeImageLanguage.length > 0) {
-      params.append('include_image_language', options.includeImageLanguage.join(','));
+      params.append("include_image_language", options.includeImageLanguage.join(","));
     }
 
     return this.get(
@@ -110,7 +110,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(24 * 60 * 60 * 1000), // 24 hours (images rarely change)
       },
-      MovieValidationSchemas.MovieImages
+      MovieValidationSchemas.MovieImages,
     );
   }
 
@@ -122,12 +122,12 @@ export class MovieService extends BaseService {
    */
   async getMovieVideos(
     movieId: number,
-    options: { language?: string } = {}
+    options: { language?: string } = {},
   ): Promise<ServiceResponse<MovieVideos>> {
     const params = new URLSearchParams();
 
     if (options.language) {
-      params.append('language', options.language);
+      params.append("language", options.language);
     }
 
     return this.get(
@@ -136,7 +136,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(6 * 60 * 60 * 1000), // 6 hours
       },
-      MovieValidationSchemas.MovieVideos
+      MovieValidationSchemas.MovieVideos,
     );
   }
 
@@ -152,7 +152,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(24 * 60 * 60 * 1000), // 24 hours
       },
-      MovieValidationSchemas.MovieKeywords
+      MovieValidationSchemas.MovieKeywords,
     );
   }
 
@@ -171,10 +171,10 @@ export class MovieService extends BaseService {
       includeImages?: boolean;
       includeVideos?: boolean;
       includeKeywords?: boolean;
-    } = {}
+    } = {},
   ): Promise<ServiceResponse<CompleteMovieData>> {
     const {
-      language = 'en-US',
+      language = "en-US",
       includeCredits = true,
       includeImages = true,
       includeVideos = true,
@@ -183,12 +183,12 @@ export class MovieService extends BaseService {
 
     // Build append_to_response parameter for efficient data fetching
     const appendParts: string[] = [];
-    if (includeCredits) appendParts.push('credits');
-    if (includeImages) appendParts.push('images');
-    if (includeVideos) appendParts.push('videos');
-    if (includeKeywords) appendParts.push('keywords');
+    if (includeCredits) appendParts.push("credits");
+    if (includeImages) appendParts.push("images");
+    if (includeVideos) appendParts.push("videos");
+    if (includeKeywords) appendParts.push("keywords");
 
-    const appendToResponse = appendParts.join(',');
+    const appendToResponse = appendParts.join(",");
 
     return this.get(
       `/movie/${movieId}`,
@@ -200,7 +200,7 @@ export class MovieService extends BaseService {
         cache: this.createCacheOptions(30 * 60 * 1000), // 30 minutes
         timeout: 20000, // 20 seconds for comprehensive request
       },
-      MovieValidationSchemas.CompleteMovieData
+      MovieValidationSchemas.CompleteMovieData,
     );
   }
 
@@ -212,7 +212,7 @@ export class MovieService extends BaseService {
    */
   async getMultipleMovies(
     movieIds: number[],
-    options: { language?: string } = {}
+    options: { language?: string } = {},
   ): Promise<ServiceResponse<MovieDetails[]>> {
     if (movieIds.length === 0) {
       return {
@@ -224,11 +224,11 @@ export class MovieService extends BaseService {
       };
     }
 
-    const promises = movieIds.map(id =>
-      this.getMovieDetails(id, options).then(response => ({
+    const promises = movieIds.map((id) =>
+      this.getMovieDetails(id, options).then((response) => ({
         id,
         ...response,
-      }))
+      })),
     );
 
     try {
@@ -238,12 +238,12 @@ export class MovieService extends BaseService {
       const errors: MovieBatchError[] = [];
 
       results.forEach((result, index) => {
-        if (result.status === 'fulfilled' && result.value.success && result.value.data) {
+        if (result.status === "fulfilled" && result.value.success && result.value.data) {
           successfulMovies.push(result.value.data);
         } else {
           errors.push({
             movieId: movieIds[index],
-            error: result.status === 'rejected' ? result.reason : result.value.error,
+            error: result.status === "rejected" ? result.reason : result.value.error,
           });
         }
       });
@@ -254,22 +254,24 @@ export class MovieService extends BaseService {
 
       return {
         data: successfulMovies,
-        error: successfulMovies.length === 0 ? {
-          code: 'ALL_REQUESTS_FAILED',
-          message: 'All movie requests failed',
-          originalError: errors,
-        } : null,
+        error:
+          successfulMovies.length === 0
+            ? {
+                code: "ALL_REQUESTS_FAILED",
+                message: "All movie requests failed",
+                originalError: errors,
+              }
+            : null,
         isLoading: false,
         fromCache: false,
         success: successfulMovies.length > 0,
       };
-
     } catch (error) {
       return {
         data: null,
         error: {
-          code: 'BATCH_REQUEST_ERROR',
-          message: 'Failed to process batch movie request',
+          code: "BATCH_REQUEST_ERROR",
+          message: "Failed to process batch movie request",
           originalError: error,
         },
         isLoading: false,
@@ -293,13 +295,15 @@ export class MovieService extends BaseService {
       includeAdult?: boolean;
       year?: number;
       primaryReleaseYear?: number;
-    } = {}
-  ): Promise<ServiceResponse<{
-    results: MovieDetails[];
-    page: number;
-    total_pages: number;
-    total_results: number;
-  }>> {
+    } = {},
+  ): Promise<
+    ServiceResponse<{
+      results: MovieDetails[];
+      page: number;
+      total_pages: number;
+      total_results: number;
+    }>
+  > {
     const params: RequestParams = {
       query,
       page: options.page ?? 1,
@@ -311,12 +315,12 @@ export class MovieService extends BaseService {
     if (options.primaryReleaseYear) params.primary_release_year = options.primaryReleaseYear;
 
     return this.getPaginated(
-      '/search/movie',
+      "/search/movie",
       params,
       {
         cache: this.createCacheOptions(15 * 60 * 1000), // 15 minutes for search results
       },
-      MovieValidationSchemas.MovieDetails
+      MovieValidationSchemas.MovieDetails,
     );
   }
 
@@ -328,13 +332,15 @@ export class MovieService extends BaseService {
    */
   async getSimilarMovies(
     movieId: number,
-    options: { page?: number; language?: string } = {}
-  ): Promise<ServiceResponse<{
-    results: MovieDetails[];
-    page: number;
-    total_pages: number;
-    total_results: number;
-  }>> {
+    options: { page?: number; language?: string } = {},
+  ): Promise<
+    ServiceResponse<{
+      results: MovieDetails[];
+      page: number;
+      total_pages: number;
+      total_results: number;
+    }>
+  > {
     const params: RequestParams = {
       page: options.page ?? 1,
     };
@@ -347,7 +353,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(2 * 60 * 60 * 1000), // 2 hours
       },
-      MovieValidationSchemas.MovieDetails
+      MovieValidationSchemas.MovieDetails,
     );
   }
 
@@ -359,13 +365,15 @@ export class MovieService extends BaseService {
    */
   async getMovieRecommendations(
     movieId: number,
-    options: { page?: number; language?: string } = {}
-  ): Promise<ServiceResponse<{
-    results: MovieDetails[];
-    page: number;
-    total_pages: number;
-    total_results: number;
-  }>> {
+    options: { page?: number; language?: string } = {},
+  ): Promise<
+    ServiceResponse<{
+      results: MovieDetails[];
+      page: number;
+      total_pages: number;
+      total_results: number;
+    }>
+  > {
     const params: RequestParams = {
       page: options.page ?? 1,
     };
@@ -378,7 +386,7 @@ export class MovieService extends BaseService {
       {
         cache: this.createCacheOptions(2 * 60 * 60 * 1000), // 2 hours
       },
-      MovieValidationSchemas.MovieDetails
+      MovieValidationSchemas.MovieDetails,
     );
   }
 
@@ -390,8 +398,8 @@ export class MovieService extends BaseService {
     if (movieId) {
       this.invalidateCache(`/movie/${movieId}`);
     } else {
-      this.invalidateCache('/movie/');
-      this.invalidateCache('/search/movie');
+      this.invalidateCache("/movie/");
+      this.invalidateCache("/search/movie");
     }
   }
 

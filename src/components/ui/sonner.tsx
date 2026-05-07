@@ -1,0 +1,37 @@
+import { useTheme } from "@/hooks/useTheme";
+import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { Icon } from "@/components/ui/icon";
+
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { isDark } = useTheme();
+
+  return (
+    <Sonner
+      theme={isDark ? "dark" : "light"}
+      className="toaster group"
+      icons={{
+        success: <Icon icon="lucide:circle-check" className="size-4" />,
+        info: <Icon icon="lucide:info" className="size-4" />,
+        warning: <Icon icon="lucide:triangle-alert" className="size-4" />,
+        error: <Icon icon="lucide:octagon-x" className="size-4" />,
+        loading: <Icon icon="lucide:loader" className="size-4 animate-spin" />,
+      }}
+      style={
+        {
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+          "--border-radius": "var(--radius)",
+        } as React.CSSProperties
+      }
+      toastOptions={{
+        classNames: {
+          toast: "cn-toast",
+        },
+      }}
+      {...props}
+    />
+  );
+};
+
+export { Toaster };

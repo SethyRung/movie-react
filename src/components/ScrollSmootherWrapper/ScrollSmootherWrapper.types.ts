@@ -1,8 +1,4 @@
-/**
- * ScrollSmoother Wrapper Types
- */
-
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 export interface ScrollSmootherWrapperProps {
   children: ReactNode;

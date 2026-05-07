@@ -1,11 +1,11 @@
 // Export the main service class
-import { MovieService } from './MovieService';
+import { MovieService } from "./MovieService";
 
 export { MovieService };
 
 // Export types and validation schemas
-export * from './types';
-export * from './validation';
+export * from "./types";
+export * from "./validation";
 
 // Create and export a singleton instance
 export const movieService = new MovieService();

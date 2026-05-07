@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
-import { ServiceError } from './ServiceResponse';
+import { AxiosError } from "axios";
+import type { ServiceError } from "./ServiceResponse";
 
 export class ServiceErrorFactory {
   static fromAxiosError(error: AxiosError): ServiceError {
@@ -16,23 +16,23 @@ export class ServiceErrorFactory {
 
   static fromNetworkError(error: unknown): ServiceError {
     return {
-      code: 'NETWORK_ERROR',
-      message: 'Network connection failed. Please check your internet connection.',
+      code: "NETWORK_ERROR",
+      message: "Network connection failed. Please check your internet connection.",
       originalError: error,
     };
   }
 
   static fromValidationError(error: unknown): ServiceError {
     return {
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid data received from server.',
+      code: "VALIDATION_ERROR",
+      message: "Invalid data received from server.",
       originalError: error,
     };
   }
 
   static fromTimeoutError(timeout: number): ServiceError {
     return {
-      code: 'TIMEOUT_ERROR',
+      code: "TIMEOUT_ERROR",
       message: `Request timed out after ${timeout}ms.`,
       statusCode: 408,
     };
@@ -49,48 +49,48 @@ export class ServiceErrorFactory {
     const statusCode = error.response?.status;
     switch (statusCode) {
       case 400:
-        return 'Bad request. Please check your parameters.';
+        return "Bad request. Please check your parameters.";
       case 401:
-        return 'Authentication failed. Please check your API credentials.';
+        return "Authentication failed. Please check your API credentials.";
       case 403:
-        return 'Access forbidden. You don\'t have permission to access this resource.';
+        return "Access forbidden. You don't have permission to access this resource.";
       case 404:
-        return 'The requested resource was not found.';
+        return "The requested resource was not found.";
       case 429:
-        return 'Too many requests. Please wait before trying again.';
+        return "Too many requests. Please wait before trying again.";
       case 500:
-        return 'Internal server error. Please try again later.';
+        return "Internal server error. Please try again later.";
       case 502:
-        return 'Bad gateway. The server encountered an error.';
+        return "Bad gateway. The server encountered an error.";
       case 503:
-        return 'Service unavailable. Please try again later.';
+        return "Service unavailable. Please try again later.";
       default:
-        return error.message || 'An unexpected error occurred.';
+        return error.message || "An unexpected error occurred.";
     }
   }
 
   private static getErrorCode(statusCode?: number): string {
     switch (statusCode) {
       case 400:
-        return 'BAD_REQUEST';
+        return "BAD_REQUEST";
       case 401:
-        return 'UNAUTHORIZED';
+        return "UNAUTHORIZED";
       case 403:
-        return 'FORBIDDEN';
+        return "FORBIDDEN";
       case 404:
-        return 'NOT_FOUND';
+        return "NOT_FOUND";
       case 408:
-        return 'TIMEOUT';
+        return "TIMEOUT";
       case 429:
-        return 'RATE_LIMIT_EXCEEDED';
+        return "RATE_LIMIT_EXCEEDED";
       case 500:
-        return 'INTERNAL_SERVER_ERROR';
+        return "INTERNAL_SERVER_ERROR";
       case 502:
-        return 'BAD_GATEWAY';
+        return "BAD_GATEWAY";
       case 503:
-        return 'SERVICE_UNAVAILABLE';
+        return "SERVICE_UNAVAILABLE";
       default:
-        return 'UNKNOWN_ERROR';
+        return "UNKNOWN_ERROR";
     }
   }
 }
@@ -99,7 +99,7 @@ export class RetryHandler {
   static async retryWithBackoff<T>(
     operation: () => Promise<T>,
     maxRetries: number = 3,
-    baseDelay: number = 1000
+    baseDelay: number = 1000,
   ): Promise<T> {
     let lastError: unknown;
 
@@ -124,7 +124,7 @@ export class RetryHandler {
 
         // Calculate exponential backoff delay
         const delay = baseDelay * Math.pow(2, attempt);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 

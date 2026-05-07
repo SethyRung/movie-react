@@ -1,11 +1,7 @@
 // Re-export all types from validation
-export type {
-  DiscoveryMovie,
-  DiscoveryPaginatedResponse,
-  MainMovieResponse,
-} from './validation';
+export type { DiscoveryMovie, DiscoveryPaginatedResponse, MainMovieResponse } from "./validation";
 
-import { DiscoveryPaginatedResponse as DiscoveryPaginatedResponseType } from './validation';
+import type { DiscoveryPaginatedResponse as DiscoveryPaginatedResponseType } from "./validation";
 
 // Additional service-specific types
 export interface PopularMoviesOptions {
@@ -42,7 +38,21 @@ export interface DiscoverMoviesOptions {
   page?: number;
   language?: string;
   region?: string;
-  sort_by?: 'popularity.asc' | 'popularity.desc' | 'release_date.asc' | 'release_date.desc' | 'revenue.asc' | 'revenue.desc' | 'primary_release_date.asc' | 'primary_release_date.desc' | 'original_title.asc' | 'original_title.desc' | 'vote_average.asc' | 'vote_average.desc' | 'vote_count.asc' | 'vote_count.desc';
+  sort_by?:
+    | "popularity.asc"
+    | "popularity.desc"
+    | "release_date.asc"
+    | "release_date.desc"
+    | "revenue.asc"
+    | "revenue.desc"
+    | "primary_release_date.asc"
+    | "primary_release_date.desc"
+    | "original_title.asc"
+    | "original_title.desc"
+    | "vote_average.asc"
+    | "vote_average.desc"
+    | "vote_count.asc"
+    | "vote_count.desc";
   include_adult?: boolean;
   include_video?: boolean;
   primary_release_year?: number;
@@ -72,14 +82,26 @@ export interface DiscoverMoviesOptions {
   with_networks_and?: string;
   with_watch_providers?: string;
   watch_region?: string;
-  with_watch_monetization_types?: 'flatrate' | 'free' | 'ads' | 'rent' | 'buy';
-  with_status?: 'rumored' | 'planned' | 'in_production' | 'post_production' | 'released' | 'canceled';
+  with_watch_monetization_types?: "flatrate" | "free" | "ads" | "rent" | "buy";
+  with_status?:
+    | "rumored"
+    | "planned"
+    | "in_production"
+    | "post_production"
+    | "released"
+    | "canceled";
 }
 
 export interface MoviesByGenreOptions {
   page?: number;
   language?: string;
-  sort_by?: 'popularity.desc' | 'release_date.desc' | 'revenue.desc' | 'primary_release_date.desc' | 'vote_average.desc' | 'vote_count.desc';
+  sort_by?:
+    | "popularity.desc"
+    | "release_date.desc"
+    | "revenue.desc"
+    | "primary_release_date.desc"
+    | "vote_average.desc"
+    | "vote_count.desc";
   include_adult?: boolean;
   include_video?: boolean;
 }

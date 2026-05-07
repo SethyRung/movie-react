@@ -1,0 +1,16 @@
+{
+  "name": "CinePhil",
+  "short_name": "CinePhil",
+  "description": "Discover movies with an editorial perspective.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
