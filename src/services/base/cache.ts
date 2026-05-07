@@ -16,8 +16,8 @@ export class ServiceCache {
   }
 
   private getEnvironmentSpecificTTL(): number {
-    const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === "development";
-    const isTest = import.meta.env.MODE === "test" || process.env.NODE_ENV === "test";
+    const isDevelopment = import.meta.env.DEV;
+    const isTest = import.meta.env.MODE === "test";
 
     if (isTest) {
       return 30 * 1000; // 30 seconds for tests

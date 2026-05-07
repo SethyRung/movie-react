@@ -13,7 +13,7 @@ const ScrollSmootherWrapper: FC<ScrollSmootherWrapperProps> = ({ children }) => 
     smootherRef.current = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
-      smooth: 1.5,
+      smooth: 1,
     });
 
     (window as any).ScrollSmoother = ScrollSmoother;

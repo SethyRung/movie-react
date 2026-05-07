@@ -56,6 +56,7 @@
 ### Path Aliases
 
 Defined in `vite.config.ts` and `tsconfig.app.json`:
+
 ```
 "@/*": ["./src/*"]
 ```

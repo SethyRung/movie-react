@@ -19,7 +19,7 @@ export abstract class BaseService {
   protected defaultTimeout: number = 10000;
   protected defaultRetries: number = 3;
   protected defaultRetryDelay: number = 1000;
-  private cleanupInterval: NodeJS.Timeout | null = null;
+  private cleanupInterval: ReturnType<typeof setInterval> | null = null;
   protected abstract readonly serviceName: string;
 
   constructor(httpClient: AxiosInstance, enablePeriodicCleanup: boolean = false) {
