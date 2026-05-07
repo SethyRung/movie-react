@@ -1,5 +1,6 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import type { RouteObject } from "react-router-dom";
+import { AnimatedPage } from "@/components/animations/AnimatedPage";
 
 const HomePage = lazy(() => import("@/pages/HomePage"));
 const MovieListPage = lazy(() => import("@/pages/MovieListPage"));
@@ -20,12 +21,18 @@ function PageLoader() {
   );
 }
 
+function WrapAnimated({ children }: { children: ReactNode }) {
+  return <AnimatedPage>{children}</AnimatedPage>;
+}
+
 export const routes: RouteObject[] = [
   {
     path: "/",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <HomePage />
+        <WrapAnimated>
+          <HomePage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -33,7 +40,9 @@ export const routes: RouteObject[] = [
     path: "/movies",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <MovieListPage />
+        <WrapAnimated>
+          <MovieListPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -41,7 +50,9 @@ export const routes: RouteObject[] = [
     path: "/movies/:id",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <MovieDetailPage />
+        <WrapAnimated>
+          <MovieDetailPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -49,7 +60,9 @@ export const routes: RouteObject[] = [
     path: "/search",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <SearchPage />
+        <WrapAnimated>
+          <SearchPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -57,7 +70,9 @@ export const routes: RouteObject[] = [
     path: "/genre/:genreId",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <GenrePage />
+        <WrapAnimated>
+          <GenrePage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -65,7 +80,9 @@ export const routes: RouteObject[] = [
     path: "/person/:personId",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <PersonDetailPage />
+        <WrapAnimated>
+          <PersonDetailPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -73,7 +90,9 @@ export const routes: RouteObject[] = [
     path: "/watchlist",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <WatchlistPage />
+        <WrapAnimated>
+          <WatchlistPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -81,7 +100,9 @@ export const routes: RouteObject[] = [
     path: "/about",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <AboutPage />
+        <WrapAnimated>
+          <AboutPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },
@@ -89,7 +110,9 @@ export const routes: RouteObject[] = [
     path: "*",
     element: (
       <Suspense fallback={<PageLoader />}>
-        <NotFoundPage />
+        <WrapAnimated>
+          <NotFoundPage />
+        </WrapAnimated>
       </Suspense>
     ),
   },

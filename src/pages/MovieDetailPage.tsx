@@ -3,6 +3,7 @@ import PageContainer from "@/components/layout/PageContainer";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
 import { ErrorState } from "@/components/ErrorState";
 import { SafeImage } from "@/components/SafeImage";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -46,10 +47,37 @@ export default function MovieDetailPage() {
     return (
       <div>
         <Skeleton className="w-full h-[50vh]" />
-        <PageContainer>
-          <Skeleton className="h-8 w-1/2 mb-4" />
-          <Skeleton className="h-4 w-full mb-2" />
-          <Skeleton className="h-4 w-3/4 mb-6" />
+        <PageContainer className="-mt-32 relative z-10">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-10">
+            <Skeleton className="shrink-0 w-48 md:w-64 aspect-[2/3] rounded-lg mx-auto md:mx-0" />
+            <div className="flex-1 space-y-4">
+              <Skeleton className="h-8 w-2/3" />
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-5 w-20 rounded-full" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-14 rounded-full" />
+                <Skeleton className="h-5 w-18 rounded-full" />
+                <Skeleton className="h-5 w-16 rounded-full" />
+              </div>
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-9 w-28 rounded-md" />
+            </div>
+          </div>
+          <Separator className="my-8" />
+          <Skeleton className="h-6 w-24 mb-4" />
+          <div className="flex gap-4 pb-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center w-24 shrink-0">
+                <Skeleton className="w-20 h-20 rounded-full mb-2" />
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-2.5 w-16 mt-1" />
+              </div>
+            ))}
+          </div>
         </PageContainer>
       </div>
     );
@@ -176,79 +204,90 @@ export default function MovieDetailPage() {
         <Separator className="my-8" />
 
         {movie.credits && movie.credits.cast && movie.credits.cast.length > 0 && (
-          <section className="mb-8">
-            <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Top Cast</h2>
-            <ScrollArea className="w-full whitespace-nowrap">
-              <div className="flex gap-4 pb-4">
-                {movie.credits.cast.slice(0, 12).map((person) => (
-                  <div key={person.credit_id} className="flex flex-col items-center w-24 shrink-0">
-                    <Avatar className="w-20 h-20 mb-2">
-                      {person.profile_path ? (
-                        <AvatarImage
-                          src={`${PROFILE_BASE}${person.profile_path}`}
-                          alt={person.name}
-                        />
-                      ) : null}
-                      <AvatarFallback className="text-xs">
-                        {person.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-xs font-medium text-foreground text-center line-clamp-1 w-full">
-                      {person.name}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground text-center line-clamp-1 w-full">
-                      {person.character}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </section>
+          <ScrollReveal>
+            <section className="mb-8">
+              <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Top Cast</h2>
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex gap-4 pb-4">
+                  {movie.credits.cast.slice(0, 12).map((person) => (
+                    <div
+                      key={person.credit_id}
+                      className="flex flex-col items-center w-24 shrink-0"
+                    >
+                      <Avatar className="w-20 h-20 mb-2">
+                        {person.profile_path ? (
+                          <AvatarImage
+                            src={`${PROFILE_BASE}${person.profile_path}`}
+                            alt={person.name}
+                          />
+                        ) : null}
+                        <AvatarFallback className="text-xs">
+                          {person.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-xs font-medium text-foreground text-center line-clamp-1 w-full">
+                        {person.name}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground text-center line-clamp-1 w-full">
+                        {person.character}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </section>
+          </ScrollReveal>
         )}
 
         {movie.videos && movie.videos.results && movie.videos.results.length > 0 && (
-          <section className="mb-8">
-            <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Videos</h2>
-            <ScrollArea className="w-full whitespace-nowrap">
-              <div className="flex gap-4 pb-4">
-                {movie.videos.results
-                  .filter((v) => v.site === "YouTube")
-                  .map((video) => (
-                    <div key={video.id} className="shrink-0 w-72 md:w-96">
-                      <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                        <iframe
-                          title={video.name}
-                          src={`https://www.youtube.com/embed/${video.key}`}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
+          <ScrollReveal>
+            <section className="mb-8">
+              <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Videos</h2>
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex gap-4 pb-4">
+                  {movie.videos.results
+                    .filter((v) => v.site === "YouTube")
+                    .map((video) => (
+                      <div key={video.id} className="shrink-0 w-72 md:w-96">
+                        <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+                          <iframe
+                            title={video.name}
+                            src={`https://www.youtube.com/embed/${video.key}`}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2 truncate">{video.name}</p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-2 truncate">{video.name}</p>
-                    </div>
-                  ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </section>
+                    ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </section>
+          </ScrollReveal>
         )}
 
-        <MovieCarousel
-          title="Similar Movies"
-          movies={similar.data?.data?.results}
-          isLoading={similar.isLoading}
-        />
+        <ScrollReveal>
+          <MovieCarousel
+            title="Similar Movies"
+            movies={similar.data?.data?.results}
+            isLoading={similar.isLoading}
+          />
+        </ScrollReveal>
 
-        <MovieCarousel
-          title="Recommended"
-          movies={recommendations.data?.data?.results}
-          isLoading={recommendations.isLoading}
-        />
+        <ScrollReveal>
+          <MovieCarousel
+            title="Recommended"
+            movies={recommendations.data?.data?.results}
+            isLoading={recommendations.isLoading}
+          />
+        </ScrollReveal>
       </PageContainer>
     </div>
   );

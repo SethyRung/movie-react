@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SafeImage } from "@/components/SafeImage";
@@ -16,8 +19,35 @@ export type MovieCardProps = {
 
 export function MovieCard({ movie, className }: MovieCardProps) {
   const queryClient = useQueryClient();
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const posterUrl = movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : null;
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+
+  useGSAP(
+    () => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced || !cardRef.current) return;
+
+      const img = cardRef.current.querySelector("[data-card-image]");
+      if (!img) return;
+
+      const onEnter = () => {
+        gsap.to(img, { scale: 1.08, duration: 0.4, ease: "power2.out" });
+      };
+      const onLeave = () => {
+        gsap.to(img, { scale: 1, duration: 0.4, ease: "power2.out" });
+      };
+
+      cardRef.current.addEventListener("mouseenter", onEnter);
+      cardRef.current.addEventListener("mouseleave", onLeave);
+
+      return () => {
+        cardRef.current?.removeEventListener("mouseenter", onEnter);
+        cardRef.current?.removeEventListener("mouseleave", onLeave);
+      };
+    },
+    { scope: cardRef },
+  );
 
   const handleMouseEnter = () => {
     queryClient.prefetchQuery({
@@ -29,6 +59,7 @@ export function MovieCard({ movie, className }: MovieCardProps) {
 
   return (
     <Link
+      ref={cardRef}
       to={`/movies/${movie.id}`}
       className={`group block w-full ${className || ""}`}
       onMouseEnter={handleMouseEnter}
@@ -36,9 +67,10 @@ export function MovieCard({ movie, className }: MovieCardProps) {
       <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
         {posterUrl ? (
           <SafeImage
+            data-card-image
             src={posterUrl}
             alt={movie.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover"
             fallbackClassName="h-full w-full"
           />
         ) : (
