@@ -67,7 +67,7 @@ function NavLink({
     <Link
       to={href}
       onClick={onClick}
-      className={`flex items-center gap-3 py-2 text-sm font-medium transition-colors ${
+      className={`flex items-center gap-3 min-h-11 py-2 text-sm font-medium transition-colors ${
         isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
       }`}
     >
@@ -122,7 +122,7 @@ function ThemeToggle({ isDark, onToggle }: { isDark: boolean; onToggle: () => vo
       variant="ghost"
       size="icon"
       onClick={onToggle}
-      className="w-9 h-9"
+      className="w-11 h-11"
       aria-label="Toggle theme"
     >
       {isDark ? (
@@ -139,7 +139,7 @@ function MobileThemeRow({ isDark, onToggle }: { isDark: boolean; onToggle: () =>
     <button
       type="button"
       onClick={onToggle}
-      className="flex items-center gap-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full text-left"
+      className="flex items-center gap-3 min-h-11 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full text-left cursor-pointer"
     >
       <Icon icon={isDark ? "lucide:sun" : "lucide:moon"} className="w-5 h-5" />
       <span>Theme</span>
@@ -197,7 +197,7 @@ export default function AppHeader() {
           <DesktopNav pathname={pathname} watchlistCount={watchlist.length} />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="w-9 h-9">
+              <Button variant="ghost" size="icon" className="w-11 h-11">
                 <Icon icon="lucide:menu" className="w-5 h-5" />
               </Button>
             </SheetTrigger>
@@ -206,7 +206,7 @@ export default function AppHeader() {
                 <div className="flex items-center justify-between">
                   <span className="font-serif text-lg font-semibold">Menu</span>
                   <SheetClose asChild>
-                    <Button variant="ghost" size="icon" className="w-9 h-9 -mr-2">
+                    <Button variant="ghost" size="icon" className="w-11 h-11 -mr-2">
                       <Icon icon="lucide:x" className="w-5 h-5" />
                     </Button>
                   </SheetClose>

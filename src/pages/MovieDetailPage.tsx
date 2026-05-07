@@ -1,15 +1,16 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
+import { CastList } from "@/components/movie/CastList";
+import { VideoList } from "@/components/movie/VideoList";
+import { RatingDisplay } from "@/components/movie/RatingDisplay";
+import { MovieMeta } from "@/components/movie/MovieMeta";
 import { ErrorState } from "@/components/ErrorState";
 import { SafeImage } from "@/components/SafeImage";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
 import { useCompleteMovieData } from "@/hooks/useMovie";
 import { useSimilarMovies, useMovieRecommendations } from "@/hooks/useMovie";
@@ -18,7 +19,6 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const BACKDROP_BASE = "https://image.tmdb.org/t/p/original";
 const POSTER_BASE = "https://image.tmdb.org/t/p/w500";
-const PROFILE_BASE = "https://image.tmdb.org/t/p/w185";
 
 export default function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -84,7 +84,6 @@ export default function MovieDetailPage() {
   }
 
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
-
   const runtimeHours = movie.runtime ? Math.floor(movie.runtime / 60) : 0;
   const runtimeMins = movie.runtime ? movie.runtime % 60 : 0;
 
@@ -137,32 +136,14 @@ export default function MovieDetailPage() {
             )}
 
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              {year && <Badge variant="outline">{year}</Badge>}
-              {movie.runtime && movie.runtime > 0 && (
-                <Badge variant="outline">
-                  {runtimeHours}h {runtimeMins}m
-                </Badge>
-              )}
-              <Badge variant="secondary">
-                <Icon icon="lucide:star" className="w-3 h-3 mr-1" />
-                {movie.vote_average.toFixed(1)} ({movie.vote_count.toLocaleString()})
-              </Badge>
+              <MovieMeta
+                year={year}
+                runtimeHours={runtimeHours}
+                runtimeMins={runtimeMins}
+                genres={movie.genres}
+              />
+              <RatingDisplay voteAverage={movie.vote_average} voteCount={movie.vote_count} />
             </div>
-
-            {movie.genres && movie.genres.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {movie.genres.map((g) => (
-                  <Link key={g.id} to={`/genre/${g.id}`}>
-                    <Badge
-                      variant="outline"
-                      className="text-xs cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
-                    >
-                      {g.name}
-                    </Badge>
-                  </Link>
-                ))}
-              </div>
-            )}
 
             <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{movie.overview}</p>
 
@@ -203,73 +184,15 @@ export default function MovieDetailPage() {
 
         <Separator className="my-8" />
 
-        {movie.credits && movie.credits.cast && movie.credits.cast.length > 0 && (
+        {movie.credits && (
           <ScrollReveal>
-            <section className="mb-8">
-              <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Top Cast</h2>
-              <ScrollArea className="w-full whitespace-nowrap">
-                <div className="flex gap-4 pb-4">
-                  {movie.credits.cast.slice(0, 12).map((person) => (
-                    <div
-                      key={person.credit_id}
-                      className="flex flex-col items-center w-24 shrink-0"
-                    >
-                      <Avatar className="w-20 h-20 mb-2">
-                        {person.profile_path ? (
-                          <AvatarImage
-                            src={`${PROFILE_BASE}${person.profile_path}`}
-                            alt={person.name}
-                          />
-                        ) : null}
-                        <AvatarFallback className="text-xs">
-                          {person.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-xs font-medium text-foreground text-center line-clamp-1 w-full">
-                        {person.name}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground text-center line-clamp-1 w-full">
-                        {person.character}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </section>
+            <CastList cast={movie.credits.cast} />
           </ScrollReveal>
         )}
 
-        {movie.videos && movie.videos.results && movie.videos.results.length > 0 && (
+        {movie.videos && (
           <ScrollReveal>
-            <section className="mb-8">
-              <h2 className="font-heading text-xl font-semibold text-foreground mb-4">Videos</h2>
-              <ScrollArea className="w-full whitespace-nowrap">
-                <div className="flex gap-4 pb-4">
-                  {movie.videos.results
-                    .filter((v) => v.site === "YouTube")
-                    .map((video) => (
-                      <div key={video.id} className="shrink-0 w-72 md:w-96">
-                        <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                          <iframe
-                            title={video.name}
-                            src={`https://www.youtube.com/embed/${video.key}`}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2 truncate">{video.name}</p>
-                      </div>
-                    ))}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </section>
+            <VideoList videos={movie.videos.results} />
           </ScrollReveal>
         )}
 

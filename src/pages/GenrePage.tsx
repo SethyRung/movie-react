@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
-import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
+import { SearchResults } from "@/components/search/SearchResults";
 import { ErrorState } from "@/components/ErrorState";
 import { useMoviesByGenre } from "@/hooks/useDiscovery";
 import { usePageTitle } from "@/hooks/usePageTitle";
@@ -56,11 +56,7 @@ export default function GenrePage() {
     <PageContainer>
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">{genreName} Movies</h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        {isLoading
-          ? Array.from({ length: 12 }).map((_, i) => <MovieCardSkeleton key={i} />)
-          : movies?.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
-      </div>
+      <SearchResults movies={movies} isLoading={isLoading} />
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">

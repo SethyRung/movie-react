@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SafeImage } from "@/components/SafeImage";
+import { Icon } from "@/components/ui/icon";
 import { movieAPI } from "@/services";
+import { useWatchlist } from "@/hooks/useWatchlist";
 import type { Movie } from "@/services/movie/validation";
 import type { DiscoveryMovie } from "@/services/discovery/validation";
 
@@ -22,6 +25,8 @@ export function MovieCard({ movie, className }: MovieCardProps) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const posterUrl = movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : null;
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+  const { isInWatchlist, toggleWatchlist } = useWatchlist();
+  const saved = isInWatchlist(movie.id);
 
   useGSAP(
     () => {
@@ -57,6 +62,21 @@ export function MovieCard({ movie, className }: MovieCardProps) {
     });
   };
 
+  const handleToggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleWatchlist({
+        id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path ?? null,
+        vote_average: movie.vote_average ?? 0,
+        release_date: movie.release_date ?? null,
+      });
+    },
+    [movie, toggleWatchlist],
+  );
+
   return (
     <Link
       ref={cardRef}
@@ -86,6 +106,15 @@ export function MovieCard({ movie, className }: MovieCardProps) {
             {movie.vote_average.toFixed(1)}
           </Badge>
         )}
+        <Button
+          variant={saved ? "default" : "secondary"}
+          size="icon"
+          onClick={handleToggle}
+          className="absolute bottom-2 right-2 w-9 h-9 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+          aria-label={saved ? "Remove from watchlist" : "Add to watchlist"}
+        >
+          <Icon icon={saved ? "lucide:bookmark-check" : "lucide:bookmark"} className="w-4 h-4" />
+        </Button>
       </div>
       <div className="mt-2">
         <h3 className="text-sm font-medium text-foreground line-clamp-1 group-hover:text-accent transition-colors">

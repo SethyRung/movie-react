@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { MovieCard } from "@/components/movie/MovieCard";
+import { MovieGrid } from "@/components/movie/MovieGrid";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ export default function WatchlistPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <MovieGrid>
           {watchlist.map((item) => (
             <div key={item.id} className="relative group">
               <MovieCard
@@ -62,7 +63,7 @@ export default function WatchlistPage() {
               </Button>
             </div>
           ))}
-        </div>
+        </MovieGrid>
       )}
     </PageContainer>
   );

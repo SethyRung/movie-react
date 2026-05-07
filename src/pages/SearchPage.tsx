@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
-import { MovieCard, MovieCardSkeleton } from "@/components/movie/MovieCard";
+import { SearchResults } from "@/components/search/SearchResults";
 import { ErrorState } from "@/components/ErrorState";
 import { useSearchMovies } from "@/hooks/useSearch";
 import { usePageTitle } from "@/hooks/usePageTitle";
@@ -77,7 +77,7 @@ export default function SearchPage() {
             <button
               type="button"
               onClick={clearRecentSearches}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Clear
             </button>
@@ -93,7 +93,7 @@ export default function SearchPage() {
                   setQuery(term);
                   addRecentSearch(term);
                 }}
-                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-foreground hover:bg-muted transition-colors"
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-foreground hover:bg-muted transition-colors cursor-pointer"
               >
                 <Icon icon="lucide:history" className="w-3 h-3 text-muted-foreground" />
                 {term}
@@ -110,7 +110,7 @@ export default function SearchPage() {
                       removeRecentSearch(term);
                     }
                   }}
-                  className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors cursor-pointer"
                 >
                   <Icon icon="lucide:x" className="w-3 h-3" />
                 </span>
@@ -137,11 +137,7 @@ export default function SearchPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-        {isLoading
-          ? Array.from({ length: 12 }).map((_, i) => <MovieCardSkeleton key={i} />)
-          : movies?.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
-      </div>
+      <SearchResults movies={movies} isLoading={isLoading} />
 
       {query && totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
