@@ -17,7 +17,7 @@ export type MovieHeroProps = {
 export function MovieHero({ movie, backdropPath, isLoading }: MovieHeroProps) {
   if (isLoading || !movie) {
     return (
-      <div className="relative w-full h-[60vh] min-h-[400px] max-h-[700px] overflow-hidden bg-muted">
+      <div className="relative w-full h-[60vh] min-h-100 max-h-175 overflow-hidden bg-muted">
         <Skeleton className="absolute inset-0" />
       </div>
     );
@@ -32,7 +32,7 @@ export function MovieHero({ movie, backdropPath, isLoading }: MovieHeroProps) {
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
 
   return (
-    <div className="relative w-full h-[60vh] min-h-[400px] max-h-[700px] overflow-hidden">
+    <div className="relative w-full h-[60vh] min-h-100 max-h-175 overflow-hidden">
       {bgUrl && (
         <SafeImage
           src={bgUrl}
@@ -41,7 +41,7 @@ export function MovieHero({ movie, backdropPath, isLoading }: MovieHeroProps) {
           fallbackClassName="absolute inset-0 w-full h-full"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
       <div className="absolute inset-0 flex items-end">
         <div className="container mx-auto px-4 pb-12 md:pb-16">
           <div className="max-w-2xl">

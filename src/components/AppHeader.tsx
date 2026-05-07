@@ -201,7 +201,7 @@ export default function AppHeader() {
                 <Icon icon="lucide:menu" className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" showCloseButton={false} className="w-[280px] sm:w-[320px]">
+            <SheetContent side="right" showCloseButton={false} className="w-70 sm:w-[320px]">
               <div className="flex flex-col gap-6 pt-6 px-6 h-full">
                 <div className="flex items-center justify-between">
                   <span className="font-serif text-lg font-semibold">Menu</span>

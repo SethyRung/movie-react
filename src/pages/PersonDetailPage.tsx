@@ -28,7 +28,7 @@ export default function PersonDetailPage() {
     return (
       <PageContainer>
         <div className="flex flex-col md:flex-row gap-6 md:gap-10">
-          <Skeleton className="shrink-0 w-48 md:w-64 aspect-[2/3] rounded-lg mx-auto md:mx-0" />
+          <Skeleton className="shrink-0 w-48 md:w-64 aspect-2/3 rounded-lg mx-auto md:mx-0" />
           <div className="flex-1 space-y-4">
             <Skeleton className="h-8 w-2/3" />
             <Skeleton className="h-4 w-1/3" />
@@ -53,7 +53,7 @@ export default function PersonDetailPage() {
               fallbackClassName="w-48 md:w-64 aspect-[2/3] rounded-lg"
             />
           ) : (
-            <div className="w-48 md:w-64 aspect-[2/3] rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm">
+            <div className="w-48 md:w-64 aspect-2/3 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm">
               No Image
             </div>
           )}

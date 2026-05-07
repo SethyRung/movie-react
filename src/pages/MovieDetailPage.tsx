@@ -49,7 +49,7 @@ export default function MovieDetailPage() {
         <Skeleton className="w-full h-[50vh]" />
         <PageContainer className="-mt-32 relative z-10">
           <div className="flex flex-col md:flex-row gap-6 md:gap-10">
-            <Skeleton className="shrink-0 w-48 md:w-64 aspect-[2/3] rounded-lg mx-auto md:mx-0" />
+            <Skeleton className="shrink-0 w-48 md:w-64 aspect-2/3 rounded-lg mx-auto md:mx-0" />
             <div className="flex-1 space-y-4">
               <Skeleton className="h-8 w-2/3" />
               <div className="flex gap-2">
@@ -89,7 +89,7 @@ export default function MovieDetailPage() {
 
   return (
     <div>
-      <div className="relative w-full h-[50vh] min-h-[350px] max-h-[600px] overflow-hidden">
+      <div className="relative w-full h-[50vh] min-h-87.5 max-h-150 overflow-hidden">
         {movie.backdrop_path && (
           <SafeImage
             src={`${BACKDROP_BASE}${movie.backdrop_path}`}
@@ -98,7 +98,7 @@ export default function MovieDetailPage() {
             fallbackClassName="absolute inset-0 w-full h-full"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
       </div>
 
       <PageContainer className="-mt-32 relative z-10">
@@ -121,7 +121,7 @@ export default function MovieDetailPage() {
                 fallbackClassName="w-48 md:w-64 aspect-[2/3] rounded-lg"
               />
             ) : (
-              <div className="w-48 md:w-64 aspect-[2/3] rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm">
+              <div className="w-48 md:w-64 aspect-2/3 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-sm">
                 No Image
               </div>
             )}

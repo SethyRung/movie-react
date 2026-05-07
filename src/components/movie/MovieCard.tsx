@@ -84,7 +84,7 @@ export function MovieCard({ movie, className }: MovieCardProps) {
       className={`group block w-full ${className || ""}`}
       onMouseEnter={handleMouseEnter}
     >
-      <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
+      <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-muted">
         {posterUrl ? (
           <SafeImage
             data-card-image
@@ -129,7 +129,7 @@ export function MovieCard({ movie, className }: MovieCardProps) {
 export function MovieCardSkeleton() {
   return (
     <div className="w-full">
-      <Skeleton className="aspect-[2/3] rounded-lg" />
+      <Skeleton className="aspect-2/3 rounded-lg" />
       <Skeleton className="mt-2 h-4 w-3/4" />
       <Skeleton className="mt-1 h-3 w-1/2" />
     </div>
