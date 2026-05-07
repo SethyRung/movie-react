@@ -1,16 +1,27 @@
 import PageContainer from "@/components/layout/PageContainer";
+import { MovieHero } from "@/components/movie/MovieHero";
+import { MovieCarousel } from "@/components/movie/MovieCarousel";
+import { useDiscoveryLists } from "@/hooks/useDiscovery";
 
 export default function HomePage() {
+  const { data, isLoading } = useDiscoveryLists();
+
+  const lists = data?.data;
+  const heroMovie = lists?.popular?.results[0];
+
   return (
-    <PageContainer>
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-          Coming Soon
-        </h1>
-        <p className="text-muted-foreground max-w-md">
-          The CinePhil movie discovery experience is being built. Check back soon.
-        </p>
-      </div>
-    </PageContainer>
+    <div>
+      <MovieHero movie={heroMovie} isLoading={isLoading} />
+      <PageContainer className="space-y-2">
+        <MovieCarousel title="Popular" movies={lists?.popular?.results} isLoading={isLoading} />
+        <MovieCarousel
+          title="Now Playing"
+          movies={lists?.nowPlaying?.results}
+          isLoading={isLoading}
+        />
+        <MovieCarousel title="Upcoming" movies={lists?.upcoming?.results} isLoading={isLoading} />
+        <MovieCarousel title="Top Rated" movies={lists?.topRated?.results} isLoading={isLoading} />
+      </PageContainer>
+    </div>
   );
 }

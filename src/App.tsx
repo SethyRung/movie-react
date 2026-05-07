@@ -10,7 +10,7 @@ function App() {
     <div className="relative">
       <AppHeader />
       <ScrollSmootherWrapper>
-        <div className="pt-14 bg-background">
+        <div className="bg-background">
           <Routes>
             {routes.map((route) => (
               <Route path={route.path} element={route.element} key={route.path} />
