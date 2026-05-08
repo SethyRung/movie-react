@@ -16,8 +16,12 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { href: "https://twitter.com", label: "Twitter", icon: "simple-icons:twitter" },
-  { href: "https://github.com", label: "GitHub", icon: "simple-icons:github" },
+  { href: "https://sethyrung.com/", label: "My Website", icon: "lucide:globe" },
+  {
+    href: "https://github.com/SethyRung/movie-react",
+    label: "GitHub",
+    icon: "simple-icons:github",
+  },
 ];
 
 export default function AppFooter() {
