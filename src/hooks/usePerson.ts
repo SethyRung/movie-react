@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { withApiKey } from "@/utils/axios";
+import { api } from "@/utils/axios";
 
 export type Person = {
   id: number;
@@ -18,7 +18,7 @@ export function usePerson(id: number) {
   return useQuery<Person>({
     queryKey: ["person", id],
     queryFn: async () => {
-      const response = await withApiKey.get<Person>(`/person/${id}`);
+      const response = await api.get<Person>(`/person/${id}`);
       return response.data;
     },
     enabled: id > 0,

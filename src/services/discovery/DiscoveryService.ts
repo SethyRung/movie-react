@@ -1,6 +1,6 @@
 import { BaseService } from "../base/BaseService";
 import type { ServiceResponse, ServiceError } from "../base/ServiceResponse";
-import { withApiKey } from "../../utils/axios";
+import { api } from "@/utils/axios";
 import { z } from "zod";
 import { DiscoveryValidationSchemas } from "./validation";
 import type { DiscoveryPaginatedResponse, MainMovieResponse } from "./validation";
@@ -35,7 +35,7 @@ export class DiscoveryService extends BaseService {
   protected readonly serviceName = "discovery";
 
   constructor() {
-    super(withApiKey);
+    super(api);
   }
 
   /**

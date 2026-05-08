@@ -1,6 +1,6 @@
 import { BaseService } from "../base/BaseService";
 import type { ServiceResponse, ServiceError } from "../base/ServiceResponse";
-import { withApiKey } from "../../utils/axios";
+import { api } from "@/utils/axios";
 import { MovieValidationSchemas } from "./validation";
 import type {
   MovieDetails,
@@ -24,7 +24,7 @@ export class MovieService extends BaseService {
   protected readonly serviceName = "movie";
 
   constructor() {
-    super(withApiKey);
+    super(api);
   }
 
   /**
