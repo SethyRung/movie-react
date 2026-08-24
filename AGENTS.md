@@ -2,79 +2,61 @@
 
 ## Quick Commands
 
-Package manager is **bun** (`bun.lock`; `pnpm-lock.yaml` removed). Use `bun run <script>` / `bun add`.
+Package manager is **bun**. Use `bun run <script>` / `bun add`.
 
-| Action        | Command                                       |
-| ------------- | --------------------------------------------- |
-| Dev server    | `bun run dev` (http://localhost:5173)         |
-| Build         | `bun run build` (runs `tsc -b && vite build`) |
-| Preview build | `bun run preview`                             |
-| Lint          | `bun run lint` / `bun run lint:fix`           |
-| Format        | `bun run fmt` / `bun run fmt:check`           |
+| Action     | Command                                   |
+| ---------- | ----------------------------------------- |
+| Dev server | `bun run dev` (http://localhost:3000)     |
+| Build      | `bun run build` (`next build`, Turbopack) |
+| Start prod | `bun run start`                           |
+| Lint       | `bun run lint` / `bun run lint:fix`       |
+| Format     | `bun run fmt` / `bun run fmt:check`       |
 
-**Verification order:** `lint` → `fmt:check` → `build`. There is **no `test` script** and no test framework installed.
+**Verification order:** `lint` → `fmt:check` → `build`. There is **no `test` script yet** — Vitest is planned (see `.scratch/next-port/`), not installed.
 
 ## Environment
 
-- `.env` exists; required vars: `VITE_API_URL` (TMDB base, `https://api.themoviedb.org/3`) and `VITE_API_KEY` (TMDB key). See `.env.example`.
-- `src/utils/env.ts` exports `envConfig` from `import.meta.env`. The axios instance (`src/utils/axios.ts`) injects `api_key` via a request interceptor.
-
-## Build
-
-`bun run build` passes (both `tsc -b` and `vite build`). Vite 8 uses the rolldown bundler. The build emits a chunk-size warning (~5 MB main chunk) — pre-existing, not a failure. `bun run dev` does not run `tsc -b`.
+- Server-only TMDB vars in `.env.local` (gitignored): `TMDB_API_KEY` and `TMDB_API_URL` (`https://api.themoviedb.org/3`). See `.env.example` (tracked).
+- **Never** prefix TMDB vars with `NEXT_PUBLIC_` and never import them in client code — the key must stay server-side. Server components and Route Handlers read `process.env` directly.
+- `@types/node` is installed; `process.env` is fine in server code.
 
 ## Project Architecture
 
-- **Frontend:** React 19 + TypeScript + Vite 8 (rolldown). **React Compiler** is enabled via `@vitejs/plugin-react`'s `reactCompilerPreset` + `@rolldown/plugin-babel` in `vite.config.ts`.
-- **Styling:** Tailwind CSS **v4** — config lives in `src/assets/css/main.css` via `@theme`; **no `tailwind.config.js`**.
-- **Server state:** TanStack Query v5. Configured in `main.tsx` (`QueryClient`): `staleTime` 5m, `gcTime` 10m, `refetchOnWindowFocus: false`, `retry` is a predicate that skips 4xx (except 429) using `isServiceError`.
-- **Client state:** `useState` + `localStorage` (see `useWatchlist`, `useRecentSearches`). `zustand` is a listed dependency but is **unused**.
-- **Routing:** React Router DOM v7. Route table in `src/router/index.tsx` (lazy-loaded pages, wrapped in `AnimatedPage`).
-- **Animations:** GSAP with `ScrollTrigger`, `TextPlugin`, `ScrollSmoother`; plugins registered **globally** in `main.tsx`.
+- **Next.js 16.3.2, App Router, `src/` dir, Turbopack.** React 19 + **React Compiler** (`reactCompiler: true` in `next.config.ts`).
+- **Client/server boundary:** content pages (`/`, `/movies`, `/movies/[id]`, `/genre/[id]`, `/person/[id]`) are Server Components that call the domain query functions and pass props down. Anything using hooks, `localStorage`, GSAP, or `next-themes` carries `"use client"`. The root `app/layout.tsx` is a server component rendering client providers.
+- **TMDB seam:** `src/services/tmdb.ts` — the single deepened module crossing to TMDB. `request<T>({ path, params?, revalidate? }, schema): Promise<T>` — one server `fetch`, validated against a Zod schema, throws `ServiceError` on failure. Uses `next: { revalidate }` for caching (default 300s). This is the **only** module that knows the TMDB transport.
+- **`src/services/error.ts`** — `ServiceError`, `toServiceError` (handles `HttpResponseError`, `ZodError`, timeout, network), `isServiceError`. The legacy axios/AxiosError mapping is gone; do not reintroduce axios.
+- **Domain query modules** (`services/{movie,discovery,person}/queries.ts`) return `Promise<T>`. Zod schemas + inferred types live in each domain's `validation.ts`. `discovery/queries.ts` is table-driven: `discoverList(kind, page)` over `LIST_URLS`; `getDiscoveryLists` fans out in parallel.
+- **TanStack Query is intentionally dropped.** Server pages need no client cache; the search page uses plain client fetch to `/api/search`. **Do not reintroduce** TanStack Query, and **do not reintroduce** a `BaseService`/`ServiceResponse`/`ServiceCache` layer — it duplicates the framework and masks bugs.
+- **Routing:** App Router file-system routes; `next/link` for navigation. The old `react-router-dom` route table is gone.
+- **Animations:** GSAP with `ScrollTrigger`, `TextPlugin`, and the **premium** `ScrollSmoother` plugin. Register plugins **client-side only**; load `ScrollSmootherWrapper` and animation components via `next/dynamic` with `{ ssr: false }` or guard with `typeof window`. Never run GSAP during SSR.
+- **Theming:** `next-themes` `ThemeProvider` in the root layout (`attribute="class"`, `enableSystem`).
 
-### Services layer (the TMDB seam)
+## Styling & UI
 
-There is **no service class hierarchy, no `ServiceResponse` envelope, and no service-layer cache**. The architecture is:
+- **Tailwind CSS v4** via `@tailwindcss/postcss`; theme tokens/CSS variables live in `src/app/globals.css`. No `tailwind.config.js`.
+- **shadcn/ui** (Radix base, Nova preset); `components.json` is configured for this project. Add components with `bunx shadcn@latest add <component>`.
+- The **one** `cn()` helper is `src/lib/utils.ts` (clsx + tailwind-merge). There is no `@/utils/cn`.
 
-- `src/services/tmdb.ts` — the single deepened seam: `request<T>(config, schema): Promise<T>`. One HTTP call (via the `api` axios instance), validated against a Zod schema, throws `ServiceError` on failure.
-- `src/services/error.ts` — `ServiceError` type, `toServiceError` dispatcher, `isServiceError` guard.
-- Domain **query modules** (`services/{movie,discovery,person}/queries.ts`) — named functions returning `Promise<T>`. Hooks call these inside `queryFn`. TanStack Query owns cache/retry/loading/error.
-  - `discovery/queries.ts`: the four list endpoints (popular/nowPlaying/upcoming/topRated) collapse into one table-driven `discoverList(kind, page)` keyed by `LIST_URLS`.
-  - `person/` is a first-class domain module like the others.
-- Query-key factories live in the hooks (`useMovie`, `useDiscovery`, `useSearch`, `usePerson`); they are the cache identity.
-- Zod schemas + inferred types live in each domain's `validation.ts`.
+## Tooling
 
-See `CONTEXT.md` for the domain glossary. **Do not reintroduce** a `BaseService`/`ServiceResponse`/`ServiceCache` layer — it duplicated TanStack Query and masked bugs.
+- **Linter:** `oxlint` (`oxlint.config.ts`) — typescript + react + **nextjs** plugins; env browser + node. `no-explicit-any`, `ban-types`, `no-empty-object-type` are off. Ignores: `node_modules`, `.next`, `next-env.d.ts`, `legacy`.
+- **Formatter:** `oxfmt` (`oxfmt.config.ts`) — 2-space, `printWidth` 100, `trailingComma` all, semi, **double quotes**.
+- **No ESLint.** create-next-app's ESLint config/deps were removed; don't re-add them.
 
-## TypeScript Quirks
+## TypeScript
 
-- Strict mode with `noUnusedLocals` and `noUnusedParameters`.
-- `verbatimModuleSyntax: true` — type-only imports must use `import type { ... }`.
-- `jsx: "react-jsx"`, `moduleResolution: "bundler"`, `allowImportingTsExtensions: true`.
-- `tsconfig.app.json` `types` is `["vite/client"]` only (no `"node"`) — do not use `NodeJS.*` or `process.env` in app source.
-- `any` is allowed (oxlint disables `@typescript-eslint/no-explicit-any`).
+- `tsconfig.json` is Next's generated config: strict, `moduleResolution: "bundler"`, `jsx: "react-jsx"`, `paths: { "@/*": ["./src/*"] }`.
+- **Only `@/*` → `./src/*`** is defined. No `@components`, `@features`, etc. Keep `paths` so the shadcn CLI resolves `@/components/ui`.
+- `legacy/` is in `tsconfig` `exclude` — it is the old Vite source kept as a **reference only** and must stay excluded from build and lint.
 
-## Code Style
+## Port in Progress
 
-- **Linter:** `oxlint` — config in `oxlint.config.ts`; typescript + react plugins. Disables `no-explicit-any`, `ban-types`, `no-empty-object-type`. Env: `browser` + `node`.
-- **Formatter:** `oxfmt` — config in `oxfmt.config.ts`; 2-space indent, `printWidth` 100, `trailingComma` all, semi, **double quotes** (`singleQuote: false`).
-- There is **one** `cn()` utility: `src/lib/utils.ts` (clsx + tailwind-merge). There is no `@/utils/cn`.
+- This repo is mid-port from Vite to Next.js. The plan lives in `.scratch/next-port/spec.md` with tickets under `.scratch/next-port/issues/`.
+- `legacy/` is the unmodified Vite app for behavior reference — do not edit, lint, or build it. It is removed in the final ticket.
+- Domain glossary (TMDB, tmdb seam, ServiceError, Movie, Discovery, Person, CompleteMovieData, discoverList, getDiscoveryLists) is preserved by the port; the prose version is in `legacy/CONTEXT.md` until cleanup.
 
-## Vite Config Gotcha
+## Conventions
 
-`vite.config.ts` uses `import.meta.dirname` (not `__dirname`) for the `@` alias. Vite 8 warns that `__dirname` is unsupported by `configLoader: 'native'` (planned default) — don't reintroduce it.
-
-## Path Aliases
-
-Only `@/*` → `./src/*` is defined, in both `vite.config.ts` and `tsconfig.app.json` (and the root `tsconfig.json` `paths`). No `@components`, `@features`, etc.
-
-## shadcn/ui
-
-- Install with `bunx shadcn@latest add <component>` (or `pnpm dlx shadcn@latest add ...`).
-- The root `tsconfig.json` must keep `paths: { "@/*": ["./src/*"] }` so the CLI resolves `@/components/ui`; otherwise components install to the wrong location.
-- `components.json` references `src/assets/css/main.css`.
+- Conventional-commits style by convention only (see `git log`) — no commitlint config or hook enforces it.
 - A shadcn MCP server is configured in `.mcp.json`.
-
-## Commit Conventions
-
-`commitlint` + `config-conventional` are listed as devDeps but there is **no config file and no git hook** — not enforced. Conventional-commits style is used by convention only (see `git log`).

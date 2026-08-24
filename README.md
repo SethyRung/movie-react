@@ -1,139 +1,107 @@
-# CinePhil
+# movie-react
 
-A modern, responsive movie discovery web application built with React 19, TypeScript, and Vite. CinePhil integrates with [The Movie Database (TMDB)](https://www.themoviedb.org/) API to deliver real-time movie data, advanced search, detailed movie pages, and personalized watchlists.
+A TMDB movie browser built with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4. Browse discovery lists, movie details, cast, search, and a local watchlist — with server-side rendering and a secret TMDB API key.
 
 ## Features
 
-- **Movie Discovery** — Browse Popular, Now Playing, Upcoming, and Top Rated movies
-- **Advanced Search** — Search movies by title with recent search history
-- **Detailed Movie Pages** — View cast, videos, production details, similar movies, and recommendations
-- **Genre Filtering** — Explore movies by genre
-- **Personal Watchlist** — Save movies to a local watchlist with quick add/remove
-- **Dark Mode** — Automatic and manual theme switching with persistence
-- **Responsive Design** — Fully optimized for mobile, tablet, and desktop
-- **PWA Ready** — Includes web app manifest for installable experience
-- **Accessibility** — Keyboard navigation, focus states, reduced-motion support, and WCAG-compliant touch targets
-- **Smooth Animations** — GSAP-powered page transitions, scroll reveals, and hover interactions
+- **Discovery** — popular, now playing, upcoming, and top-rated lists (home + `/movies`)
+- **Movie details** — hero, cast, videos, similar titles, and recommendations
+- **Browse by genre** — paginated genre listings
+- **Person pages** — cast/crew biographies
+- **Search** — debounced movie search via a server Route Handler
+- **Watchlist** — persisted in `localStorage`, with toast feedback
+- **Theming** — light/dark via `next-themes`, no flash
+- **Animations** — GSAP `ScrollSmoother` + scroll-triggered reveals
 
-## Tech Stack
+## Tech stack
 
-| Category         | Technology                                       |
-| ---------------- | ------------------------------------------------ |
-| Framework        | React 19                                         |
-| Language         | TypeScript 6                                     |
-| Bundler          | Vite 8 (Rolldown)                                |
-| Styling          | Tailwind CSS v4                                  |
-| UI Components    | shadcn/ui + Radix UI                             |
-| State Management | TanStack Query (server), Zustand (client)        |
-| Routing          | React Router DOM v7                              |
-| Animations       | GSAP (ScrollTrigger, TextPlugin, ScrollSmoother) |
-| Icons            | Iconify (offline bundles)                        |
-| Linting          | oxlint                                           |
-| Formatting       | oxfmt                                            |
+| Area       | Choice                                                 |
+| ---------- | ------------------------------------------------------ |
+| Framework  | Next.js 16.3.2 (App Router, Turbopack)                 |
+| UI         | React 19, TypeScript, Tailwind CSS v4                  |
+| Components | shadcn/ui (Radix, Nova preset)                         |
+| Animations | GSAP (`ScrollSmoother`, `ScrollTrigger`, `TextPlugin`) |
+| Theming    | `next-themes`                                          |
+| Validation | Zod (TMDB response schemas)                            |
+| Tooling    | `bun`, `oxlint`, `oxfmt` (no ESLint)                   |
+| Compiler   | React Compiler (`reactCompiler: true`)                 |
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- **Node.js 18+**
-- **pnpm** (preferred package manager)
+- Node.js 20+
+- [bun](https://bun.sh) 1.4+
+- A [TMDB API key](https://developer.themoviedb.org/docs)
 
-### Installation
+### Install
 
 ```bash
-# Clone the repository
-git clone <repo-url>
-cd movie-react
-
-# Install dependencies
-pnpm install
-
-# Set up environment variables
-cp .env .env.local
-# Edit .env.local and add your TMDB API key
+bun install
 ```
 
-### Environment Variables
+### Environment
 
-Create a `.env.local` file in the project root:
+Copy the example and add your TMDB key:
+
+```bash
+cp .env.example .env
+```
 
 ```env
-VITE_API_URL=https://api.themoviedb.org/3
-VITE_API_KEY=your_tmdb_api_key_here
+TMDB_API_URL=https://api.themoviedb.org/3
+TMDB_API_KEY=your_tmdb_key
 ```
 
-> Get a free TMDB API key at [https://www.themoviedb.org/settings/api](https://www.themoviedb.org/settings/api)
+The key is **server-only** — it is never prefixed with `NEXT_PUBLIC_` and never reaches the browser.
 
-### Development
+### Run
 
 ```bash
-# Start the development server
-pnpm dev
+bun run dev
 ```
 
-The application will be available at `http://localhost:5173`.
+Open http://localhost:3000.
 
-### Build
+## Scripts
 
-```bash
-# Type-check and build for production
-pnpm build
+| Script      | Command             | Description                      |
+| ----------- | ------------------- | -------------------------------- |
+| `dev`       | `bun run dev`       | Start the dev server (port 3000) |
+| `build`     | `bun run build`     | Production build (`next build`)  |
+| `start`     | `bun run start`     | Run the production build         |
+| `lint`      | `bun run lint`      | Lint with `oxlint`               |
+| `lint:fix`  | `bun run lint:fix`  | Lint and auto-fix                |
+| `fmt`       | `bun run fmt`       | Format with `oxfmt`              |
+| `fmt:check` | `bun run fmt:check` | Check formatting without writing |
 
-# Preview the production build
-pnpm preview
-```
+**Verification order:** `lint` → `fmt:check` → `build`.
 
-## Available Scripts
-
-| Script           | Description                         |
-| ---------------- | ----------------------------------- |
-| `pnpm dev`       | Start development server            |
-| `pnpm build`     | Type-check and build for production |
-| `pnpm preview`   | Preview the production build        |
-| `pnpm lint`      | Run oxlint for code quality         |
-| `pnpm lint:fix`  | Auto-fix linting issues             |
-| `pnpm fmt`       | Format code with oxfmt              |
-| `pnpm fmt:check` | Check code formatting               |
-
-## Project Structure
+## Project structure
 
 ```
-├── public/                 # Static assets & PWA manifest
-├── src/
-│   ├── assets/css/         # Global styles & Tailwind theme
-│   ├── components/
-│   │   ├── animations/     # GSAP animation wrappers
-│   │   ├── layout/         # Page containers
-│   │   ├── movie/          # Movie-specific components (cards, carousels, cast, etc.)
-│   │   ├── search/         # Search bar & results
-│   │   └── ui/             # shadcn/ui primitives & design system
-│   ├── hooks/              # Custom React hooks (data fetching, theme, watchlist)
-│   ├── lib/                # Utility functions (cn, etc.)
-│   ├── pages/              # Route-level page components
-│   ├── router/             # Route definitions
-│   ├── services/           # API layer (TMDB services, caching, error handling)
-│   ├── types/              # Shared TypeScript types
-│   └── utils/              # Environment config & axios instances
-├── docs/                   # Documentation (REDESIGN_PLAN.md)
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── oxlint.config.ts
+src/
+  app/            App Router: layout, pages, globals.css
+  services/       TMDB seam + domain query modules
+    tmdb.ts       Server fetch + Zod validation (the only TMDB transport)
+    error.ts      ServiceError / toServiceError / isServiceError
+    movie/        Movie queries + Zod schemas
+    discovery/    Discovery list queries + schemas
+    person/       Person queries + schemas
+  lib/            cn() utility
+  components/     UI + feature components
 ```
 
-## Architecture Highlights
+Path alias: `@/*` → `./src/*`.
 
-- **Service Layer** — `BaseService` provides typed HTTP requests with automatic caching, retry logic, and Zod validation
-- **TanStack Query** — All server state is managed via React Query with sensible defaults (5min stale time, 10min GC time)
-- **Path Aliases** — `@/*` maps to `src/*` in both Vite and TypeScript
-- **shadcn/ui** — Components are installed via the shadcn CLI into `src/components/ui`
-- **No `tailwind.config.js`** — Tailwind v4 configuration lives in `src/assets/css/main.css` via `@theme`
+## Architecture
 
-## API
-
-This project uses the [TMDB API v3](https://developer.themoviedb.org/reference/intro/getting-started). All requests are authenticated via the `api_key` query parameter injected by an Axios interceptor.
+- **Server-side TMDB seam.** `src/services/tmdb.ts` is the single module that crosses to TMDB: one server `fetch`, validated against a Zod schema, throwing `ServiceError` on failure. Responses are cached via Next's `fetch` `revalidate` option.
+- **Server Components** for content pages (`/`, `/movies`, `/movies/[id]`, `/genre/[id]`, `/person/[id]`) call the domain query functions directly and pass props to client components for interactivity.
+- **`/api/search`** is the only client-reachable path to TMDB; the `/search` page debounces and fetches it.
+- **Client components** (`"use client"`) wrap anything using hooks, `localStorage` (watchlist, recent searches), `next-themes`, or GSAP. `ScrollSmoother` loads via `next/dynamic` with `{ ssr: false }`.
+- **No TanStack Query** — server pages render on the server; the search page uses plain client fetch.
 
 ## License
 
-MIT
+See [LICENSE](./LICENSE).
