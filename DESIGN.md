@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: Portfolio Design System
+name: Movie Design System
 description: A light-first, ink-on-stone interpretation of the getdesign.md Website Starter Kit — a paper-gray canvas (#ececec) where the primary action colour IS the ink (#1e2124), a single Forest Green accent (#16a34a) is reserved only for "New" status dots, and binary near-black hero/CTA/footer bands punctuate an otherwise quiet, hairline-ruled surface. Geist carries the narrative, Geist Mono carries the small uppercase labels, and every rectangle is a tight 4px.
 
 colors:
