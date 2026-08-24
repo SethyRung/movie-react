@@ -3,5 +3,5 @@ import { PersonSchema } from "./validation";
 import type { Person } from "./validation";
 
 export async function getPerson(id: number, language = "en-US"): Promise<Person> {
-  return request({ url: `/person/${id}`, params: { language } }, PersonSchema);
+  return request({ path: `/person/${id}`, params: { language } }, PersonSchema);
 }

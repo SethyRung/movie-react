@@ -32,7 +32,7 @@ export async function getCompleteMovieData(
 
   return request(
     {
-      url: `/movie/${id}`,
+      path: `/movie/${id}`,
       params: { language, append_to_response: appendParts.join(",") },
     },
     MovieValidationSchemas.CompleteMovieData,
@@ -45,7 +45,7 @@ export async function getSimilarMovies(
   language = DEFAULT_LANG,
 ): Promise<PaginatedMovieResponse> {
   return request(
-    { url: `/movie/${id}/similar`, params: { page, language } },
+    { path: `/movie/${id}/similar`, params: { page, language } },
     MovieValidationSchemas.PaginatedMovieResponse,
   );
 }
@@ -56,7 +56,7 @@ export async function getMovieRecommendations(
   language = DEFAULT_LANG,
 ): Promise<PaginatedMovieResponse> {
   return request(
-    { url: `/movie/${id}/recommendations`, params: { page, language } },
+    { path: `/movie/${id}/recommendations`, params: { page, language } },
     MovieValidationSchemas.PaginatedMovieResponse,
   );
 }
@@ -80,5 +80,5 @@ export async function searchMovies(
   if (year) params.year = year;
   if (primaryReleaseYear) params.primary_release_year = primaryReleaseYear;
 
-  return request({ url: "/search/movie", params }, MovieValidationSchemas.PaginatedMovieResponse);
+  return request({ path: "/search/movie", params }, MovieValidationSchemas.PaginatedMovieResponse);
 }

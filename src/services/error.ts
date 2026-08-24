@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { ZodError } from "zod";
 
 export interface ServiceError {
@@ -17,6 +16,18 @@ export function isServiceError(error: unknown): error is ServiceError {
     typeof (error as { code: unknown }).code === "string" &&
     typeof (error as { message: unknown }).message === "string"
   );
+}
+
+export class HttpResponseError extends Error {
+  statusCode: number;
+  statusMessage?: string;
+
+  constructor(statusCode: number, statusMessage?: string) {
+    super(statusMessage ?? `Request failed with status ${statusCode}`);
+    this.name = "HttpResponseError";
+    this.statusCode = statusCode;
+    this.statusMessage = statusMessage;
+  }
 }
 
 function errorCode(statusCode?: number): string {
@@ -44,12 +55,10 @@ function errorCode(statusCode?: number): string {
   }
 }
 
-function errorMessage(error: AxiosError): string {
-  const tmdbMessage = (error.response?.data as { status_message?: string } | undefined)
-    ?.status_message;
-  if (tmdbMessage) return tmdbMessage;
+function errorMessage(statusCode?: number, statusMessage?: string): string {
+  if (statusMessage) return statusMessage;
 
-  switch (error.response?.status) {
+  switch (statusCode) {
     case 400:
       return "Bad request. Please check your parameters.";
     case 401:
@@ -67,7 +76,7 @@ function errorMessage(error: AxiosError): string {
     case 503:
       return "Service unavailable. Please try again later.";
     default:
-      return error.message || "An unexpected error occurred.";
+      return "An unexpected error occurred.";
   }
 }
 
@@ -82,27 +91,35 @@ export function toServiceError(error: unknown): ServiceError {
     };
   }
 
-  if (error instanceof AxiosError) {
-    const statusCode = error.response?.status;
-    if (error.code === "ECONNABORTED" || /timeout/i.test(error.message)) {
-      return {
-        code: "TIMEOUT_ERROR",
-        message: "Request timed out. Please try again.",
-        statusCode: 408,
-        originalError: error,
-      };
-    }
+  if (error instanceof HttpResponseError) {
     return {
-      code: errorCode(statusCode),
-      message: errorMessage(error),
-      statusCode,
+      code: errorCode(error.statusCode),
+      message: errorMessage(error.statusCode, error.statusMessage),
+      statusCode: error.statusCode,
+      originalError: error,
+    };
+  }
+
+  if (error instanceof DOMException && error.name === "TimeoutError") {
+    return {
+      code: "TIMEOUT_ERROR",
+      message: "Request timed out. Please try again.",
+      statusCode: 408,
+      originalError: error,
+    };
+  }
+
+  if (error instanceof TypeError) {
+    return {
+      code: "NETWORK_ERROR",
+      message: "Network connection failed. Please check your internet connection.",
       originalError: error,
     };
   }
 
   return {
-    code: "NETWORK_ERROR",
-    message: "Network connection failed. Please check your internet connection.",
+    code: "UNKNOWN_ERROR",
+    message: "An unexpected error occurred.",
     originalError: error,
   };
 }

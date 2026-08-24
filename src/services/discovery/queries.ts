@@ -6,8 +6,6 @@ const DEFAULT_LANG = "en-US";
 
 export type ListKind = "popular" | "nowPlaying" | "upcoming" | "topRated";
 
-// The only thing that varies across the four list endpoints is the URL.
-// TTLs are gone — TanStack Query owns the cache via staleTime.
 const LIST_URLS: Record<ListKind, string> = {
   popular: "/movie/popular",
   nowPlaying: "/movie/now_playing",
@@ -21,7 +19,7 @@ export async function discoverList(
   language = DEFAULT_LANG,
 ): Promise<DiscoveryPaginatedResponse> {
   return request(
-    { url: LIST_URLS[kind], params: { page, language } },
+    { path: LIST_URLS[kind], params: { page, language } },
     DiscoveryValidationSchemas.DiscoveryPaginatedResponse,
   );
 }
@@ -33,7 +31,7 @@ export async function getMoviesByGenre(
 ): Promise<DiscoveryPaginatedResponse> {
   return request(
     {
-      url: "/discover/movie",
+      path: "/discover/movie",
       params: { with_genres: String(genreId), page, language },
     },
     DiscoveryValidationSchemas.DiscoveryPaginatedResponse,
