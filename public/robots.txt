@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /watchlist
-
-Sitemap: https://cinephil.example.com/sitemap.xml
