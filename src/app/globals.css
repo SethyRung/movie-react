@@ -11,6 +11,8 @@
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-geist-sans);
   --color-badge-new: var(--badge-new);
+  --color-hero: var(--hero);
+  --color-hero-foreground: var(--hero-foreground);
   --color-footer: var(--footer);
   --color-footer-foreground: var(--footer-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -77,6 +79,8 @@
   --chart-5: #ececec;
   --radius: 0.25rem;
   --badge-new: #16a34a;
+  --hero: #0f1013;
+  --hero-foreground: #ffffff;
   --footer: #000000;
   --footer-foreground: #a1a1a1;
   --sidebar: #ffffff;
@@ -114,6 +118,8 @@
   --chart-4: #15171a;
   --chart-5: #0a0a0a;
   --badge-new: #4ade80;
+  --hero: #0f1013;
+  --hero-foreground: #ededed;
   --footer: #000000;
   --footer-foreground: #a1a1a1;
   --sidebar: #15171a;

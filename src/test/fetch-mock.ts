@@ -33,6 +33,9 @@ export function mockFetch() {
   }) as typeof fetch;
 
   return {
+    handle(next: FetchImpl) {
+      impl = next;
+    },
     json(body: unknown, init: JsonInit = {}) {
       impl = async () =>
         new Response(JSON.stringify(body), {

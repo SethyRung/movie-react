@@ -11,6 +11,30 @@ export type TmdbRequestConfig = {
   revalidate?: number;
 };
 
+let ipv4Only = false;
+let ipv4AgentPromise: Promise<import("undici").Agent> | null = null;
+
+async function fetchIpv4(url: URL): Promise<Response> {
+  const { Agent, fetch: undiciFetch } = await import("undici");
+  ipv4AgentPromise ??= Promise.resolve(new Agent({ connect: { family: 4, timeout: 10_000 } }));
+  return (await undiciFetch(url, {
+    dispatcher: await ipv4AgentPromise,
+  })) as unknown as Response;
+}
+
+async function tmdbFetch(url: URL, revalidate: number): Promise<Response> {
+  if (!ipv4Only) {
+    try {
+      return await fetch(url, { next: { revalidate } });
+    } catch (error) {
+      if (!(error instanceof TypeError)) throw error;
+      ipv4Only = true;
+    }
+  }
+
+  return fetchIpv4(url);
+}
+
 export async function request<T>(config: TmdbRequestConfig, schema: ZodSchema<T>): Promise<T> {
   if (!TMDB_API_KEY) {
     const missing: ServiceError = {
@@ -30,9 +54,7 @@ export async function request<T>(config: TmdbRequestConfig, schema: ZodSchema<T>
       }
     }
 
-    const response = await fetch(url, {
-      next: { revalidate: config.revalidate ?? 300 },
-    });
+    const response = await tmdbFetch(url, config.revalidate ?? 300);
 
     if (!response.ok) {
       let statusMessage: string | undefined;
