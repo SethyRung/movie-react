@@ -2,91 +2,79 @@
 
 ## Quick Commands
 
+Package manager is **bun** (`bun.lock`; `pnpm-lock.yaml` removed). Use `bun run <script>` / `bun add`.
+
 | Action        | Command                                    |
 | ------------- | ------------------------------------------ |
-| Dev server    | `pnpm dev` (http://localhost:5173)         |
-| Build         | `pnpm build` (runs `tsc -b && vite build`) |
-| Preview build | `pnpm preview`                             |
-| Lint          | `pnpm lint` / `pnpm lint:fix`              |
-| Format        | `pnpm fmt` / `pnpm fmt:check`              |
+| Dev server    | `bun run dev` (http://localhost:5173)      |
+| Build         | `bun run build` (runs `tsc -b && vite build`) |
+| Preview build | `bun run preview`                          |
+| Lint          | `bun run lint` / `bun run lint:fix`        |
+| Format        | `bun run fmt` / `bun run fmt:check`        |
 
-**Verification order:** `lint` → `fmt` → `build`. No `test` or `type-check` scripts exist.
+**Verification order:** `lint` → `fmt:check` → `build`. There is **no `test` script** and no test framework installed.
 
 ## Environment
 
-- **Node.js 18+** required; **pnpm** preferred.
-- `.env` already exists with placeholder `VITE_API_KEY`. Set a real TMDB key to use the API.
+- `.env` exists; required vars: `VITE_API_URL` (TMDB base, `https://api.themoviedb.org/3`) and `VITE_API_KEY` (TMDB key). See `.env.example`.
+- `src/utils/env.ts` exports `envConfig` from `import.meta.env`. The axios instance (`src/utils/axios.ts`) injects `api_key` via a request interceptor.
 
-## Build & Type-Check Gotchas
+## Build
 
-- **`pnpm build` currently fails at `tsc -b`** because:
-  1. `src/services/base/BaseService.ts` uses `NodeJS.Timeout` and `src/services/base/cache.ts` uses `process.env.NODE_ENV`, but `tsconfig.app.json` only includes `"types": ["vite/client"]` — missing `"node"`.
-  2. `src/utils/axios.ts` imports `./env`, which does not exist. It should export `envConfig` with `API_URL` and `API_KEY`.
-- **`pnpm dev` works** — Vite doesn't run `tsc -b` and resolves aliases at runtime.
-- `dist/` contains a **stale build** from Nov 2025.
+`bun run build` passes (both `tsc -b` and `vite build`). Vite 8 uses the rolldown bundler. The build emits a chunk-size warning (~5 MB main chunk) — pre-existing, not a failure. `bun run dev` does not run `tsc -b`.
 
 ## Project Architecture
 
-- **Frontend:** React 19 + TypeScript + Vite 8 (bundler is rolldown).
+- **Frontend:** React 19 + TypeScript + Vite 8 (rolldown). **React Compiler** is enabled via `@vitejs/plugin-react`'s `reactCompilerPreset` + `@rolldown/plugin-babel` in `vite.config.ts`.
 - **Styling:** Tailwind CSS **v4** — config lives in `src/assets/css/main.css` via `@theme`; **no `tailwind.config.js`**.
-- **State:** TanStack Query (server). No Zustand stores currently exist.
-- **Routing:** React Router DOM v7. Routes are defined in `src/router/index.ts` (currently an empty array).
+- **Server state:** TanStack Query v5. Configured in `main.tsx` (`QueryClient`): `staleTime` 5m, `gcTime` 10m, `refetchOnWindowFocus: false`, `retry` is a predicate that skips 4xx (except 429) using `isServiceError`.
+- **Client state:** `useState` + `localStorage` (see `useWatchlist`, `useRecentSearches`). `zustand` is a listed dependency but is **unused**.
+- **Routing:** React Router DOM v7. Route table in `src/router/index.tsx` (lazy-loaded pages, wrapped in `AnimatedPage`).
 - **Animations:** GSAP with `ScrollTrigger`, `TextPlugin`, `ScrollSmoother`; plugins registered **globally** in `main.tsx`.
 
-### Directory Layout
+### Services layer (the TMDB seam)
 
-- `src/router/index.ts` — active route table (eager imports, currently empty).
-- `src/pages/` — exists but is **empty**.
-- `src/hooks/` — exists but is **empty**.
-- `src/features/` — does **not** exist.
-- `src/components/` — shared business components (`AppHeader`, `AppFooter`, `ScrollSmootherWrapper`).
-- `src/components/ui/` — design-system primitives (only `button.tsx` currently).
-- `src/services/` — API layer with a `MovieAPI` singleton exposing `.movie` and `.discovery` services.
-- `src/lib/utils.ts` — `cn()` utility (clsx + tailwind-merge).
-- `src/types/indext.ts` — empty file with a **typo in the filename** (`indext` not `index`).
+There is **no service class hierarchy, no `ServiceResponse` envelope, and no service-layer cache**. The architecture is:
 
-### Gotchas
+- `src/services/tmdb.ts` — the single deepened seam: `request<T>(config, schema): Promise<T>`. One HTTP call (via the `api` axios instance), validated against a Zod schema, throws `ServiceError` on failure.
+- `src/services/error.ts` — `ServiceError` type, `toServiceError` dispatcher, `isServiceError` guard.
+- Domain **query modules** (`services/{movie,discovery,person}/queries.ts`) — named functions returning `Promise<T>`. Hooks call these inside `queryFn`. TanStack Query owns cache/retry/loading/error.
+  - `discovery/queries.ts`: the four list endpoints (popular/nowPlaying/upcoming/topRated) collapse into one table-driven `discoverList(kind, page)` keyed by `LIST_URLS`.
+  - `person/` is a first-class domain module like the others.
+- Query-key factories live in the hooks (`useMovie`, `useDiscovery`, `useSearch`, `usePerson`); they are the cache identity.
+- Zod schemas + inferred types live in each domain's `validation.ts`.
 
-- **Only the `@` alias is defined** (in both `vite.config.ts` and `tsconfig.app.json`). No `@components`, `@features`, etc. aliases exist, despite old notes claiming otherwise.
-- `src/utils/axios.ts` imports `./env`, which is missing. This file needs to be created to satisfy the build.
-- `components.json` (shadcn/ui style) correctly references `src/assets/css/main.css`.
-- `class-variance-authority` **is** listed in `package.json` and is used by shadcn components.
-- Only **one** `cn()` utility exists: `src/lib/utils.ts`. The old duplicate at `src/utils/cn.ts` has been removed.
-
-### Path Aliases
-
-Defined in `vite.config.ts` and `tsconfig.app.json`:
-
-```
-"@/*": ["./src/*"]
-```
-
-No other aliases are configured. The shadcn CLI relies on the root `tsconfig.json` having `paths` to resolve `@/components/ui`. If it is missing, shadcn components install to the wrong location.
-
-## Testing
-
-- **No testing infrastructure is installed.** There are no `test` scripts, no `/tests/` directory, and no Vitest/Testing Library/MSW dependencies in `package.json`.
+See `CONTEXT.md` for the domain glossary. **Do not reintroduce** a `BaseService`/`ServiceResponse`/`ServiceCache` layer — it duplicated TanStack Query and masked bugs.
 
 ## TypeScript Quirks
 
-- Strict mode enabled with `noUnusedLocals` and `noUnusedParameters`.
+- Strict mode with `noUnusedLocals` and `noUnusedParameters`.
 - `verbatimModuleSyntax: true` — type-only imports must use `import type { ... }`.
-- `jsx: "react-jsx"`.
-- `moduleResolution: "bundler"` with `allowImportingTsExtensions: true`.
-- `any` is allowed in source (oxlint disables `@typescript-eslint/no-explicit-any`).
+- `jsx: "react-jsx"`, `moduleResolution: "bundler"`, `allowImportingTsExtensions: true`.
+- `tsconfig.app.json` `types` is `["vite/client"]` only (no `"node"`) — do not use `NodeJS.*` or `process.env` in app source.
+- `any` is allowed (oxlint disables `@typescript-eslint/no-explicit-any`).
 
 ## Code Style
 
-- **Linter:** `oxlint` — config in `oxlint.config.ts`; typescript and react plugins enabled.
-- **Formatter:** `oxfmt` — config in `oxfmt.config.ts`; 2-space tabs, printWidth 100, trailingComma `all`, semi, singleQuote `false`.
-- `oxlint.config.ts` disables `@typescript-eslint/no-explicit-any`, `@typescript-eslint/ban-types`, and `@typescript-eslint/no-empty-object-type`.
+- **Linter:** `oxlint` — config in `oxlint.config.ts`; typescript + react plugins. Disables `no-explicit-any`, `ban-types`, `no-empty-object-type`. Env: `browser` + `node`.
+- **Formatter:** `oxfmt` — config in `oxfmt.config.ts`; 2-space indent, `printWidth` 100, `trailingComma` all, semi, **double quotes** (`singleQuote: false`).
+- There is **one** `cn()` utility: `src/lib/utils.ts` (clsx + tailwind-merge). There is no `@/utils/cn`.
+
+## Vite Config Gotcha
+
+`vite.config.ts` uses `import.meta.dirname` (not `__dirname`) for the `@` alias. Vite 8 warns that `__dirname` is unsupported by `configLoader: 'native'` (planned default) — don't reintroduce it.
+
+## Path Aliases
+
+Only `@/*` → `./src/*` is defined, in both `vite.config.ts` and `tsconfig.app.json` (and the root `tsconfig.json` `paths`). No `@components`, `@features`, etc.
 
 ## shadcn/ui
 
-- Install components with `pnpm dlx shadcn@latest add <component>`.
-- The root `tsconfig.json` must define `paths` so the CLI can resolve `@/components/ui`. If components install to the wrong location, check that `tsconfig.json` contains:
-  ```json
-  "compilerOptions": {
-    "paths": { "@/*": ["./src/*"] }
-  }
-  ```
+- Install with `bunx shadcn@latest add <component>` (or `pnpm dlx shadcn@latest add ...`).
+- The root `tsconfig.json` must keep `paths: { "@/*": ["./src/*"] }` so the CLI resolves `@/components/ui`; otherwise components install to the wrong location.
+- `components.json` references `src/assets/css/main.css`.
+- A shadcn MCP server is configured in `.mcp.json`.
+
+## Commit Conventions
+
+`commitlint` + `config-conventional` are listed as devDeps but there is **no config file and no git hook** — not enforced. Conventional-commits style is used by convention only (see `git log`).
