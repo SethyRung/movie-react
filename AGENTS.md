@@ -4,13 +4,13 @@
 
 Package manager is **bun** (`bun.lock`; `pnpm-lock.yaml` removed). Use `bun run <script>` / `bun add`.
 
-| Action        | Command                                    |
-| ------------- | ------------------------------------------ |
-| Dev server    | `bun run dev` (http://localhost:5173)      |
+| Action        | Command                                       |
+| ------------- | --------------------------------------------- |
+| Dev server    | `bun run dev` (http://localhost:5173)         |
 | Build         | `bun run build` (runs `tsc -b && vite build`) |
-| Preview build | `bun run preview`                          |
-| Lint          | `bun run lint` / `bun run lint:fix`        |
-| Format        | `bun run fmt` / `bun run fmt:check`        |
+| Preview build | `bun run preview`                             |
+| Lint          | `bun run lint` / `bun run lint:fix`           |
+| Format        | `bun run fmt` / `bun run fmt:check`           |
 
 **Verification order:** `lint` → `fmt:check` → `build`. There is **no `test` script** and no test framework installed.
 
