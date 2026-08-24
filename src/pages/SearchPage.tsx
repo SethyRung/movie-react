@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
 import { SearchResults } from "@/components/search/SearchResults";
@@ -16,16 +16,18 @@ export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlQuery = searchParams.get("q") || "";
   const [inputValue, setInputValue] = useState(urlQuery);
-  const [query, setQuery] = useState(urlQuery);
   const [page, setPage] = useState(1);
+  const [lastUrlQuery, setLastUrlQuery] = useState(urlQuery);
   const { recent, addRecentSearch, removeRecentSearch, clearRecentSearches } = useRecentSearches();
 
-  useEffect(() => {
+  // Reset the input + page when the URL query changes (back/forward, recent-search click).
+  if (lastUrlQuery !== urlQuery) {
+    setLastUrlQuery(urlQuery);
     setInputValue(urlQuery);
-    setQuery(urlQuery);
     setPage(1);
-  }, [urlQuery]);
+  }
 
+  const query = urlQuery;
   const { data, isLoading, isError, refetch } = useSearchMovies(query, page);
   const movies = data?.results;
   const totalPages = data?.total_pages ?? 1;
@@ -36,7 +38,6 @@ export default function SearchPage() {
     if (inputValue.trim()) {
       addRecentSearch(inputValue.trim());
       setSearchParams({ q: inputValue.trim() });
-      setQuery(inputValue.trim());
       setPage(1);
     }
   };
@@ -88,9 +89,7 @@ export default function SearchPage() {
                 key={term}
                 type="button"
                 onClick={() => {
-                  setInputValue(term);
                   setSearchParams({ q: term });
-                  setQuery(term);
                   addRecentSearch(term);
                 }}
                 className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-foreground hover:bg-muted transition-colors cursor-pointer"

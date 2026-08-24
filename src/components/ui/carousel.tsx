@@ -88,11 +88,13 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api || !setApi) return;
+    // oxlint-disable-next-line react/set-state-in-effect -- setApi is a parent callback prop syncing the embla API out
     setApi(api);
   }, [api, setApi]);
 
   React.useEffect(() => {
     if (!api) return;
+    // oxlint-disable-next-line react/set-state-in-effect -- onSelect is a parent callback prop syncing the embla API out
     onSelect(api);
     api.on("reInit", onSelect);
     api.on("select", onSelect);
