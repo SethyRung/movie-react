@@ -9,5 +9,5 @@ export default defineConfig({
   singleQuote: false,
   trailingComma: "all",
   printWidth: 100,
-  ignorePatterns: ["node_modules", "dist", "package-lock.json"],
+  ignorePatterns: ["node_modules", ".next", "next-env.d.ts", "legacy", "bun.lock"],
 });
