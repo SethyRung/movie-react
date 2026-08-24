@@ -36,8 +36,8 @@ export default function GenrePage() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, refetch } = useMoviesByGenre(id, page);
-  const movies = data?.data?.results;
-  const totalPages = data?.data?.total_pages ?? 1;
+  const movies = data?.results;
+  const totalPages = data?.total_pages ?? 1;
 
   const genreName = GENRE_MAP[id] || "Genre";
 

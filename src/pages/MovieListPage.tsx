@@ -47,8 +47,8 @@ export default function MovieListPage() {
     setPage(1);
   };
 
-  const movies = currentQuery.data?.data?.results;
-  const totalPages = currentQuery.data?.data?.total_pages ?? 1;
+  const movies = currentQuery.data?.results;
+  const totalPages = currentQuery.data?.total_pages ?? 1;
   const isLoading = currentQuery.isLoading;
   const isError = currentQuery.isError;
 

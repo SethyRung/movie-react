@@ -5,6 +5,7 @@ import "@/assets/css/main.css";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { isServiceError } from "@/services";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,7 +20,16 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
-      retry: 1,
+      retry: (failureCount, error) => {
+        // Don't retry client errors (4xx) except rate limiting (429)
+        if (isServiceError(error)) {
+          const { statusCode } = error;
+          if (statusCode && statusCode >= 400 && statusCode < 500 && statusCode !== 429) {
+            return false;
+          }
+        }
+        return failureCount < 1;
+      },
       refetchOnWindowFocus: false,
     },
   },

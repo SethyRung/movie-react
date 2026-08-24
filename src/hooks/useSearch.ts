@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { movieAPI } from "@/services";
-import type { MovieDetails } from "@/services/movie/validation";
-import type { ServiceResponse } from "@/services/base/ServiceResponse";
+import { searchMovies } from "@/services/movie/queries";
+import type { PaginatedMovieResponse } from "@/services/movie/validation";
 
 const searchKeys = {
   all: ["search"] as const,
@@ -9,16 +8,9 @@ const searchKeys = {
 };
 
 export function useSearchMovies(query: string, page = 1) {
-  return useQuery<
-    ServiceResponse<{
-      results: MovieDetails[];
-      page: number;
-      total_pages: number;
-      total_results: number;
-    }>
-  >({
+  return useQuery<PaginatedMovieResponse>({
     queryKey: searchKeys.movies(query, page),
-    queryFn: () => movieAPI.movie.searchMovies(query, { page }),
+    queryFn: () => searchMovies(query, { page }),
     enabled: query.trim().length > 0,
   });
 }

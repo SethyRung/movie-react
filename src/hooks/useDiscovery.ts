@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { movieAPI } from "@/services";
-import type {
-  DiscoveryPaginatedResponse,
-  MainMovieResponse,
-} from "@/services/discovery/validation";
-import type { ServiceResponse } from "@/services/base/ServiceResponse";
+import {
+  discoverList,
+  getDiscoveryLists,
+  getMoviesByGenre,
+  type DiscoveryLists,
+} from "@/services/discovery/queries";
+import type { DiscoveryPaginatedResponse } from "@/services/discovery/validation";
 
 const discoveryKeys = {
   all: ["discovery"] as const,
@@ -12,65 +13,52 @@ const discoveryKeys = {
   nowPlaying: (page: number) => [...discoveryKeys.all, "nowPlaying", page] as const,
   upcoming: (page: number) => [...discoveryKeys.all, "upcoming", page] as const,
   topRated: (page: number) => [...discoveryKeys.all, "topRated", page] as const,
-  main: () => [...discoveryKeys.all, "main"] as const,
   byGenre: (genreId: number, page: number) =>
     [...discoveryKeys.all, "genre", genreId, page] as const,
   lists: () => [...discoveryKeys.all, "lists"] as const,
 };
 
+export { discoveryKeys };
+
 export function usePopularMovies(page = 1) {
-  return useQuery<ServiceResponse<DiscoveryPaginatedResponse>>({
+  return useQuery<DiscoveryPaginatedResponse>({
     queryKey: discoveryKeys.popular(page),
-    queryFn: () => movieAPI.discovery.getPopularMovies({ page }),
+    queryFn: () => discoverList("popular", page),
   });
 }
 
 export function useNowPlayingMovies(page = 1) {
-  return useQuery<ServiceResponse<DiscoveryPaginatedResponse>>({
+  return useQuery<DiscoveryPaginatedResponse>({
     queryKey: discoveryKeys.nowPlaying(page),
-    queryFn: () => movieAPI.discovery.getNowPlayingMovies({ page }),
+    queryFn: () => discoverList("nowPlaying", page),
   });
 }
 
 export function useUpcomingMovies(page = 1) {
-  return useQuery<ServiceResponse<DiscoveryPaginatedResponse>>({
+  return useQuery<DiscoveryPaginatedResponse>({
     queryKey: discoveryKeys.upcoming(page),
-    queryFn: () => movieAPI.discovery.getUpcomingMovies({ page }),
+    queryFn: () => discoverList("upcoming", page),
   });
 }
 
 export function useTopRatedMovies(page = 1) {
-  return useQuery<ServiceResponse<DiscoveryPaginatedResponse>>({
+  return useQuery<DiscoveryPaginatedResponse>({
     queryKey: discoveryKeys.topRated(page),
-    queryFn: () => movieAPI.discovery.getTopRatedMovies({ page }),
-  });
-}
-
-export function useMainMovie() {
-  return useQuery<ServiceResponse<MainMovieResponse>>({
-    queryKey: discoveryKeys.main(),
-    queryFn: () => movieAPI.discovery.getMainMovie(),
+    queryFn: () => discoverList("topRated", page),
   });
 }
 
 export function useMoviesByGenre(genreId: number, page = 1) {
-  return useQuery<ServiceResponse<DiscoveryPaginatedResponse>>({
+  return useQuery<DiscoveryPaginatedResponse>({
     queryKey: discoveryKeys.byGenre(genreId, page),
-    queryFn: () => movieAPI.discovery.getMoviesByGenre(genreId, { page }),
+    queryFn: () => getMoviesByGenre(genreId, page),
     enabled: genreId > 0,
   });
 }
 
 export function useDiscoveryLists() {
-  return useQuery<
-    ServiceResponse<{
-      popular?: DiscoveryPaginatedResponse;
-      nowPlaying?: DiscoveryPaginatedResponse;
-      upcoming?: DiscoveryPaginatedResponse;
-      topRated?: DiscoveryPaginatedResponse;
-    }>
-  >({
+  return useQuery<DiscoveryLists>({
     queryKey: discoveryKeys.lists(),
-    queryFn: () => movieAPI.discovery.getDiscoveryLists({ includeTopRated: true }),
+    queryFn: () => getDiscoveryLists(),
   });
 }

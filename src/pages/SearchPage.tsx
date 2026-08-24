@@ -27,9 +27,9 @@ export default function SearchPage() {
   }, [urlQuery]);
 
   const { data, isLoading, isError, refetch } = useSearchMovies(query, page);
-  const movies = data?.data?.results;
-  const totalPages = data?.data?.total_pages ?? 1;
-  const totalResults = data?.data?.total_results ?? 0;
+  const movies = data?.results;
+  const totalPages = data?.total_pages ?? 1;
+  const totalResults = data?.total_results ?? 0;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

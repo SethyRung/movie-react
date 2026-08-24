@@ -30,7 +30,7 @@ export default function MovieDetailPage() {
   const recommendations = useMovieRecommendations(movieId);
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
 
-  const movie = data?.data;
+  const movie = data;
   const isSaved = movie ? isInWatchlist(movie.id) : false;
 
   usePageTitle(movie?.title || "Movie Details");
@@ -199,7 +199,7 @@ export default function MovieDetailPage() {
         <ScrollReveal>
           <MovieCarousel
             title="Similar Movies"
-            movies={similar.data?.data?.results}
+            movies={similar.data?.results}
             isLoading={similar.isLoading}
           />
         </ScrollReveal>
@@ -207,7 +207,7 @@ export default function MovieDetailPage() {
         <ScrollReveal>
           <MovieCarousel
             title="Recommended"
-            movies={recommendations.data?.data?.results}
+            movies={recommendations.data?.results}
             isLoading={recommendations.isLoading}
           />
         </ScrollReveal>

@@ -11,7 +11,7 @@ export default function HomePage() {
 
   const { data, isLoading, isError, refetch } = useDiscoveryLists();
 
-  const lists = data?.data;
+  const lists = data;
   const heroMovie = lists?.popular?.results[0];
 
   if (isError) {

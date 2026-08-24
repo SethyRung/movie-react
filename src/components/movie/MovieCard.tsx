@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SafeImage } from "@/components/SafeImage";
 import { Icon } from "@/components/ui/icon";
-import { movieAPI } from "@/services";
+import { getCompleteMovieData } from "@/services/movie/queries";
+import { movieKeys } from "@/hooks/useMovie";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import type { Movie } from "@/services/movie/validation";
 import type { DiscoveryMovie } from "@/services/discovery/validation";
@@ -56,8 +57,8 @@ export function MovieCard({ movie, className }: MovieCardProps) {
 
   const handleMouseEnter = () => {
     queryClient.prefetchQuery({
-      queryKey: ["movie", "details", movie.id],
-      queryFn: () => movieAPI.movie.getMovieDetails(movie.id),
+      queryKey: movieKeys.complete(movie.id),
+      queryFn: () => getCompleteMovieData(movie.id),
       staleTime: 5 * 60 * 1000,
     });
   };
