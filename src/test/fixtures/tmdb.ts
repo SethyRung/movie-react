@@ -1,5 +1,6 @@
 import type { DiscoveryMovie, DiscoveryPaginatedResponse } from "@/services/discovery/validation";
 import type { CastMember, CompleteMovieData, MovieVideo } from "@/services/movie/validation";
+import type { Person } from "@/services/person/validation";
 
 export function discoveryMovie(overrides: Partial<DiscoveryMovie> = {}): DiscoveryMovie {
   return {
@@ -88,6 +89,22 @@ export function completeMovie(overrides: Partial<CompleteMovieData> = {}): Compl
       posters: [],
       logos: [],
     },
+    ...overrides,
+  };
+}
+
+export function person(overrides: Partial<Person> = {}): Person {
+  return {
+    id: 6193,
+    name: "Leonardo DiCaprio",
+    biography: "Leonardo Wilhelm DiCaprio is an American actor and film producer.",
+    birthday: "1974-11-11",
+    deathday: null,
+    place_of_birth: "Los Angeles, California, USA",
+    profile_path: "/leo.jpg",
+    known_for_department: "Acting",
+    popularity: 50.2,
+    also_known_as: ["Leo DiCaprio"],
     ...overrides,
   };
 }
