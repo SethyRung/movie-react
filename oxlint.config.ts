@@ -6,7 +6,7 @@ export default defineConfig({
     node: true,
   },
   plugins: ["typescript", "react", "nextjs"],
-  ignorePatterns: ["node_modules", ".next", "next-env.d.ts", "legacy"],
+  ignorePatterns: ["node_modules", ".next", "next-env.d.ts"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-object-type": "off",
