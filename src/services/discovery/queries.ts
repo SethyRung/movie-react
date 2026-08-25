@@ -1,3 +1,4 @@
+import { toServiceError } from "@/services/error";
 import { request } from "@/services/tmdb";
 import { DiscoveryValidationSchemas } from "./validation";
 import type { DiscoveryPaginatedResponse } from "./validation";
@@ -56,11 +57,11 @@ export async function getDiscoveryLists(language = DEFAULT_LANG): Promise<Discov
   });
 
   if (Object.keys(result).length === 0) {
-    throw {
+    throw toServiceError({
       code: "ALL_DISCOVERY_REQUESTS_FAILED",
       message: "All discovery list requests failed",
       originalError: errors,
-    };
+    });
   }
 
   return result;
