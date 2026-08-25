@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { useHasMounted } from "./use-has-mounted";
 
 const STORAGE_KEY = "cinephil:recent-searches:v1";
 const MAX_RECENT = 8;
@@ -40,14 +41,6 @@ if (typeof window !== "undefined") {
 function subscribe(onStoreChange: () => void) {
   listeners.add(onStoreChange);
   return () => listeners.delete(onStoreChange);
-}
-
-function useHasMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
 }
 
 export function useRecentSearches() {

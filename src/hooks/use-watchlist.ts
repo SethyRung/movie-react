@@ -2,6 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { toast } from "sonner";
+import { useHasMounted } from "./use-has-mounted";
 
 const STORAGE_KEY = "cinephil:watchlist:v1";
 const LEGACY_STORAGE_KEY = "cinephil_watchlist";
@@ -77,14 +78,6 @@ if (typeof window !== "undefined") {
 function subscribe(onStoreChange: () => void) {
   listeners.add(onStoreChange);
   return () => listeners.delete(onStoreChange);
-}
-
-function useHasMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
 }
 
 function toWatchlistMovie(movie: WatchlistMovie): Omit<WatchlistItem, "addedAt"> {
