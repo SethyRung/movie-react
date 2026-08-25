@@ -6,8 +6,8 @@ import { MovieDetailHero } from "@/components/movie/movie-detail-hero";
 import { MovieStills } from "@/components/movie/movie-stills";
 import { VideoList } from "@/components/movie/video-list";
 import { StatusSection } from "@/components/status-section";
+import { isNotFoundError, parseRouteId } from "@/lib/route-id";
 import { tmdbImageUrl } from "@/lib/tmdb-image";
-import { isServiceError } from "@/services/error";
 import {
   getCompleteMovieData,
   getMovieRecommendations,
@@ -21,23 +21,13 @@ type MovieDetailPageProps = {
 
 export const dynamic = "force-dynamic";
 
-function parseMovieId(id: string): number | null {
-  if (!/^\d+$/.test(id)) return null;
-  const movieId = Number(id);
-  return Number.isInteger(movieId) && movieId > 0 ? movieId : null;
-}
-
-function isNotFoundError(error: unknown): boolean {
-  return isServiceError(error) && (error.code === "NOT_FOUND" || error.statusCode === 404);
-}
-
 function settledValue<T>(result: PromiseSettledResult<T>): T | null {
   return result.status === "fulfilled" ? result.value : null;
 }
 
 export async function generateMetadata({ params }: MovieDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const movieId = parseMovieId(id);
+  const movieId = parseRouteId(id);
   if (movieId == null) return { title: "Movie not found" };
 
   try {
@@ -61,7 +51,7 @@ export async function generateMetadata({ params }: MovieDetailPageProps): Promis
 
 export default async function MovieDetailPage({ params }: MovieDetailPageProps) {
   const { id } = await params;
-  const movieId = parseMovieId(id);
+  const movieId = parseRouteId(id);
   if (movieId == null) {
     return (
       <StatusSection

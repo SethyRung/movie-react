@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { PersonProfile } from "@/components/person/person-profile";
 import { StatusSection } from "@/components/status-section";
+import { isNotFoundError, parseRouteId } from "@/lib/route-id";
 import { tmdbImageUrl } from "@/lib/tmdb-image";
-import { isServiceError } from "@/services/error";
 import { getPerson } from "@/services/person/queries";
 
 type PersonDetailPageProps = {
@@ -11,19 +11,9 @@ type PersonDetailPageProps = {
 
 export const dynamic = "force-dynamic";
 
-function parsePersonId(id: string): number | null {
-  if (!/^\d+$/.test(id)) return null;
-  const personId = Number(id);
-  return Number.isInteger(personId) && personId > 0 ? personId : null;
-}
-
-function isNotFoundError(error: unknown): boolean {
-  return isServiceError(error) && (error.code === "NOT_FOUND" || error.statusCode === 404);
-}
-
 export async function generateMetadata({ params }: PersonDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const personId = parsePersonId(id);
+  const personId = parseRouteId(id);
   if (personId == null) return { title: "Person not found" };
 
   try {
@@ -47,7 +37,7 @@ export async function generateMetadata({ params }: PersonDetailPageProps): Promi
 
 export default async function PersonDetailPage({ params }: PersonDetailPageProps) {
   const { id } = await params;
-  const personId = parsePersonId(id);
+  const personId = parseRouteId(id);
   if (personId == null) {
     return (
       <StatusSection
