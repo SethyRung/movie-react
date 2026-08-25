@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PersonProfile } from "@/components/person/person-profile";
+import { StatusSection } from "@/components/status-section";
 import { tmdbImageUrl } from "@/lib/tmdb-image";
 import { isServiceError } from "@/services/error";
 import { getPerson } from "@/services/person/queries";
@@ -18,18 +19,6 @@ function parsePersonId(id: string): number | null {
 
 function isNotFoundError(error: unknown): boolean {
   return isServiceError(error) && (error.code === "NOT_FOUND" || error.statusCode === 404);
-}
-
-function PersonStatus({ title, message }: { title: string; message: string }) {
-  return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
-      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">Person</p>
-      <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
-        {title}
-      </h1>
-      <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">{message}</p>
-    </section>
-  );
 }
 
 export async function generateMetadata({ params }: PersonDetailPageProps): Promise<Metadata> {
@@ -61,7 +50,8 @@ export default async function PersonDetailPage({ params }: PersonDetailPageProps
   const personId = parsePersonId(id);
   if (personId == null) {
     return (
-      <PersonStatus
+      <StatusSection
+        label="Person"
         title="Person not found"
         message="This person is unavailable or the link is invalid."
       />
@@ -76,7 +66,8 @@ export default async function PersonDetailPage({ params }: PersonDetailPageProps
   if (!result.ok) {
     if (isNotFoundError(result.error)) {
       return (
-        <PersonStatus
+        <StatusSection
+          label="Person"
           title="Person not found"
           message="This person is unavailable or the link is invalid."
         />
@@ -84,7 +75,8 @@ export default async function PersonDetailPage({ params }: PersonDetailPageProps
     }
 
     return (
-      <PersonStatus
+      <StatusSection
+        label="Person"
         title="Could not load person"
         message="Person details are unavailable right now. Try again shortly."
       />

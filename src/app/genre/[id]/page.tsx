@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ListPagination } from "@/components/movie/list-pagination";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieGrid } from "@/components/movie/movie-grid";
+import { StatusSection } from "@/components/status-section";
 import { parseListPage } from "@/lib/discovery-list";
 import { genreHref, genreLabel, parseGenreId } from "@/lib/genre";
 import { getMoviesByGenre } from "@/services/discovery/queries";
@@ -17,18 +18,6 @@ type GenrePageProps = {
 
 export const dynamic = "force-dynamic";
 
-function GenreStatus({ title, message }: { title: string; message: string }) {
-  return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
-      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">Genre</p>
-      <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
-        {title}
-      </h1>
-      <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">{message}</p>
-    </section>
-  );
-}
-
 export async function generateMetadata({ params }: GenrePageProps): Promise<Metadata> {
   const { id } = await params;
   const genreId = parseGenreId(id);
@@ -41,7 +30,8 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
   const genreId = parseGenreId(id);
   if (genreId == null) {
     return (
-      <GenreStatus
+      <StatusSection
+        label="Genre"
         title="Genre not found"
         message="This genre is unavailable or the link is invalid."
       />
@@ -59,7 +49,8 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
 
   if (!result.ok) {
     return (
-      <GenreStatus
+      <StatusSection
+        label="Genre"
         title="Could not load movies"
         message="This genre list is unavailable right now. Try again shortly."
       />

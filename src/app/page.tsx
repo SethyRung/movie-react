@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieCarousel } from "@/components/movie/movie-carousel";
 import { MovieHero } from "@/components/movie/movie-hero";
+import { StatusSection } from "@/components/status-section";
 import {
   getDiscoveryLists,
   type DiscoveryLists,
@@ -36,17 +37,11 @@ export default async function Home() {
 
   if (!hasLists) {
     return (
-      <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
-        <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-          Discovery
-        </p>
-        <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
-          Could not load discovery lists
-        </h1>
-        <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
-          Movie lists are unavailable right now. Try again shortly.
-        </p>
-      </section>
+      <StatusSection
+        label="Discovery"
+        title="Could not load discovery lists"
+        message="Movie lists are unavailable right now. Try again shortly."
+      />
     );
   }
 

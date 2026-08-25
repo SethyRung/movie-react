@@ -3,6 +3,7 @@ import { CategoryTabs } from "@/components/movie/category-tabs";
 import { ListPagination } from "@/components/movie/list-pagination";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieGrid } from "@/components/movie/movie-grid";
+import { StatusSection } from "@/components/status-section";
 import { listKindLabel, moviesListHref, parseListKind, parseListPage } from "@/lib/discovery-list";
 import { discoverList } from "@/services/discovery/queries";
 
@@ -22,20 +23,6 @@ export async function generateMetadata({ searchParams }: MoviesPageProps): Promi
   return { title: `${listKindLabel(parseListKind(params.kind))} Movies` };
 }
 
-function MoviesUnavailable() {
-  return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
-      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">Browse</p>
-      <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
-        Could not load movies
-      </h1>
-      <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
-        This discovery list is unavailable right now. Try again shortly.
-      </p>
-    </section>
-  );
-}
-
 export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   const params = await searchParams;
   const kind = parseListKind(params.kind);
@@ -46,7 +33,13 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   try {
     list = await discoverList(kind, requestedPage);
   } catch {
-    return <MoviesUnavailable />;
+    return (
+      <StatusSection
+        label="Browse"
+        title="Could not load movies"
+        message="This discovery list is unavailable right now. Try again shortly."
+      />
+    );
   }
 
   const page = Math.min(Math.max(list.page, 1), Math.max(list.total_pages, 1));

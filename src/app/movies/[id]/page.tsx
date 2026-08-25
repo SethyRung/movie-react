@@ -5,6 +5,7 @@ import { MovieCarousel } from "@/components/movie/movie-carousel";
 import { MovieDetailHero } from "@/components/movie/movie-detail-hero";
 import { MovieStills } from "@/components/movie/movie-stills";
 import { VideoList } from "@/components/movie/video-list";
+import { StatusSection } from "@/components/status-section";
 import { tmdbImageUrl } from "@/lib/tmdb-image";
 import { isServiceError } from "@/services/error";
 import {
@@ -32,18 +33,6 @@ function isNotFoundError(error: unknown): boolean {
 
 function settledValue<T>(result: PromiseSettledResult<T>): T | null {
   return result.status === "fulfilled" ? result.value : null;
-}
-
-function MovieStatus({ title, message }: { title: string; message: string }) {
-  return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
-      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">Film</p>
-      <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
-        {title}
-      </h1>
-      <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">{message}</p>
-    </section>
-  );
 }
 
 export async function generateMetadata({ params }: MovieDetailPageProps): Promise<Metadata> {
@@ -75,7 +64,8 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
   const movieId = parseMovieId(id);
   if (movieId == null) {
     return (
-      <MovieStatus
+      <StatusSection
+        label="Film"
         title="Movie not found"
         message="This title is unavailable or the link is invalid."
       />
@@ -91,7 +81,8 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
   if (movieResult.status === "rejected") {
     if (isNotFoundError(movieResult.reason)) {
       return (
-        <MovieStatus
+        <StatusSection
+          label="Film"
           title="Movie not found"
           message="This title is unavailable or the link is invalid."
         />
@@ -99,7 +90,8 @@ export default async function MovieDetailPage({ params }: MovieDetailPageProps) 
     }
 
     return (
-      <MovieStatus
+      <StatusSection
+        label="Film"
         title="Could not load movie"
         message="Movie details are unavailable right now. Try again shortly."
       />
