@@ -3,7 +3,7 @@ import { CategoryTabs } from "@/components/movie/category-tabs";
 import { ListPagination } from "@/components/movie/list-pagination";
 import { MovieCard } from "@/components/movie/movie-card";
 import { MovieGrid } from "@/components/movie/movie-grid";
-import { listKindLabel, parseListKind, parseListPage } from "@/lib/discovery-list";
+import { listKindLabel, moviesListHref, parseListKind, parseListPage } from "@/lib/discovery-list";
 import { discoverList } from "@/services/discovery/queries";
 
 type MoviesSearchParams = {
@@ -78,7 +78,11 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
         </p>
       )}
 
-      <ListPagination kind={kind} page={page} totalPages={list.total_pages} />
+      <ListPagination
+        page={page}
+        totalPages={list.total_pages}
+        hrefForPage={(next) => moviesListHref(kind, next)}
+      />
     </div>
   );
 }

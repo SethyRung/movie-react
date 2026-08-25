@@ -1,16 +1,14 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
-import { moviesListHref } from "@/lib/discovery-list";
 import { Button } from "@/components/ui/button";
-import type { ListKind } from "@/services/discovery/queries";
 
 export type ListPaginationProps = {
-  kind: ListKind;
   page: number;
   totalPages: number;
+  hrefForPage: (page: number) => string;
 };
 
-export function ListPagination({ kind, page, totalPages }: ListPaginationProps) {
+export function ListPagination({ page, totalPages, hrefForPage }: ListPaginationProps) {
   if (totalPages <= 1) return null;
 
   const previousPage = page > 1 ? page - 1 : null;
@@ -20,7 +18,7 @@ export function ListPagination({ kind, page, totalPages }: ListPaginationProps) 
     <nav aria-label="Pagination" className="flex items-center justify-center gap-2">
       {previousPage ? (
         <Button asChild variant="outline" className="min-h-11 px-4">
-          <Link href={moviesListHref(kind, previousPage)}>
+          <Link href={hrefForPage(previousPage)}>
             <ChevronLeftIcon data-icon="inline-start" />
             Previous
           </Link>
@@ -38,7 +36,7 @@ export function ListPagination({ kind, page, totalPages }: ListPaginationProps) 
 
       {nextPage ? (
         <Button asChild variant="outline" className="min-h-11 px-4">
-          <Link href={moviesListHref(kind, nextPage)}>
+          <Link href={hrefForPage(nextPage)}>
             Next
             <ChevronRightIcon data-icon="inline-end" />
           </Link>
