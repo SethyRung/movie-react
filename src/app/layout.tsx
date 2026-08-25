@@ -40,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SkipLink />
           <AppHeader />
           <ScrollSmootherWrapper>
-            <main id="main-content" className="min-h-[calc(100dvh-3.5rem)] pt-14">
+            <main id="main-content" className="min-h-dvh pt-14">
               {children}
             </main>
             <AppFooter />

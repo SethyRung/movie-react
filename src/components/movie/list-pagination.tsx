@@ -32,7 +32,7 @@ export function ListPagination({ kind, page, totalPages }: ListPaginationProps) 
         </Button>
       )}
 
-      <p className="text-muted-foreground px-3 font-mono text-[11px] tracking-[1.1px] uppercase">
+      <p className="text-muted-foreground px-3 font-mono text-xs tracking-widest uppercase">
         Page {page} of {totalPages}
       </p>
 

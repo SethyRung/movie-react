@@ -18,7 +18,7 @@ export function CategoryTabs({ value }: CategoryTabsProps) {
             href={moviesListHref(kind)}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-sm px-3.5 py-2 text-[14px] leading-5 transition-colors",
+              "rounded-sm px-3.5 py-2 text-sm transition-colors",
               active
                 ? "bg-primary text-primary-foreground"
                 : "bg-secondary text-foreground hover:bg-card",

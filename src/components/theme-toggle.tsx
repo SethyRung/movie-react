@@ -49,7 +49,7 @@ export function ThemeToggleRow({ className }: { className?: string }) {
 
       <span>Appearance</span>
 
-      <span className="text-muted-foreground ml-auto font-mono text-[11px] tracking-[1.1px] uppercase">
+      <span className="text-muted-foreground ml-auto font-mono text-xs tracking-widest uppercase">
         {isDark ? "Dark" : "Light"}
       </span>
     </Button>

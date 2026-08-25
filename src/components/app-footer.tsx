@@ -23,15 +23,13 @@ export function AppFooter() {
         <div>
           <Link href="/" className="flex items-center gap-2 text-white">
             <FilmIcon className="size-5" />
-            <span className="text-[15px] font-semibold tracking-[-0.26px] text-white">
-              {site.name}
-            </span>
+            <span className="text-sm font-semibold text-white">{site.name}</span>
           </Link>
           <p className="mt-4 text-sm leading-6">{site.description} Your guide to cinema.</p>
         </div>
 
         <div>
-          <h2 className="font-mono text-[11px] tracking-[1.1px] text-white uppercase">Discover</h2>
+          <h2 className="font-mono text-xs tracking-widest text-white uppercase">Discover</h2>
           <ul className="mt-4 flex flex-col gap-3">
             {footerDiscover.map(({ href, label }) => (
               <li key={href}>
@@ -44,7 +42,7 @@ export function AppFooter() {
         </div>
 
         <div>
-          <h2 className="font-mono text-[11px] tracking-[1.1px] text-white uppercase">Company</h2>
+          <h2 className="font-mono text-xs tracking-widest text-white uppercase">Company</h2>
           <ul className="mt-4 flex flex-col gap-3">
             <li>
               <Link href="/about" className="text-sm transition-colors hover:text-white">
@@ -65,7 +63,7 @@ export function AppFooter() {
         </div>
 
         <div>
-          <h2 className="font-mono text-[11px] tracking-[1.1px] text-white uppercase">Connect</h2>
+          <h2 className="font-mono text-xs tracking-widest text-white uppercase">Connect</h2>
           <div className="mt-4 flex gap-3">
             <a
               href={site.url}
@@ -86,7 +84,7 @@ export function AppFooter() {
               <GithubMark className="size-4" />
             </a>
           </div>
-          <p className="mt-4 font-mono text-[11px] tracking-[1.1px] uppercase">
+          <p className="mt-4 font-mono text-xs tracking-widest uppercase">
             Powered by{" "}
             <a
               href={site.tmdb}

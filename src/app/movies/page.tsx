@@ -24,14 +24,12 @@ export async function generateMetadata({ searchParams }: MoviesPageProps): Promi
 
 function MoviesUnavailable() {
   return (
-    <section className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-340 flex-col justify-end px-6 py-18">
-      <p className="text-muted-foreground font-mono text-[11px] tracking-[1.1px] uppercase">
-        Browse
-      </p>
-      <h1 className="mt-3 max-w-2xl text-[38px] leading-none font-medium tracking-[-1.5px] md:text-[60px] md:leading-[1.02] md:tracking-[-2.5px]">
+    <section className="mx-auto flex min-h-dvh w-full max-w-340 flex-col justify-end px-6 py-18">
+      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">Browse</p>
+      <h1 className="mt-3 max-w-2xl text-4xl leading-none font-medium tracking-tight md:text-6xl md:tracking-tighter">
         Could not load movies
       </h1>
-      <p className="text-muted-foreground mt-6 max-w-md text-[17px] leading-6.75">
+      <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
         This discovery list is unavailable right now. Try again shortly.
       </p>
     </section>
@@ -58,10 +56,10 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
     <div className="mx-auto flex w-full max-w-340 flex-col gap-8 px-6 py-12 md:py-16">
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-muted-foreground font-mono text-[11px] tracking-[1.1px] uppercase">
+          <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
             Browse
           </p>
-          <h1 className="mt-3 text-[32px] leading-[39px] font-medium tracking-[-1.2px] md:text-[38px] md:leading-none md:tracking-[-1.5px]">
+          <h1 className="mt-3 text-3xl font-medium tracking-tight md:text-4xl md:leading-none">
             {title}
           </h1>
         </div>
@@ -75,7 +73,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
           ))}
         </MovieGrid>
       ) : (
-        <p className="text-muted-foreground text-[17px] leading-[27px]">
+        <p className="text-muted-foreground text-lg leading-relaxed">
           No movies in this list right now.
         </p>
       )}

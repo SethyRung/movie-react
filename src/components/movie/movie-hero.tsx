@@ -39,29 +39,29 @@ export function MovieHero({ movie }: MovieHeroProps) {
       ) : null}
       <div className="from-hero via-hero/80 absolute inset-0 bg-linear-to-t to-transparent" />
 
-      <div className="relative mx-auto flex min-h-[28rem] w-full max-w-340 flex-col justify-end gap-10 px-6 py-16 md:min-h-[34rem] md:flex-row md:items-end md:justify-between md:py-20">
+      <div className="relative mx-auto flex min-h-112 w-full max-w-340 flex-col justify-end gap-10 px-6 py-16 md:min-h-136 md:flex-row md:items-end md:justify-between md:py-20">
         <div className="max-w-2xl">
-          <p className="text-hero-foreground/50 font-mono text-[11px] tracking-[1.1px] uppercase">
+          <p className="text-hero-foreground/50 font-mono text-xs tracking-widest uppercase">
             Featured
           </p>
-          <h1 className="mt-3 text-[38px] leading-none font-semibold tracking-[-1.5px] md:text-[60px] md:leading-[1.02] md:tracking-[-2.5px]">
+          <h1 className="mt-3 text-4xl leading-none font-semibold tracking-tight md:text-6xl md:tracking-tighter">
             {movie.title}
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             {year ? (
-              <span className="text-hero-foreground/60 font-mono text-[11px] tracking-[1.1px] uppercase">
+              <span className="text-hero-foreground/60 font-mono text-xs tracking-widest uppercase">
                 {year}
               </span>
             ) : null}
             {rating > 0 ? (
-              <span className="text-hero-foreground/60 font-mono text-[11px] tracking-[1.1px] uppercase">
+              <span className="text-hero-foreground/60 font-mono text-xs tracking-widest uppercase">
                 {rating.toFixed(1)}
                 {movie.vote_count != null ? ` · ${movie.vote_count.toLocaleString()} votes` : null}
               </span>
             ) : null}
           </div>
           {movie.overview ? (
-            <p className="text-hero-foreground/70 mt-5 max-w-xl text-[17px] leading-[27px]">
+            <p className="text-hero-foreground/70 mt-5 max-w-xl text-lg leading-relaxed">
               {movie.overview}
             </p>
           ) : null}

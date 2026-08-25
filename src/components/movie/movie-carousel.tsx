@@ -23,7 +23,7 @@ export function MovieCarousel({ title, href, children }: MovieCarouselProps) {
   return (
     <section className="flex flex-col gap-5">
       <header className="flex items-end justify-between gap-4">
-        <h2 className="text-xl leading-5.5 font-semibold tracking-[-0.5px]">{title}</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
         <div className="flex items-center gap-2">
           {href ? (
             <Link href={href} className="text-muted-foreground hover:text-foreground text-sm">

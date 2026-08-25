@@ -93,9 +93,7 @@ export function AppHeader() {
       <div className="max-w-340 px-6 py-3.5 mx-auto flex  items-center gap-4">
         <Link href="/" className="flex items-center gap-2 text-foreground">
           <FilmIcon className="size-5" />
-          <span className="hidden text-[15px] font-semibold tracking-[-0.26px] sm:inline">
-            {site.name}
-          </span>
+          <span className="hidden text-sm font-semibold sm:inline">{site.name}</span>
         </Link>
 
         <DesktopNav pathname={pathname} />
