@@ -19,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useWatchlist } from "@/hooks/use-watchlist";
 import { primaryNav, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +33,7 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || (href !== "/" && pathname.startsWith(href));
 }
 
-function DesktopNav({ pathname }: { pathname: string }) {
+function DesktopNav({ pathname, watchlistCount }: { pathname: string; watchlistCount: number }) {
   return (
     <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
       {primaryNav.map(({ href, label }) => (
@@ -47,13 +48,24 @@ function DesktopNav({ pathname }: { pathname: string }) {
           )}
         >
           {label}
+          {href === "/watchlist" && watchlistCount > 0 ? (
+            <span className="text-muted-foreground ml-1.5 font-mono text-xs">{watchlistCount}</span>
+          ) : null}
         </Link>
       ))}
     </nav>
   );
 }
 
-function MobileNav({ pathname, onNavigate }: { pathname: string; onNavigate: () => void }) {
+function MobileNav({
+  pathname,
+  watchlistCount,
+  onNavigate,
+}: {
+  pathname: string;
+  watchlistCount: number;
+  onNavigate: () => void;
+}) {
   return (
     <nav aria-label="Primary" className="flex flex-col gap-1">
       {primaryNav.map(({ href, label }) => {
@@ -73,6 +85,11 @@ function MobileNav({ pathname, onNavigate }: { pathname: string; onNavigate: () 
           >
             <Icon size={16} />
             {label}
+            {href === "/watchlist" && watchlistCount > 0 ? (
+              <span className="text-muted-foreground ml-auto font-mono text-xs">
+                {watchlistCount}
+              </span>
+            ) : null}
           </Link>
         );
       })}
@@ -87,6 +104,7 @@ function MenuGlyph({ open }: { open: boolean }) {
 export function AppHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { watchlist } = useWatchlist();
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-background border-b border-accent backdrop-blur supports-backdrop-filter:bg-background/80">
@@ -96,7 +114,7 @@ export function AppHeader() {
           <span className="hidden text-sm font-semibold sm:inline">{site.name}</span>
         </Link>
 
-        <DesktopNav pathname={pathname} />
+        <DesktopNav pathname={pathname} watchlistCount={watchlist.length} />
 
         <div className="hidden flex-1 justify-center md:flex">
           <HeaderSearch />
@@ -126,7 +144,11 @@ export function AppHeader() {
               <div className="flex flex-1 flex-col gap-6 px-4">
                 <HeaderSearch />
 
-                <MobileNav pathname={pathname} onNavigate={() => setOpen(false)} />
+                <MobileNav
+                  pathname={pathname}
+                  watchlistCount={watchlist.length}
+                  onNavigate={() => setOpen(false)}
+                />
               </div>
 
               <SheetFooter>

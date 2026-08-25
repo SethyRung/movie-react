@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { MovieMeta } from "@/components/movie/movie-meta";
 import { RatingDisplay } from "@/components/movie/rating-display";
+import { WatchlistButton } from "@/components/movie/watchlist-button";
 import { releaseYear, tmdbImageUrl } from "@/lib/tmdb-image";
 import type { CompleteMovieData } from "@/services/movie/validation";
 
@@ -59,6 +60,8 @@ export function MovieDetailHero({ movie }: MovieDetailHeroProps) {
               {movie.overview}
             </p>
           ) : null}
+
+          <WatchlistButton movie={movie} variant="label" className="mt-8" />
 
           {companies && companies.length > 0 ? (
             <div className="mt-8">
